@@ -11,9 +11,9 @@ jobs:
     steps:
       - name: Read official source and image metadata
         run: |
-          curl -L --fail --silent --show-error --max-time 30 'https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-topography-bathymetry' -o /tmp/nasa.html
+          curl -L --fail --silent --show-error --max-time 30 'https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-map' -o /tmp/nasa.html
           python3 -c 'import re; s=open("/tmp/nasa.html").read(); print("TITLE",re.findall(r"<title>(.*?)</title>",s,re.S|re.I)); print("JPEG LINKS",*sorted(set(re.findall(r"https://eoimages[^\x22\x27 ]+?\.jpg",s))),sep="\n")'
-          curl -L --fail --silent --show-error --max-time 45 -D /tmp/headers 'https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73751/world.topo.bathy.200407.3x5400x2700.jpg' -o /tmp/nasa.jpg
+          curl -L --fail --silent --show-error --max-time 45 -D /tmp/headers 'https://assets.science.nasa.gov/content/dam/science/esd/eo/images/bmng/bmng-base/july/world.200407.3x5400x2700.jpg' -o /tmp/nasa.jpg
           cat /tmp/headers
           file /tmp/nasa.jpg
           ls -lh /tmp/nasa.jpg
