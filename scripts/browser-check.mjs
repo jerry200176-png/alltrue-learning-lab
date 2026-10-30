@@ -10,6 +10,7 @@ try {
   const errors = []; page.on('pageerror', error => errors.push(error.message));
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 57);
+  assert.equal(await page.locator('.hero').evaluate(element => element.ownerDocument.defaultView.getComputedStyle(element, '::before').animationName), 'none', 'reduced motion disables the star animation');
   assert.equal(await page.title(), '台北全真一對一');
   assert.ok((await page.locator('.hero h1').innerText()).replace(/\s/gu, '').includes('台北全真一對一'));
   assert.equal(await page.locator('header').getByRole('link', { name: '台北全真一對一首頁' }).count(), 1);
@@ -43,6 +44,7 @@ try {
   const afterButton = await homeCanvas.screenshot();
   assert.equal(initial.equals(afterButton), false, 'homepage Earth responds to the keyboard control');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
+  assert.equal(await page.locator('.hero').evaluate(element => element.ownerDocument.defaultView.getComputedStyle(element, '::before').animationName), 'space-twinkle', 'star animation follows the motion preference');
   await page.waitForFunction(() => document.querySelector('[data-earth-toggle]')?.getAttribute('aria-pressed') === 'true');
   await page.waitForTimeout(1500);
   const afterAnimation = await homeCanvas.screenshot();

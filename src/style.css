@@ -139,3 +139,11 @@
 .legend-taipei,.legend-sun{display:inline-block;width:8px;height:8px;border-radius:50%;background:#f5f7fa}
 .legend-sun{background:transparent;border:2px solid #ffce52;width:9px;height:9px}
 @media(max-width:600px){.hero-inner{min-height:0}.hero-copy .hero-eyebrow{font-size:9px;letter-spacing:.12em;margin-bottom:20px}.earth-controls{border-left:0;border-top:1px solid #8db2c42b}.view-actions{padding:0 16px 15px}.earth-controls{gap:16px}}
+
+/* Inspired by Motion Library's Twinkling Sky and Aurora Gradient. */
+@media (prefers-reduced-motion:no-preference){
+  .hero::before{animation:space-twinkle 9s ease-in-out infinite alternate}
+  .hero::after{content:'';position:absolute;inset:-15%;pointer-events:none;opacity:.45;background:radial-gradient(ellipse 38% 28% at 55% 76%,#277b9b38,transparent 75%),radial-gradient(ellipse 30% 30% at 82% 15%,#b58a4930,transparent 75%);animation:space-drift 18s ease-in-out infinite alternate}
+}
+@keyframes space-twinkle{from{opacity:.48}to{opacity:.84}}
+@keyframes space-drift{from{transform:translate3d(-1%,0,0) scale(1)}to{transform:translate3d(2%,-1%,0) scale(1.04)}}

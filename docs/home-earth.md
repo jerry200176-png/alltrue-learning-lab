@@ -5,3 +5,5 @@
 時間和日期使用既有 [NOAA 太陽位置近似公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)；白點標示臺北，金色圓環標示太陽直射點，光線僅表示方向，不代表日地距離的比例。可拖曳地球或選擇臺北、北極視角；選擇時段或調整日期可改變日照。
 
 瀏覽器模擬不等於實體裝置測試。iPhone、平板及專業科學內容審查仍為 **PENDING**。
+
+星空與緩慢光暈的動態構想參考 [Motion Library 動態收藏](https://kittenjam-motion-library.vercel.app/) 的 Twinkling Sky 與 Aurora Gradient，本站以 CSS 自行實作；未加入該站程式碼或新的動畫套件。使用者選擇減少動態效果時不播放。
