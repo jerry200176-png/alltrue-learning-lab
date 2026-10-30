@@ -66,9 +66,24 @@ function home(): void {
   app.querySelector<HTMLButtonElement>('[data-earth-toggle]')!.addEventListener('click', () => globeController?.toggleRotation());
 }
 function bullets(items: string[]) { return `<ul>${items.map(i=>`<li>${escape(i)}</li>`).join('')}</ul>`; }
-function supportsWebGL(): boolean { try { const c = document.createElement('canvas'); return !!c.getContext('webgl2'); } catch { return false; } }
+function supportsWebGL(): boolean {
+  try {
+    const context = document.createElement('canvas').getContext('webgl2');
+    if (!context) return false;
+    // This is only a probe; do not retain a second context alongside the lesson.
+    context.getExtension('WEBGL_lose_context')?.loseContext();
+    return true;
+  } catch { return false; }
+}
+const failedSimulation = '<div class="sim-message"><b>無法啟動 3D 模擬</b><p>裝置無法建立或維持 WebGL 2。請關閉其他分頁、重新整理，或改用支援 WebGL 2 的瀏覽器。</p></div>';
+window.addEventListener('message', event => {
+  const frame = app.querySelector<HTMLIFrameElement>('.simulation-frame');
+  if (!frame || event.source !== frame.contentWindow || event.origin !== location.origin || event.data?.type !== 'alltrue-webgl-failed') return;
+  const holder = frame.parentElement;
+  if (holder?.id === 'simulation') holder.innerHTML = failedSimulation;
+});
 async function loadSimulation(lesson: Lesson, holder: HTMLElement): Promise<void> {
-  if (!supportsWebGL()) { holder.innerHTML = '<div class="sim-message"><b>無法啟動 3D 模擬</b><p>此瀏覽器或裝置不支援 WebGL 2。請更新瀏覽器、啟用硬體加速，或改用支援 WebGL 2 的裝置。</p></div>'; return; }
+  if (!supportsWebGL()) { holder.innerHTML = failedSimulation; return; }
   try {
     const response = await fetch(asset(`upstream/${lesson.file}`));
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -76,7 +91,10 @@ async function loadSimulation(lesson: Lesson, holder: HTMLElement): Promise<void
     if (!holder.isConnected) return;
     const frame = document.createElement('iframe'); frame.title = `${lesson.title} 3D 互動教材`; frame.allow = 'fullscreen'; frame.className='simulation-frame';
     const scriptUrl = new URL(bridgeUrl, window.location.href).href;
-    const injected = `<base href="${new URL(asset('upstream/courses/'), window.location.href).href}"><script type="module" src="${scriptUrl}"></script>`;
+    // A successful probe does not guarantee the lesson can create or retain a context.
+    // Report explicit WebGL errors from the iframe; ordinary lesson errors are not masked.
+    const monitor = `<script>(()=>{const report=()=>parent.postMessage({type:'alltrue-webgl-failed'},parent.location.origin);const isContextError=text=>/webgl/i.test(text)&&/(context|not supported)/i.test(text);addEventListener('error',e=>{if(isContextError(e.message))report()},true);addEventListener('unhandledrejection',e=>{if(isContextError(String(e.reason)))report()},true);addEventListener('webglcontextlost',report,true)})();</script>`;
+    const injected = `<base href="${new URL(asset('upstream/courses/'), window.location.href).href}">${monitor}<script type="module" src="${scriptUrl}"></script>`;
     frame.srcdoc = html.replace('<head>', `<head>${injected}`); holder.replaceChildren(frame);
   } catch { if (holder.isConnected) holder.innerHTML = '<div class="sim-message"><b>教材載入失敗</b><p>請檢查網路連線後重新整理頁面。</p></div>'; }
 }
