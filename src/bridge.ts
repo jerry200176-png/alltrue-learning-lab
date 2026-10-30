@@ -8,7 +8,7 @@ function localizeNode(node: Node): void {
     const text = node.nodeValue || '';
     const translated = translate(text);
     if (text !== translated) node.nodeValue = translated;
-  } else if (node instanceof HTMLElement) {
+  } else if (node instanceof Element) {
     for (const name of ['title', 'aria-label', 'placeholder']) {
       const value = node.getAttribute(name);
       if (value) { const translated = translate(value); if (translated !== value) node.setAttribute(name, translated); }
