@@ -7,4 +7,5 @@ it('converts visible text and terminology without repeatedly changing already tr
   expect(translate('只靠一只斜槽')).toBe('只靠一個斜槽');
   expect(translate('水蒸汽与碳循环')).toBe('水蒸氣與碳循環');
   expect(translate('蒸汽和水蒸汽')).toBe('蒸氣和水蒸氣');
+  expect(translate('课件滑块和参考工况')).toBe('教材滑桿和參考操作條件');
 });

@@ -1,5 +1,8 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+const lessons = JSON.parse(readFileSync('src/lessons.json', 'utf8'));
+const titleFor = slug => lessons.find(lesson => lesson.slug === slug).title;
 const origin = process.env.LAB_URL || 'http://127.0.0.1:4173/';
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 try {
@@ -10,6 +13,8 @@ try {
   await page.getByRole('searchbox').fill('酵素'); assert.equal(await page.locator('.lesson-card').count(), 1);
   for (const slug of ['projectile-step', 'rate-step', 'enzyme-step', 'earth-motion-step']) {
     await page.goto(`${origin}#lesson/${slug}`);
+    await page.getByRole('heading', { name: titleFor(slug), exact: true }).waitFor();
+    await page.locator('iframe').waitFor();
     const frame = page.frameLocator('iframe'); await frame.locator('canvas').first().waitFor({ timeout: 20000 });
     await frame.locator('body').getByText('目錄', { exact: true }).first().waitFor({ timeout: 20000 });
     assert.ok((await frame.locator('body').innerText()).length > 100, slug);
@@ -33,10 +38,30 @@ try {
   await mobile.locator('[data-subject=phys]').tap(); assert.equal(await mobile.locator('.lesson-card').count(), 10);
   for (const slug of ['projectile-step', 'rate-step', 'enzyme-step', 'earth-motion-step']) {
     await mobile.goto(`${origin}#lesson/${slug}`);
+    await mobile.getByRole('heading', { name: titleFor(slug), exact: true }).waitFor();
     await mobile.locator('#simulation').scrollIntoViewIfNeeded();
     const mobileFrame = mobile.frameLocator('iframe');
     await mobileFrame.locator('#tabL').waitFor({ state: 'visible', timeout: 20000 });
     await mobileFrame.locator('#tabR').waitFor({ state: 'visible', timeout: 20000 });
+    if (slug === 'projectile-step') {
+      const scene = mobileFrame.locator('#gl');
+      const rect = await scene.boundingBox();
+      assert.ok(rect);
+      const child = mobile.frames()[1];
+      await child.evaluate(() => {
+        const canvas = document.querySelector('#gl');
+        canvas.dataset.pointerCount = '0';
+        canvas.addEventListener('pointermove', () => { canvas.dataset.pointerCount = String(Number(canvas.dataset.pointerCount) + 1); });
+      });
+      const client = await mobile.context().newCDPSession(mobile);
+      const x = rect.x + rect.width * 0.5; const y = rect.y + rect.height * 0.65;
+      await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
+      await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + 35, y: y + 15 }] });
+      await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      await child.waitForFunction(() => Number(document.querySelector('#gl')?.dataset.pointerCount) > 0, null, { timeout: 5000 });
+      assert.ok(Number(await scene.getAttribute('data-pointer-count')) > 0, 'touch drag must reach 3D canvas');
+      await client.detach();
+    }
     await mobileFrame.locator('#tabL').tap();
     assert.equal(await mobileFrame.locator('#left').evaluate(el => el.classList.contains('collapsed')), false);
     await mobileFrame.locator('#tabR').tap();

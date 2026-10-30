@@ -61,4 +61,9 @@
 | 水循環的過程與地理意義 (`water-cycle-step`) | 草稿，PENDING | PENDING | PENDING | PENDING |
 | 氣壓帶、風帶與三圈環流 (`circulation-step`) | 草稿，PENDING | PENDING | PENDING | PENDING |
 
-桌面 Chromium 可使用 `scripts/all-lessons-check.mjs` 檢查各單元載入、步驟導覽及三道題目的存在；`scripts/science-check.mjs` 以水平拋射的四個高度檢查位移、等時位移比例及軌跡係數，也檢查地球運動的正午高度與酵素模型的溫度反應。四個代表單元的介面、手機視窗分頁與 WebGL 失敗提示可透過 `scripts/browser-check.mjs` 檢查。這些檢查不是對全部控制器、公式與教學結果的驗收，手機視窗模擬也不等於實體手機或平板測試。
+桌面 Chromium 可使用 `scripts/all-lessons-check.mjs` 檢查各單元載入、步驟導覽及三道題目的存在；`scripts/control-check.mjs` 及 `scripts/toggle-check.mjs` 可檢查控制項是否回應。`scripts/science-check.mjs` 以水平拋射的四個高度檢查位移、等時位移比例及軌跡係數，也檢查地球運動的正午高度、酵素模型的溫度反應與強酸強鹼滴定數據。四個代表單元的介面、手機視窗分頁與 WebGL 失敗提示可透過 `scripts/browser-check.mjs` 檢查。這些檢查不是對全部控制器、公式與教學結果的驗收，手機視窗模擬也不等於實體手機或平板測試。
+
+## 自動化紀錄的範圍
+
+- 在桌面 Chromium 預設步驟中，`scripts/control-check.mjs` 檢查 54 個單元的 138 個範圍滑桿，以及 26 組多選控制項各一個替代選項；`scripts/toggle-check.mjs` 檢查 119 個開關。這些檢查不涵蓋各步驟的所有選項、所有極值或其科學正確性。
+- 以固定上游版本逐一執行語法抽取，共得到 26,282 筆含中文字的字串紀錄；其中 1,544 筆標為顯示候選，其餘 24,738 筆的用途未能由局部語法確定。紀錄可能包含重複文字或標記，不等於實際待翻譯文句的數量；未分類項目不得自動當作顯示文字改寫。
