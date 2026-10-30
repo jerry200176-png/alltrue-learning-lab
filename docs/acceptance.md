@@ -61,7 +61,7 @@
 | 水循環的過程與地理意義 (`water-cycle-step`) | 草稿，PENDING | PENDING | PENDING | PENDING |
 | 氣壓帶、風帶與三圈環流 (`circulation-step`) | 草稿，PENDING | PENDING | PENDING | PENDING |
 
-桌面 Chromium 可使用 `scripts/all-lessons-check.mjs` 檢查各單元載入、步驟導覽及三道題目的存在；`scripts/control-check.mjs` 及 `scripts/toggle-check.mjs` 可檢查控制項是否回應。`scripts/science-check.mjs` 以水平拋射的四個高度檢查位移、等時位移比例及軌跡係數，也檢查地球運動的正午高度、酵素模型的溫度反應與強酸強鹼滴定數據。四個代表單元的介面、手機視窗分頁與 WebGL 失敗提示可透過 `scripts/browser-check.mjs` 檢查。這些檢查不是對全部控制器、公式與教學結果的驗收，手機視窗模擬也不等於實體手機或平板測試。
+桌面 Chromium 可使用 `scripts/all-lessons-check.mjs` 檢查各單元載入、步驟導覽、三道題目的存在及常見控制項的可存取名稱；`scripts/control-check.mjs` 及 `scripts/toggle-check.mjs` 可檢查控制項是否回應。`scripts/science-check.mjs` 以水平拋射的四個高度檢查位移、等時位移比例及軌跡係數，也檢查地球運動的正午高度、酵素模型的溫度反應與強酸強鹼滴定數據。四個代表單元的介面、手機視窗分頁與 WebGL 失敗提示可透過 `scripts/browser-check.mjs` 檢查。這些檢查不是對全部控制器、公式與教學結果的驗收，手機視窗模擬也不等於實體手機或平板測試。
 
 ## 自動化紀錄的範圍
 

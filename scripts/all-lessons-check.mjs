@@ -14,6 +14,11 @@ try {
       await frame.locator('canvas').first().waitFor({ timeout: 15000 });
       await frame.getByText('目錄', { exact: true }).first().waitFor({ timeout: 15000 });
       if (await page.locator('.lesson-content details').count() < 3) throw new Error('少於三道概念題');
+      await frame.locator('#right').waitFor({ state: 'attached' });
+      const unnamed = await frame.locator('#right').evaluate(root => [...root.querySelectorAll('input[type=range], .sw:not(.multi) button')]
+        .filter(el => !el.getAttribute('aria-label')?.trim() && !el.getAttribute('aria-labelledby')?.trim())
+        .map(el => el.closest('[data-key]')?.getAttribute('data-key') || el.tagName));
+      if (unnamed.length) throw new Error(`控制項沒有可存取名稱：${unnamed.join(', ')}`);
       const navigation = await frame.locator('#steps').evaluate(root => {
         const buttons = [...root.querySelectorAll('button[data-i]')];
         const failures = [];

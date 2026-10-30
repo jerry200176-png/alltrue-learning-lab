@@ -17,15 +17,44 @@ function localizeNode(node: Node): void {
     for (const child of node.childNodes) localizeNode(child);
   }
 }
+// The original controls often use visual text instead of native input labels.
+// Add names only to rendered controls; the upstream event logic remains unchanged.
+const autoNamed = new WeakSet<Element>();
+function nameControls(root: ParentNode): void {
+  const selector = 'input[type=range], .sw:not(.multi) button';
+  const elements: Element[] = [];
+  if (root instanceof Element && root.matches(selector)) elements.push(root);
+  elements.push(...root.querySelectorAll(selector));
+  for (const element of elements) {
+    if (element.hasAttribute('aria-labelledby') || (element.hasAttribute('aria-label') && !autoNamed.has(element))) continue;
+    const label = element instanceof HTMLInputElement
+      ? element.closest('.sl')?.querySelector('.slh .lb')
+      : element.closest('.sw')?.querySelector('.nm');
+    const text = label?.textContent?.replace(/\s+/gu, ' ').trim();
+    if (text) {
+      const translated = translate(text);
+      if (element.getAttribute('aria-label') !== translated) element.setAttribute('aria-label', translated);
+      autoNamed.add(element);
+    }
+  }
+}
 const observer = new MutationObserver(records => {
   for (const record of records) {
-    if (record.type === 'characterData') localizeNode(record.target);
+    if (record.type === 'characterData') {
+      localizeNode(record.target);
+      const group = record.target.parentElement?.closest('.sl, .sw');
+      if (group) nameControls(group);
+    }
     else if (record.type === 'attributes') localizeNode(record.target);
-    else for (const node of record.addedNodes) localizeNode(node);
+    else for (const node of record.addedNodes) {
+      localizeNode(node);
+      if (node instanceof Element) nameControls(node);
+    }
   }
 });
 observer.observe(document.documentElement, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['title', 'aria-label', 'placeholder'] });
 localizeNode(document.documentElement);
+nameControls(document.documentElement);
 
 // Three.js lessons draw some labels to 2D canvas textures; translate and measure the same text.
 const context = CanvasRenderingContext2D.prototype;
@@ -50,6 +79,7 @@ document.addEventListener('click', event => {
 
 // Keep the upstream fold controls, but avoid their overlapping panels on narrow screens.
 window.addEventListener('DOMContentLoaded', () => {
+  nameControls(document.documentElement);
   if (!window.matchMedia('(max-width: 600px)').matches) return;
   const left = document.querySelector<HTMLElement>('#left');
   const right = document.querySelector<HTMLElement>('#right');

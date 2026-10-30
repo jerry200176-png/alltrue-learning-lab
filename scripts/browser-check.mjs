@@ -18,6 +18,9 @@ try {
     const frame = page.frameLocator('iframe'); await frame.locator('canvas').first().waitFor({ timeout: 20000 });
     await frame.locator('body').getByText('目錄', { exact: true }).first().waitFor({ timeout: 20000 });
     assert.ok((await frame.locator('body').innerText()).length > 100, slug);
+    const unnamed = await frame.locator('#right').evaluate(root => [...root.querySelectorAll('input[type=range], .sw:not(.multi) button')]
+      .filter(el => !el.getAttribute('aria-label')?.trim() && !el.getAttribute('aria-labelledby')?.trim()).length);
+    assert.equal(unnamed, 0, `${slug} controls need accessible names`);
     assert.equal(await page.locator('.lesson-content details').count(), 3, `${slug} concepts`);
     if (slug === 'projectile-step') {
       await frame.getByRole('button', { name: '›', exact: true }).click();
