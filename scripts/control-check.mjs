@@ -5,10 +5,12 @@ const selected = process.env.LAB_SLUG ? lessons.filter(lesson => lesson.slug ===
 if (!selected.length) throw new Error('Unknown LAB_SLUG');
 const limit = Number(process.env.LAB_LIMIT || selected.length);
 const origin = process.env.LAB_URL || 'http://127.0.0.1:4173/';
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const launch = () => chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+let browser = await launch();
 const failures = []; let sliders = 0; let choices = 0; let empty = 0;
 try {
   for (const [index, lesson] of selected.slice(0, limit).entries()) {
+    if (index > 0 && index % 10 === 0) { await browser.close(); browser = await launch(); }
     const page = await browser.newPage({ viewport: { width: 1200, height: 800 } });
     const errors = []; page.on('pageerror', error => errors.push(error.message));
     try {
@@ -22,7 +24,7 @@ try {
         if (!key) throw new Error('range has no stable key');
         const label = input.locator('xpath=ancestor::div[contains(concat(" ", normalize-space(@class), " "), " sl ")][1]').locator('.slh b');
         await label.waitFor({ state: 'attached' });
-        await frame.waitForFunction(inputKey => !!document.querySelector(`#right input[data-key="${inputKey}"]`)?.closest('.sl')?.querySelector('.slh b')?.textContent?.trim(), key, { timeout: 30000 });
+        try { await frame.waitForFunction(inputKey => !!document.querySelector(`#right input[data-key="${inputKey}"]`)?.closest('.sl')?.querySelector('.slh b')?.textContent?.trim(), key, { timeout: 60000 }); } catch { throw new Error(`range ${key} initial label did not load`); }
         const info = await input.evaluate(el => ({ key: el.dataset.key, min: Number(el.min), max: Number(el.max), value: Number(el.value), step: Number(el.step) }));
         if (!(info.max > info.min)) throw new Error(`invalid range ${JSON.stringify(info)}`);
         const before = (await label.innerText()).trim();

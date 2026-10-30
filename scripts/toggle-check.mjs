@@ -4,10 +4,12 @@ const lessons = JSON.parse(readFileSync('src/lessons.json', 'utf8'));
 const selected = process.env.LAB_SLUG ? lessons.filter(lesson => lesson.slug === process.env.LAB_SLUG) : lessons;
 if (!selected.length) throw new Error('Unknown LAB_SLUG');
 const origin = process.env.LAB_URL || 'http://127.0.0.1:4173/';
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const launch = () => chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+let browser = await launch();
 const failures = []; let toggles = 0; let skipped = 0;
 try {
   for (const [index, lesson] of selected.entries()) {
+    if (index > 0 && index % 10 === 0) { await browser.close(); browser = await launch(); }
     const page = await browser.newPage({ viewport: { width: 1200, height: 800 } });
     const errors = []; page.on('pageerror', e => errors.push(e.message));
     try {
