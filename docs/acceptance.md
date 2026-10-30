@@ -15,14 +15,14 @@
 | 氯氣的製備及性質 (`chlorine-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 高爐煉鐵 (`blast-furnace-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 金屬冶煉：電解熔融鹽 + 鋁熱 (`smelting-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
-| 世界洋流的分佈規律與影響 (`currents-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
+| 世界洋流的分布規律與影響 (`currents-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 海—氣相互作用與聖嬰、反聖嬰 (`enso-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 煤的綜合利用：以煤的氣化為主線 (`coal-gas-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
-| 接觸法制硫酸 (`sulfuric-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
+| 接觸法製硫酸 (`sulfuric-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 鹽類的水解及其應用 (`hydrolysis-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 大氣受熱過程 (`heating-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 喀斯特地貌的形成與識別 (`karst-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
-| 工業制水泥 (`cement-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
+| 工業製水泥 (`cement-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 全球氣候變化與國家安全 (`carbon-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 構造地貌的形成 (`tectonic-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 光電效應 (`photoelectric-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
@@ -55,10 +55,10 @@
 | 吸氧腐蝕與暖貼的設計 (`corrosion-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 影響酵素活性的條件 (`enzyme-step`) | 草稿，PENDING | PENDING | PENDING | PENDING |
 | 氯鹼工業 (`chlor-alkali-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
-| 侯氏制鹼 (`hou-soda-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
+| 侯氏製鹼 (`hou-soda-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 電流的磁場 (`current-field-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 布朗運動與擴散 (`brownian-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
-| 水迴圈的過程與地理意義 (`water-cycle-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
+| 水循環的過程與地理意義 (`water-cycle-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 | 氣壓帶、風帶與三圈環流 (`circulation-step`) | 未編寫，PENDING | PENDING | PENDING | PENDING |
 
 桌面 Chromium 的四個代表單元可透過 `scripts/browser-check.mjs` 進行基本載入測試；這不是對其全部控制器或科學結果的驗收。手機視窗模擬不等於實體手機或平板測試。

@@ -65,7 +65,7 @@
       "黃赤交角",
       "迴歸運動",
       "正午高度",
-      "緯度分佈",
+      "緯度分布",
       "年內變化",
       "正午方向",
       "四季",
@@ -176,7 +176,7 @@
   {
     "slug": "currents-step",
     "subject": "geo",
-    "title": "世界洋流的分佈規律與影響",
+    "title": "世界洋流的分布規律與影響",
     "type": "原理與現象",
     "question": "數萬只玩具鴨散落海面，為什麼會漂到世界各地的海岸？",
     "steps": [
@@ -233,7 +233,7 @@
   {
     "slug": "sulfuric-step",
     "subject": "chem",
-    "title": "接觸法制硫酸",
+    "title": "接觸法製硫酸",
     "type": "工業流程",
     "question": "怎樣把礦石裡的硫，又快、又多、又省、又幹淨地變成硫酸？",
     "steps": [
@@ -309,7 +309,7 @@
   {
     "slug": "cement-step",
     "subject": "chem",
-    "title": "工業制水泥",
+    "title": "工業製水泥",
     "type": "工業流程",
     "question": "一車石頭和土，憑什麼磨一磨、燒一燒、再磨一磨，就變成能撐起大壩的水泥？",
     "steps": [
@@ -952,7 +952,7 @@
   {
     "slug": "hou-soda-step",
     "subject": "chem",
-    "title": "侯氏制鹼",
+    "title": "侯氏製鹼",
     "type": "工業流程",
     "question": "怎樣用食鹽和氨造出純鹼，還順手拿到氮肥？",
     "steps": [
@@ -1011,7 +1011,7 @@
   {
     "slug": "water-cycle-step",
     "subject": "geo",
-    "title": "水迴圈的過程與地理意義",
+    "title": "水循環的過程與地理意義",
     "type": "原理與現象",
     "question": "江河不斷注入大海，為什麼大海的水沒有增多？",
     "steps": [
@@ -1040,7 +1040,7 @@
       "60° 爬升",
       "七帶六風",
       "季節移動",
-      "海陸分佈",
+      "海陸分布",
       "考核 · 麥哲倫"
     ],
     "file": "courses/circulation-step.html",
