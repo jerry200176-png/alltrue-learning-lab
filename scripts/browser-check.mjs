@@ -11,6 +11,7 @@ try {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 54);
   assert.equal(await page.title(), '台北全真一對一');
+  assert.ok((await page.locator('.hero h1').innerText()).replace(/\s/gu, '').includes('台北全真一對一'));
   assert.equal(await page.locator('header').getByRole('link', { name: '台北全真一對一首頁' }).count(), 1);
   assert.equal(await page.locator('.subject-tile img').count(), 4);
   const homeCanvas = page.locator('#home-simulation canvas');
