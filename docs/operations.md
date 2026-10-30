@@ -23,4 +23,10 @@
 - 留下事故時間、影響、部署及回滾版本、症狀與修正 PR。釐清原因並通過原有檢查後才再次發布。
 - 目前沒有設定外部可用性監測或告警。日常維護應定期檢視站點可用性、依賴與上游授權變動；不要宣稱監控已啟用。需要自動監測時，另行建立具明確接收對象與告警規則的監測。
 
+## GitHub Pages 靜態試用站備援
+
+若使用 GitHub Pages 的「Deploy from a branch」，以專用發布分支的根目錄存放已驗證的 `dist` 內容及 `.nojekyll`，不要將建置產物混入原始碼分支。專用分支名稱、產物 commit、來源 SHA、CI 執行紀錄與實際網址都必須列入發布紀錄；`version.json` 應呈現乾淨且已通過檢查的來源 SHA。儲存庫擁有者需在 Settings → Pages 選擇發布分支與 `/ (root)`；分支推送本身不代表網站已啟用。完成設定後確認 Pages 建置結果並從公開網址驗證。
+
+更新時從已通過檢查的乾淨原始碼重新建置，在發布分支建立新的產物 commit；保留舊 commit，不以強制推送改寫歷史。回滾可把先前的產物狀態還原為一個新 commit，推送至同一發布分支，再確認 Pages 已更新且 `version.json` 指向預期的來源。若需要立即停止公開，使用儲存庫 Settings → Pages 停用發布。這是靜態試用站的手動備援流程，不代表已建立自動發布或監控。
+
 參考：[Google SRE Release Engineering](https://sre.google/sre-book/release-engineering/)、[GitHub Actions 部署環境](https://docs.github.com/en/actions/concepts/workflows-and-actions/deployment-environments) 與 [Semantic Versioning](https://semver.org/)。這些是設計依據，不表示本專案已具備其全部組織流程。
