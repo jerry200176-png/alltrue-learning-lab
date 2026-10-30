@@ -24,16 +24,14 @@ jobs:
             const page=await browser.newPage();
             await page.goto('https://xbjiaoyu.com/#catalog',{waitUntil:'domcontentloaded',timeout:30000});
             await page.locator('main article h3').first().waitFor({timeout:45000});
-            page.on('response', response=>{if(response.url().startsWith('https://xbjiaoyu.com/') && !/\.(?:png|jpg|jpeg|webp|svg|css|woff2?)(?:\?|$)/i.test(response.url())) console.log('RESPONSE',response.status(),response.url(),response.headers()['content-type']);});
+            page.on('response', async response=>{if(response.url().includes('/api/launch/') || response.url().includes('/api/access/')) {const data=await response.json().catch(()=>null); console.log('API_META',new URL(response.url()).pathname,response.status(),data?Object.keys(data):'non-json');}});
             await page.goto('https://xbjiaoyu.com/#course/mirror', {waitUntil:'domcontentloaded'});
             await page.getByRole('button',{name:'免费在线使用 ↗'}).click();
-            await page.waitForTimeout(8000);
-            console.log('AFTER_TRIAL',page.url(),(await page.locator('body').innerText()).slice(0,8000));
-            console.log('FRAMES',JSON.stringify(page.frames().map(f=>({url:f.url(),name:f.name()}))));
-            await page.goto('https://xbjiaoyu.com/#course/mirror', {waitUntil:'domcontentloaded'});
-            await page.getByRole('button',{name:'↓ 下载课件'}).click();
-            await page.waitForTimeout(2000);
-            console.log('AFTER_DOWNLOAD',(await page.locator('body').innerText()).slice(-4000));
+            await page.waitForTimeout(45000);
+            console.log('PUBLIC_PLAY', page.url());
+            console.log('CLASSROOM', (await page.locator('#classroom').innerText()).slice(0,3000));
+            console.log('FRAMES', JSON.stringify(page.frames().map(f=>({url:f.url().split('?')[0],name:f.name()}))));
+            console.log('IFRAMES', JSON.stringify(await page.locator('iframe').evaluateAll(es=>es.map(e=>({src:e.getAttribute('src')?.split('?')[0],hasSrcdoc:e.hasAttribute('srcdoc')})))));
 
           } finally {await browser.close()}
           JS
