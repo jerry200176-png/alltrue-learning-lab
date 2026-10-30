@@ -87,8 +87,18 @@ try {
       const initialValue = await slider.inputValue();
       await slider.focus(); await page.keyboard.press('ArrowRight');
       assert.notEqual(await slider.inputValue(), initialValue, 'lesson Earth slider responds to keyboard');
+      await frame.locator('#gl').evaluate(canvas => {
+        const child = canvas.ownerDocument.defaultView;
+        const context = canvas.getContext('webgl2');
+        const release = child.__alltrueReleaseGraphics;
+        child.__alltrueReleaseGraphics = () => {
+          release();
+          child.parent.document.documentElement.dataset.lessonContextReleased = String(context.isContextLost());
+        };
+      });
       await frame.locator('a.home').click();
       await page.locator('#catalog').waitFor();
+      assert.equal(await page.locator('html').getAttribute('data-lesson-context-released'), 'true', 'lesson WebGL context is released on navigation');
       assert.equal(await page.locator('.lesson-card').count(), 54);
     }
     console.log(`PASS: ${slug} loads a translated 3D lesson`);

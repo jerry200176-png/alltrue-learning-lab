@@ -88,6 +88,6 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   return { rotate, setSun, toggleRotation() { playing = !playing; onRotationChange(playing); }, dispose() {
     disposed = true; cancelAnimationFrame(animationFrame); resizeObserver.disconnect(); visibilityObserver.disconnect();
     motion.removeEventListener('change', onMotionChange);
-    material.map?.dispose(); material.dispose(); geometry.dispose(); markerGeometry.dispose(); markerMaterial.dispose(); renderer.dispose();
+    material.map?.dispose(); material.dispose(); geometry.dispose(); markerGeometry.dispose(); markerMaterial.dispose(); renderer.dispose(); renderer.forceContextLoss();
   } };
 }

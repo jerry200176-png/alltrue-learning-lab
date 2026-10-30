@@ -17,10 +17,16 @@ try {
     const { slug } = lesson;
     console.log(`Loading ${index + 1}/${lessons.length}: ${slug}`);
     await page.goto(`${origin}#lesson/${slug}`);
+    await page.getByRole('heading', { name: lesson.title, exact: true }).waitFor({ timeout: 30000 });
+    const frameElement = page.locator('#simulation iframe');
     const frame = page.frameLocator('#simulation iframe');
-    try { await frame.locator('#gl').waitFor({ timeout: 30000 }); }
+    try {
+      await frameElement.waitFor({ timeout: 30000 });
+      if (await frameElement.getAttribute('title') !== `${lesson.title} 3D 互動教材`) throw new Error('Unexpected lesson frame');
+      await frame.locator('#gl').waitFor({ timeout: 30000 });
+    }
     catch (error) {
-      console.error(`FAILED ${slug}; simulation: ${(await page.locator('#simulation').innerText()).slice(0, 400)}; errors: ${errors.join('; ')}`);
+      console.error(`FAILED ${slug}; simulation: ${(await page.locator('#simulation').innerText({ timeout: 3000 }).catch(() => '(無法讀取頁面)')).slice(0, 400)}; errors: ${errors.join('; ')}`);
       throw error;
     }
     await frame.locator('#steps button').first().waitFor({ state: 'visible', timeout: 30000 });
