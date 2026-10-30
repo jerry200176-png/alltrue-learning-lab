@@ -69,7 +69,7 @@ jobs:
           if ! node scripts/webkit-mobile-check.mjs; then
             echo "WebKit runner diagnostics:"
             free -h
-            ps -eo pid,ppid,rss,stat,comm,args --sort=-rss | head -40
+            ps -eo pid,ppid,rss,stat,comm --sort=-rss | head -40
             exit 1
           fi
 
