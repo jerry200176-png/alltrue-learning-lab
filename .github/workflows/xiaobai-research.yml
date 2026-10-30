@@ -24,7 +24,12 @@ jobs:
             const page=await browser.newPage();
             await page.goto('https://xbjiaoyu.com/#catalog',{waitUntil:'domcontentloaded',timeout:30000});
             await page.locator('main article h3').first().waitFor({timeout:45000});
-            const cards=await page.locator('main article').evaluateAll(els=>els.map(el=>({title:el.querySelector('h3')?.innerText,text:el.innerText,links:[...el.querySelectorAll('a')].map(a=>({text:a.innerText,href:a.href})),buttons:[...el.querySelectorAll('button')].map(b=>({text:b.innerText,action:b.getAttribute('data-action'),id:b.getAttribute('data-id')}))})));
-            console.log('VISIBLE_CATALOGUE',JSON.stringify(cards));
+            for (const id of ['mirror','lens','terrain','chemistry-c07']) {
+              await page.goto('https://xbjiaoyu.com/#course/' + id, {waitUntil:'domcontentloaded'});
+              await page.waitForTimeout(3000);
+              console.log('COURSE', id, 'URL', page.url(), 'TEXT', (await page.locator('main').innerText()).slice(0,5000));
+              console.log('CONTROLS', JSON.stringify(await page.locator('main a,main button').evaluateAll(es=>es.map(e=>({tag:e.tagName,text:e.innerText,href:e.href,action:e.getAttribute('data-action')})))));
+            }
+
           } finally {await browser.close()}
           JS
