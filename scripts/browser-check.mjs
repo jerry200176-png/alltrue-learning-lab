@@ -9,7 +9,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 850 } });
   const errors = []; page.on('pageerror', error => errors.push(error.message));
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 55);
+  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 56);
   assert.equal(await page.title(), '台北全真一對一');
   assert.ok((await page.locator('.hero h1').innerText()).replace(/\s/gu, '').includes('台北全真一對一'));
   assert.equal(await page.locator('header').getByRole('link', { name: '台北全真一對一首頁' }).count(), 1);
@@ -69,7 +69,7 @@ try {
   assert.equal(await page.getByRole('link', { name: '铜匠实验室（Tongjiang Lab）' }).getAttribute('href'), 'https://lab.tongjiang.app/');
   assert.ok(await page.getByRole('link', { name: 'CC BY-NC 4.0' }).getAttribute('href'));
   assert.equal(await page.getByRole('link', { name: '第三方授權聲明' }).count(), 1);
-  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 55);
+  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 56);
   await page.locator('[data-filter=bio]').click(); assert.equal(await page.locator('.lesson-card').count(), 5);
   await page.getByRole('searchbox').fill('酵素'); assert.equal(await page.locator('.lesson-card').count(), 1);
   for (const slug of ['projectile-step', 'rate-step', 'enzyme-step', 'earth-motion-step']) {
@@ -110,11 +110,12 @@ try {
       assert.equal(await page.locator('html').getAttribute('data-lesson-context-released'), 'true', 'lesson WebGL context is released on navigation');
       await page.waitForTimeout(100);
       assert.equal(await page.locator('html').getAttribute('data-late-lesson-frame'), null, 'pending lesson animation is cancelled on navigation');
-      assert.equal(await page.locator('.lesson-card').count(), 55);
+      assert.equal(await page.locator('.lesson-card').count(), 56);
     }
     console.log(`PASS: ${slug} loads a translated 3D lesson`);
   }
   assert.deepEqual(errors, []);
+  await page.close();
   const unavailableTexture = await browser.newPage({ viewport: { width: 1280, height: 850 } });
   await unavailableTexture.route('**/derived/earth-blue-marble-nasa-5400.jpg', route => route.abort());
   await unavailableTexture.goto(origin);
@@ -192,6 +193,7 @@ try {
     assert.equal(await mobileFrame.locator('#right').evaluate(el => el.classList.contains('collapsed')), false);
   }
   console.log('PASS: four mobile lessons and panel touch');
+  await mobile.close();
   const tablet = await browser.newPage({ viewport: { width: 768, height: 1024 }, isMobile: true, hasTouch: true });
   await tablet.goto(`${origin}#lesson/projectile-step`);
   await tablet.locator('#simulation').scrollIntoViewIfNeeded();
@@ -201,10 +203,12 @@ try {
   await tabletFrame.locator('#steps button').nth(1).tap();
   assert.equal(await tabletFrame.locator('#steps button').nth(1).evaluate(el => el.classList.contains('on')), true);
   console.log('PASS: tablet viewport and step touch');
+  await tablet.close();
   const noWebGL = await browser.newPage();
   await noWebGL.addInitScript(() => { const original=HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function(type, ...args) { if (type === 'webgl2') return null; return original.call(this, type, ...args); }; });
   await noWebGL.goto(origin); await noWebGL.getByText('無法啟動 3D 地球').waitFor(); assert.equal(await noWebGL.locator('#home-simulation canvas').count(), 0);
   await noWebGL.goto(`${origin}#lesson/projectile-step`); await noWebGL.getByText('無法啟動 3D 模擬').waitFor(); assert.equal(await noWebGL.locator('iframe').count(),0); console.log('PASS: WebGL fallback');
+  await noWebGL.close();
   const failedLesson = await browser.newPage();
   await failedLesson.addInitScript(() => {
     if (globalThis.parent === globalThis) return;
@@ -214,6 +218,7 @@ try {
   await failedLesson.goto(`${origin}#lesson/projectile-step`);
   await failedLesson.getByText('無法啟動 3D 模擬').waitFor({ timeout: 30000 });
   assert.equal(await failedLesson.locator('iframe').count(), 0, 'lesson WebGL initialization failure shows fallback');
+  await failedLesson.close();
   const lostContext = await browser.newPage();
   await lostContext.goto(`${origin}#lesson/projectile-step`);
   const lostCanvas = lostContext.frameLocator('iframe').locator('#gl');
