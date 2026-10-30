@@ -16,7 +16,15 @@ try {
   assert.equal(await page.locator('.subject-tile img').count(), 4);
   const homeCanvas = page.locator('#home-simulation canvas');
   await homeCanvas.waitFor({ timeout: 30000 });
-  await page.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.ready === 'true');
+  await page.waitForFunction(() => {
+    const canvas = document.querySelector('#home-simulation canvas');
+    return canvas?.dataset.ready === 'true' && !canvas.dataset.detailLoading;
+  });
+  const textureDetails = await homeCanvas.evaluate(canvas => {
+    const gl = canvas.getContext('webgl2');
+    return { quality: canvas.dataset.texture, maxSize: gl?.getParameter(gl.MAX_TEXTURE_SIZE), coarse: canvas.ownerDocument.defaultView.matchMedia('(pointer: coarse)').matches };
+  });
+  if (!textureDetails.coarse && textureDetails.maxSize >= 5400) assert.equal(textureDetails.quality, 'detailed', 'capable desktop loads the detailed NASA texture');
   const rotationToggle = page.getByRole('button', { name: '自動旋轉' });
   assert.equal(await rotationToggle.getAttribute('aria-pressed'), 'false', 'reduced motion starts with rotation paused');
   await homeCanvas.evaluate(canvas => {
@@ -107,6 +115,22 @@ try {
     console.log(`PASS: ${slug} loads a translated 3D lesson`);
   }
   assert.deepEqual(errors, []);
+  const unavailableTexture = await browser.newPage({ viewport: { width: 1280, height: 850 } });
+  await unavailableTexture.route('**/derived/earth-blue-marble-nasa-5400.jpg', route => route.abort());
+  await unavailableTexture.goto(origin);
+  await unavailableTexture.waitForFunction(() => {
+    const canvas = document.querySelector('#home-simulation canvas');
+    return canvas?.dataset.ready === 'true' && !canvas.dataset.detailLoading;
+  });
+  assert.equal(await unavailableTexture.locator('#home-simulation canvas').getAttribute('data-texture'), 'standard', 'standard globe remains available when the detailed texture fails');
+  await unavailableTexture.close();
+  const sharpMobile = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+  await sharpMobile.goto(origin);
+  await sharpMobile.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.ready === 'true');
+  const resolution = await sharpMobile.locator('#home-simulation canvas').evaluate(canvas => ({ width: canvas.width, height: canvas.height, cssWidth: canvas.clientWidth }));
+  assert.ok(resolution.width >= resolution.cssWidth * 2.4, 'high-density mobile globe uses a sharp drawing buffer');
+  assert.ok(resolution.width * resolution.height <= 1_202_000, 'globe drawing buffer stays within its memory budget');
+  await sharpMobile.close();
   const mobileGlobePage = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   await mobileGlobePage.emulateMedia({ reducedMotion: 'reduce' });
   await mobileGlobePage.goto(origin); assert.equal(await mobileGlobePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);

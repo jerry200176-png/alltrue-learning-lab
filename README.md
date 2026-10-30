@@ -43,4 +43,6 @@ CI 另以 Playwright 的 Linux WebKit 和手機視窗設定，依序檢查 54 �
 
 程式碼可透過還原合併 commit 回滾。設定 GitHub Pages 使用 GitHub Actions 後，`main` 的 CI 通過才會部署建置產物；切換完成前網站仍由 `preview-site` 分支發佈。參見維護流程確認實際使用的發布來源及回滾方式。不要刪除上游授權或第三方聲明而保留其素材。
 
+首頁高解析 NASA 地球貼圖來源與設備回退方式見 [docs/earth-texture.md](docs/earth-texture.md)。
+
 版本、發佈紀錄與維護流程見 [CHANGELOG.md](CHANGELOG.md)、[docs/releases.md](docs/releases.md) 和 [docs/operations.md](docs/operations.md)。
