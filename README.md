@@ -1,1 +1,37 @@
-# alltrue-learning-lab
+# 全真 Learning Lab
+
+以 [Tongjiang Lab](https://github.com/smithjohn78390/tongjiang-lab) 的 54 個 3D 單元為基礎的繁體中文教材網站。**目前為未完成的教學原型，不可視為已通過課堂或正式上線驗收。**
+
+## 執行與檢查
+
+需要 Node.js 22 或更新版本。
+
+```sh
+npm ci
+npm run dev
+npm run lint
+npm run typecheck
+npm run test
+npm run build
+```
+
+如本機有 Chromium，可先執行 `npm run build && npm run preview`，再以另一個終端執行 `node scripts/browser-check.mjs`；可用 `CHROMIUM_PATH` 指定 Chromium 路徑。此檢查使用模擬器及軟體 WebGL，不代表實體手機、平板驗收。
+
+## 狀態與限制
+
+- 已加入 54 個上游教材的目錄、封面和未修改原始 HTML。四個單元有完整教學內容草稿，其餘 50 個的專屬教案尚未完成。
+- 顯示文字以獨立轉換層套用 OpenCC 及台灣術語表。這是輔助轉換，並非逐句校對；尚未確認所有互動、畫布標籤、回饋與術語。原始教材程式未改動，但轉換層可能影響依賴顯示文字的互動，須逐單元檢查。
+- 四個教案草稿、全部模擬的科學與數學正確性及三道概念題的可操作性均待專業審查。實際裝置驗收 **PENDING**。逐項紀錄見 [docs/acceptance.md](docs/acceptance.md)。
+- 不支援 WebGL 2 時顯示替代說明。行動裝置上的上游控制器及效能仍待真實裝置測試。
+
+## 來源與授權
+
+上游基準：Tongjiang Lab commit `4d63ce0a72d987c850ec6d919e570bdb752c87a6`。`public/upstream/` 保存未修改的教材、封面、目錄和授權聲明；`docs/upstream-sha256.json` 記錄上游檔案雜湊並由單元測試核對。網站外殼、教材草稿及顯示文字轉換層是本專案新增內容；所提供的全真 Logo 保存在 `logo.jpg` 和 `public/logo.jpg`。
+
+上游教材、封面與目錄採 [CC BY-NC 4.0](public/upstream/LICENSE)，使用或改編時須署名 Tongjiang Lab、連結授權並說明修改，且僅限非商業用途。內嵌 three.js 使用 MIT 授權，見 [第三方聲明](public/upstream/THIRD_PARTY_NOTICES.md)。
+
+翻譯目錄由 `scripts/generate-catalog.mjs` 從上游目錄產生；重新產生會覆寫 `src/lessons.json` 的人工修改。`src/glossary.json` 為轉換術語表，`src/education.ts` 為教案草稿，`src/bridge.ts` 為單元頁的顯示層轉換。
+
+## 回滾
+
+未部署。本變更合併後若需回滾，還原合併 commit，或部署前切回合併前的 commit `71302b6bb04452c4e2cc942502a3e6cbdcd95292`。不要刪除上游授權或第三方聲明而保留其素材。
