@@ -56,6 +56,15 @@ observer.observe(document.documentElement, { subtree: true, childList: true, cha
 localizeNode(document.documentElement);
 nameControls(document.documentElement);
 
+// Some upstream lessons listen for arrow keys on window to change steps.
+// Let native range inputs handle their own keys instead of triggering navigation.
+document.addEventListener('keydown', event => {
+  if (event.target instanceof HTMLInputElement && event.target.type === 'range' &&
+      ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
+    event.stopPropagation();
+  }
+});
+
 // Three.js lessons draw some labels to 2D canvas textures; translate and measure the same text.
 const context = CanvasRenderingContext2D.prototype;
 const fillText = context.fillText;

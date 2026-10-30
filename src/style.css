@@ -5,4 +5,20 @@
 .review-notice{background:#fff6df;border-radius:8px;padding:12px 15px;margin:20px 0 0;color:#806524!important;font-size:12px!important}
 .fullscreen-button{border:1px solid #667669;background:transparent;color:#edf3ec;border-radius:20px;font-size:11px;padding:6px 11px}.simulation-frame:fullscreen{background:#17201d}
 
-.preview-banner{background:#fff6df;color:#715819;border-bottom:1px solid #eadbb3;padding:12px 0;font-size:12px;line-height:1.7}.preview-banner strong{margin-right:8px;color:#624805}
+
+/* The homepage embeds the original, interactive Earth lesson. */
+.hero-demo{min-width:0;margin:48px 0;background:#fff;border:1px solid #dce5d8;border-radius:18px;overflow:hidden;box-shadow:0 20px 55px #2e4a3618}
+.demo-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 20px}
+.demo-heading div{display:flex;flex-direction:column;gap:5px}
+.demo-heading span{font-size:10px;letter-spacing:.12em;font-weight:800;color:#617d69}
+.demo-heading strong{font-size:17px;color:#263c31}
+.demo-heading a{flex-shrink:0;font-size:12px;font-weight:700;color:#456c4f}
+.hero-simulation{height:440px;background:#17201d;overflow:hidden}
+.hero-demo>p{margin:0;padding:13px 20px;font-size:12px;line-height:1.6;color:#52665a}
+.credits-link{align-self:center;font-size:13px;font-weight:600;color:#f0f5ec;text-decoration:underline;text-underline-offset:4px}
+.credits-page{max-width:800px;min-height:55vh;padding-top:55px;padding-bottom:90px}
+.credits-page h1{font-size:clamp(30px,4vw,44px);margin:35px 0 22px}
+.credits-page p{font-size:16px;line-height:1.9;color:#405049}
+.credits-page p a{color:#2e6247;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:900px){.hero-demo{margin:35px 0}.hero-simulation{height:400px}}
+@media(max-width:600px){.hero-demo{margin:32px 0 45px}.hero-simulation{height:380px}.demo-heading{padding:13px 15px}.demo-heading strong{font-size:15px}.hero-demo>p{padding:12px 15px}.credits-link{align-self:flex-start}}

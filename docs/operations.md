@@ -13,7 +13,7 @@
 
 - 在乾淨 checkout 執行 `npm ci`、`npm run lint`、`npm run typecheck`、`npm run test`、`npm run build`、`npm run check:release`，確認相同 commit 的 GitHub Actions 通過。
 - 依 README 啟動 production preview，執行瀏覽器與科學檢查。上游檔案須通過雜湊比對；更換上游版本時重新檢查授權及模型差異。
-- 檢查首頁提示、署名和授權連結、分類搜尋、四科代表單元、WebGL 失敗提示、手機與平板版面。實體裝置、螢幕閱讀器、科學與教學審查未完成時保留 PENDING，不得稱為 production verified。
+- 檢查教材審查提示、署名和授權連結、分類搜尋、四科代表單元、WebGL 失敗提示、手機與平板版面。實體裝置、螢幕閱讀器、科學與教學審查未完成時保留 PENDING，不得稱為 production verified。
 - 將實際建置與待發布的原始碼 SHA 比對；若來源、建置或權限無法核實，不要發布。公開分享仍限定已批准的非商業用途。
 
 ## 發佈後及回滾
@@ -23,7 +23,13 @@
 - 留下事故時間、影響、部署及回滾版本、症狀與修正 PR。釐清原因並通過原有檢查後才再次發布。
 - 目前沒有設定外部可用性監測或告警。日常維護應定期檢視站點可用性、依賴與上游授權變動；不要宣稱監控已啟用。需要自動監測時，另行建立具明確接收對象與告警規則的監測。
 
-## GitHub Pages 靜態試用站備援
+## GitHub Pages：以 main 發佈
+
+將儲存庫 Settings → Pages → Build and deployment 的 Source 設為 **GitHub Actions**。之後 `.github/workflows/ci.yml` 在 `main` 的 push 或手動執行時，先完成 lint、typecheck、單元測試、建置、版本檢查、瀏覽器及科學檢查；只有通過後才上傳同一次建置產物並部署。PR 或其他分支不會部署。切換設定之前，舊的 `preview-site` 發佈來源仍然有效；必須確認新的 Actions 部署成功，才能記為切換完成。
+
+每次部署後記錄 Pages workflow 與實際來源 SHA，檢查網站和 `version.json`；版本資訊只記錄建置的來源，不代表已完成教學驗收。若需回滾，在 `main` 以新的 revert commit 還原有問題的變更，等待完整 CI 與部署，核對來源 SHA 和功能；緊急時可在 Pages 設定停止發布。不要繞過 CI 或修改既有測試來強制發布。
+
+## 舊版靜態分支備援
 
 若使用 GitHub Pages 的「Deploy from a branch」，以專用發布分支的根目錄存放已驗證的 `dist` 內容及 `.nojekyll`，不要將建置產物混入原始碼分支。專用分支名稱、產物 commit、來源 SHA、CI 執行紀錄與實際網址都必須列入發布紀錄；`version.json` 應呈現乾淨且已通過檢查的來源 SHA。儲存庫擁有者需在 Settings → Pages 選擇發布分支與 `/ (root)`；分支推送本身不代表網站已啟用。完成設定後確認 Pages 建置結果並從公開網址驗證。
 
