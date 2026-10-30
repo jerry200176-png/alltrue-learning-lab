@@ -9,6 +9,13 @@ try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 850 } });
   const errors = []; page.on('pageerror', error => errors.push(error.message));
   await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 54);
+  assert.equal(await page.locator('.earth svg').count(), 1);
+  await page.getByRole('link', { name: '教材來源與授權' }).click();
+  await page.getByRole('heading', { name: '教材來源與授權' }).waitFor();
+  assert.equal(await page.getByRole('link', { name: '铜匠实验室（Tongjiang Lab）' }).getAttribute('href'), 'https://lab.tongjiang.app/');
+  assert.ok(await page.getByRole('link', { name: 'CC BY-NC 4.0' }).getAttribute('href'));
+  assert.equal(await page.getByRole('link', { name: '第三方授權聲明' }).count(), 1);
+  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 54);
   await page.locator('[data-filter=bio]').click(); assert.equal(await page.locator('.lesson-card').count(), 5);
   await page.getByRole('searchbox').fill('酵素'); assert.equal(await page.locator('.lesson-card').count(), 1);
   for (const slug of ['projectile-step', 'rate-step', 'enzyme-step', 'earth-motion-step']) {
