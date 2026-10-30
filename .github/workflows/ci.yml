@@ -1,0 +1,34 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run build
+      - run: npm run check:release
+      - name: Browser and science checks
+        env:
+          CHROMIUM_PATH: /usr/bin/google-chrome
+          LAB_URL: http://127.0.0.1:4173/
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/alltrue-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail "$LAB_URL" > /dev/null; then break; fi
+            sleep 1
+          done
+          curl --silent --fail "$LAB_URL" > /dev/null
+          node scripts/browser-check.mjs
+          node scripts/science-check.mjs

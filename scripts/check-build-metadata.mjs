@@ -1,0 +1,11 @@
+import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import assert from 'node:assert/strict';
+const metadata = JSON.parse(readFileSync('dist/version.json', 'utf8'));
+const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
+assert.equal(metadata.version, packageJson.version);
+assert.equal(metadata.upstream, '4d63ce0a72d987c850ec6d919e570bdb752c87a6');
+const actual = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+assert.equal(metadata.revision, actual);
+if (process.env.CI) assert.equal(metadata.dirty, false, 'CI must build a clean checkout');
+console.log(`PASS: ${metadata.version}; revision ${metadata.revision}; dirty ${metadata.dirty}`);

@@ -1,0 +1,1049 @@
+[
+  {
+    "slug": "haber-step",
+    "subject": "chem",
+    "title": "合成氨工業",
+    "type": "工業流程",
+    "question": "如何兼顧產量、速率與能源消耗，把氮氣和氫氣轉化成氨？",
+    "steps": [
+      "為什麼建廠",
+      "為什麼淨化",
+      "為什麼加壓",
+      "為什麼高溫",
+      "塔內什麼樣",
+      "為什麼要循環",
+      "考核 · 當班長"
+    ],
+    "file": "courses/haber-step.html",
+    "cover": "covers/haber-step.webp"
+  },
+  {
+    "slug": "river-step",
+    "subject": "geo",
+    "title": "河流地貌的發育",
+    "type": "原理與現象",
+    "question": "河流如何透過侵蝕、搬運與堆積，逐漸改變河岸和地形？",
+    "steps": [
+      "認識沙盤",
+      "山區V形谷",
+      "河谷剖面",
+      "沖積扇",
+      "凹岸凸岸",
+      "河漫灘",
+      "三角洲",
+      "考核：汛期來了"
+    ],
+    "file": "courses/river-step.html",
+    "cover": "covers/river-step.webp"
+  },
+  {
+    "slug": "rate-step",
+    "subject": "chem",
+    "title": "化學反應速率的影響因素",
+    "type": "原理與現象",
+    "question": "為什麼有些反應很快，有些卻很慢？哪些條件會影響反應速率？",
+    "steps": [
+      "認識實驗台",
+      "濃度",
+      "溫度",
+      "催化劑",
+      "定量測速率",
+      "看進去",
+      "誤差與錯誤操作",
+      "考核 · 當實驗員"
+    ],
+    "file": "courses/rate-step.html",
+    "cover": "covers/rate-step.webp"
+  },
+  {
+    "slug": "insolation-step",
+    "subject": "geo",
+    "title": "太陽直射點的迴歸運動與四季、五帶",
+    "type": "原理與現象",
+    "question": "學校所在地的正午太陽高度和正午太陽方向，一年裡為什麼有規律地變化？",
+    "steps": [
+      "黃赤交角",
+      "迴歸運動",
+      "正午高度",
+      "緯度分布",
+      "年內變化",
+      "正午方向",
+      "四季",
+      "五帶",
+      "考核 · 點帶"
+    ],
+    "file": "courses/insolation-step.html",
+    "cover": "covers/insolation-step.webp"
+  },
+  {
+    "slug": "ball-stick-step",
+    "subject": "chem",
+    "title": "搭建球棍模型認識有機化合物分子結構",
+    "type": "原理與現象模擬",
+    "question": "如何利用球棍模型理解有機分子的鍵結與立體形狀？",
+    "steps": [
+      "零件盒",
+      "甲烷",
+      "二氯甲烷",
+      "單鍵能轉",
+      "碳鏈",
+      "同分異構",
+      "乙烯與乙炔",
+      "苯",
+      "考核"
+    ],
+    "file": "courses/ball-stick-step.html",
+    "cover": "covers/ball-stick-step.webp"
+  },
+  {
+    "slug": "titration-step",
+    "subject": "chem",
+    "title": "強酸與強鹼的中和滴定",
+    "type": "原理與現象",
+    "question": "滴定接近終點時，為什麼只加入少量滴定液就可能使指示劑變色？",
+    "steps": [
+      "認識滴定裝置",
+      "潤洗與趕氣泡",
+      "取液與加指示劑",
+      "逐滴加入",
+      "半滴到終點",
+      "讀數與計算",
+      "看進去",
+      "誤差與錯誤操作",
+      "考核 · 當滴定員"
+    ],
+    "file": "courses/titration-step.html",
+    "cover": "covers/titration-step.webp"
+  },
+  {
+    "slug": "chlorine-step",
+    "subject": "chem",
+    "title": "氯氣的製備及性質",
+    "type": "原理與現象",
+    "question": "製備、收集及處理氯氣時，裝置中的各部分有什麼作用？",
+    "steps": [
+      "認識裝置",
+      "為什麼加熱",
+      "為什麼要濃鹽酸",
+      "第一瓶洗什麼",
+      "第二瓶洗什麼",
+      "怎麼收集",
+      "多餘的氯氣去哪",
+      "氯水裡有什麼",
+      "考核 · 當實驗員"
+    ],
+    "file": "courses/chlorine-step.html",
+    "cover": "covers/chlorine-step.webp"
+  },
+  {
+    "slug": "blast-furnace-step",
+    "subject": "chem",
+    "title": "高爐煉鐵",
+    "type": "工業流程",
+    "question": "高爐如何將鐵礦石還原成生鐵？焦炭與石灰石各有什麼作用？",
+    "steps": [
+      "礦石變鐵",
+      "分層裝料",
+      "剖開看層",
+      "風口燒焦",
+      "逐級還原",
+      "石灰石造渣",
+      "風溫與能耗",
+      "值班考核"
+    ],
+    "file": "courses/blast-furnace-step.html",
+    "cover": "covers/blast-furnace-step.webp"
+  },
+  {
+    "slug": "smelting-step",
+    "subject": "chem",
+    "title": "金屬冶煉：電解熔融鹽 + 鋁熱",
+    "type": "工業流程",
+    "question": "熔融鹽電解與鋁熱反應如何分別用來製取金屬？",
+    "steps": [
+      "三處工作台",
+      "只能電解",
+      "剖開槽",
+      "誰往哪走",
+      "摻冰晶石",
+      "電力消耗",
+      "鋁熱",
+      "值班考核"
+    ],
+    "file": "courses/smelting-step.html",
+    "cover": "covers/smelting-step.webp"
+  },
+  {
+    "slug": "currents-step",
+    "subject": "geo",
+    "title": "世界洋流的分布規律與影響",
+    "type": "原理與現象",
+    "question": "散落海面的漂流物為什麼可能隨洋流到達遙遠的海岸？",
+    "steps": [
+      "風推水走",
+      "中低緯成圈",
+      "中高緯反著轉",
+      "寒暖流",
+      "不繞圈會倒轉",
+      "海水性質",
+      "氣候影響",
+      "漁場",
+      "考核 · 四站"
+    ],
+    "file": "courses/currents-step.html",
+    "cover": "covers/currents-step.webp"
+  },
+  {
+    "slug": "enso-step",
+    "subject": "geo",
+    "title": "海—氣相互作用與聖嬰、反聖嬰",
+    "type": "原理與現象",
+    "question": "熱帶太平洋海溫與信風變化，如何影響聖嬰、反聖嬰及各地氣候？",
+    "steps": [
+      "交換",
+      "差",
+      "環流",
+      "聖嬰",
+      "越線",
+      "反聖嬰",
+      "考核"
+    ],
+    "file": "courses/enso-step.html",
+    "cover": "covers/enso-step.webp"
+  },
+  {
+    "slug": "coal-gas-step",
+    "subject": "chem",
+    "title": "煤的綜合利用：以煤的氣化為主線",
+    "type": "工業流程",
+    "question": "如何將煤轉化成含一氧化碳與氫氣的合成氣？",
+    "steps": [
+      "為什麼氣化",
+      "供熱還是供氣",
+      "爐子里長什麼樣",
+      "蒸氣多好還是少好",
+      "變換調比例",
+      "為什麼要脫硫",
+      "變成什麼",
+      "考核"
+    ],
+    "file": "courses/coal-gas-step.html",
+    "cover": "covers/coal-gas-step.webp"
+  },
+  {
+    "slug": "sulfuric-step",
+    "subject": "chem",
+    "title": "接觸法製硫酸",
+    "type": "工業流程",
+    "question": "工業製硫酸時，如何兼顧產率、反應速率與污染控制？",
+    "steps": [
+      "為什麼分五段",
+      "為什麼先淨化",
+      "為什麼這個溫度",
+      "為什麼要常壓",
+      "塔內什麼樣",
+      "為什麼用濃硫酸",
+      "考核 · 當班長"
+    ],
+    "file": "courses/sulfuric-step.html",
+    "cover": "covers/sulfuric-step.webp"
+  },
+  {
+    "slug": "hydrolysis-step",
+    "subject": "chem",
+    "title": "鹽類的水解及其應用",
+    "type": "原理與現象",
+    "question": "為什麼某些鹽溶於水後，溶液會呈酸性或鹼性？",
+    "steps": [
+      "認識實驗",
+      "鹽的類型",
+      "看進去",
+      "濃度",
+      "溫度",
+      "加酸抑制",
+      "淨水",
+      "煮沸與蒸乾",
+      "考核 · 配溶液"
+    ],
+    "file": "courses/hydrolysis-step.html",
+    "cover": "covers/hydrolysis-step.webp"
+  },
+  {
+    "slug": "heating-step",
+    "subject": "geo",
+    "title": "大氣受熱過程",
+    "type": "原理與現象",
+    "question": "太陽、地表與大氣如何交換輻射能量，影響地表溫度？",
+    "steps": [
+      "削弱",
+      "地面吸收",
+      "長波",
+      "截留",
+      "逆輻射",
+      "雲",
+      "溫室氣體",
+      "月球對照",
+      "考核"
+    ],
+    "file": "courses/heating-step.html",
+    "cover": "covers/heating-step.webp"
+  },
+  {
+    "slug": "karst-step",
+    "subject": "geo",
+    "title": "喀斯特地貌的形成與識別",
+    "type": "原理與現象",
+    "question": "水與可溶性岩石長期作用，如何形成喀斯特地形與洞穴？",
+    "steps": [
+      "溶",
+      "溝→窪",
+      "峰叢→峰林",
+      "孤峰→殘丘",
+      "快慢",
+      "洞",
+      "考核"
+    ],
+    "file": "courses/karst-step.html",
+    "cover": "covers/karst-step.webp"
+  },
+  {
+    "slug": "cement-step",
+    "subject": "chem",
+    "title": "工業製水泥",
+    "type": "工業流程",
+    "question": "水泥生產如何將石灰石等原料轉變為水泥熟料？",
+    "steps": [
+      "看全廠",
+      "備生料",
+      "預熱分解",
+      "窯裡走",
+      "燒成帶",
+      "急冷",
+      "加石膏",
+      "值班考核"
+    ],
+    "file": "courses/cement-step.html",
+    "cover": "covers/cement-step.webp"
+  },
+  {
+    "slug": "carbon-step",
+    "subject": "geo",
+    "title": "全球氣候變化與國家安全",
+    "type": "原理與現象",
+    "question": "人為排放如何改變碳循環，並影響氣候與社會？",
+    "steps": [
+      "碳循環",
+      "兩條輸入",
+      "排放去向",
+      "保溫增強",
+      "越線",
+      "國家",
+      "應對",
+      "考核"
+    ],
+    "file": "courses/carbon-step.html",
+    "cover": "covers/carbon-step.webp"
+  },
+  {
+    "slug": "tectonic-step",
+    "subject": "geo",
+    "title": "構造地貌的形成",
+    "type": "原理與現象",
+    "question": "構造作用與侵蝕如何改變岩層及地表地形？",
+    "steps": [
+      "彎",
+      "分",
+      "倒置",
+      "錯開",
+      "升降",
+      "考核"
+    ],
+    "file": "courses/tectonic-step.html",
+    "cover": "covers/tectonic-step.webp"
+  },
+  {
+    "slug": "photoelectric-step",
+    "subject": "phys",
+    "title": "光電效應",
+    "type": "原理與實驗",
+    "question": "光的頻率與強度，以及金屬種類，如何影響光電子與光電流？",
+    "steps": [
+      "認識電路",
+      "加到飽和",
+      "反向掃描",
+      "改光強",
+      "換頻率",
+      "換金屬",
+      "作圖測 h",
+      "真實器材",
+      "考核"
+    ],
+    "file": "courses/photoelectric-step.html",
+    "cover": "covers/photoelectric-step.webp"
+  },
+  {
+    "slug": "capacitor-step",
+    "subject": "phys",
+    "title": "觀察電容器的充放電",
+    "type": "原理與實驗",
+    "question": "電容器如何儲存電荷？充放電時電壓與電流如何改變？",
+    "steps": [
+      "認識器材",
+      "合向 1 充電",
+      "合向 2 放電",
+      "面積得電荷",
+      "兩種接法",
+      "記錄 q-u",
+      "換 C 換 R",
+      "真實器材",
+      "考核"
+    ],
+    "file": "courses/capacitor-step.html",
+    "cover": "covers/capacitor-step.webp"
+  },
+  {
+    "slug": "earth-motion-step",
+    "subject": "geo",
+    "title": "地球運動的地理意義",
+    "type": "原理與現象",
+    "question": "地球自轉、公轉與地軸傾斜，如何影響晝夜、時間及季節？",
+    "steps": [
+      "自轉",
+      "公轉",
+      "晝夜半球",
+      "晨線昏線",
+      "地方時",
+      "時區日界線",
+      "晝夜長短",
+      "正午太陽高度",
+      "考核 · 時差"
+    ],
+    "file": "courses/earth-motion-step.html",
+    "cover": "covers/earth-motion-step.webp"
+  },
+  {
+    "slug": "accel-force-step",
+    "subject": "phys",
+    "title": "實驗：探究加速度與力、質量的關係",
+    "type": "原理與現象",
+    "question": "如何利用紙帶資料，探究加速度與合力、質量的關係？",
+    "steps": [
+      "認識器材",
+      "平衡阻力",
+      "打紙帶",
+      "求加速度",
+      "a 與 F",
+      "a 與 m",
+      "誤差",
+      "考核"
+    ],
+    "file": "courses/accel-force-step.html",
+    "cover": "covers/accel-force-step.webp"
+  },
+  {
+    "slug": "iron-step",
+    "subject": "chem",
+    "title": "鐵及其化合物：鐵的價態轉化",
+    "type": "原理與現象",
+    "question": "鐵的 +2 與 +3 氧化態如何轉化？可以如何檢驗？",
+    "steps": [
+      "認識實驗",
+      "白色沉澱",
+      "隔絕空氣",
+      "KSCN 檢驗",
+      "價態降下來",
+      "價態升回去",
+      "看進去",
+      "檢鐵站",
+      "考核 · 壓到 +2 價"
+    ],
+    "file": "courses/iron-step.html",
+    "cover": "covers/iron-step.webp"
+  },
+  {
+    "slug": "plasmolysis-step",
+    "subject": "bio",
+    "title": "植物細胞的吸水和失水",
+    "type": "原理與現象",
+    "question": "外界溶液濃度改變時，植物細胞如何吸水或失水？",
+    "steps": [
+      "滲透",
+      "原生質層",
+      "失水",
+      "水去哪",
+      "復原",
+      "甘油",
+      "測濃度",
+      "考核"
+    ],
+    "file": "courses/plasmolysis-step.html",
+    "cover": "covers/plasmolysis-step.webp"
+  },
+  {
+    "slug": "electrolysis-step",
+    "subject": "chem",
+    "title": "電解原理：電解氯化銅溶液與飽和食鹽水",
+    "type": "原理與現象",
+    "question": "同一個直流電源，為什麼電解氯化銅溶液得到銅和氯氣，電解飽和食鹽水卻得到氫氣、氯氣和氫氧化鈉？",
+    "steps": [
+      "認識實驗",
+      "接通電源",
+      "通得更久",
+      "看進去",
+      "換食鹽水",
+      "陰極區變紅",
+      "放電順序",
+      "銅作陽極",
+      "考核 · 出 29.6 mg 銅"
+    ],
+    "file": "courses/electrolysis-step.html",
+    "cover": "covers/electrolysis-step.webp"
+  },
+  {
+    "slug": "ammonia-step",
+    "subject": "chem",
+    "title": "氨的製備與性質（含噴泉實驗）",
+    "type": "原理與現象",
+    "question": "氨氣溶於水的性質，如何造成噴泉現象？",
+    "steps": [
+      "整套裝置",
+      "管口朝哪邊",
+      "乾燥劑選誰",
+      "怎麼收集",
+      "收多久",
+      "驗滿與白煙",
+      "做噴泉",
+      "看進去",
+      "考核 · 做噴泉"
+    ],
+    "file": "courses/ammonia-step.html",
+    "cover": "covers/ammonia-step.webp"
+  },
+  {
+    "slug": "equilibrium-step",
+    "subject": "chem",
+    "title": "探究影響化學平衡移動的因素",
+    "type": "原理與實驗",
+    "question": "改變濃度或溫度時，如何判斷化學平衡的移動方向？",
+    "steps": [
+      "認識實驗台",
+      "鐵管加料",
+      "鐵粉減料",
+      "鉻管加鹼",
+      "鉻管加酸",
+      "冷熱兩盆",
+      "看進去",
+      "誤差 · 讀數",
+      "考核"
+    ],
+    "file": "courses/equilibrium-step.html",
+    "cover": "covers/equilibrium-step.webp"
+  },
+  {
+    "slug": "flame-step",
+    "subject": "chem",
+    "title": "焰色試驗與原子光譜",
+    "type": "原理與現象",
+    "question": "不同金屬元素為什麼呈現不同焰色？光譜如何提供辨識線索？",
+    "steps": [
+      "認識實驗",
+      "洗淨鉑絲",
+      "鈉雙線",
+      "鉀與鈷玻璃",
+      "能量與波長",
+      "發射與吸收",
+      "六種金屬",
+      "考核 · 驗出鉀"
+    ],
+    "file": "courses/flame-step.html",
+    "cover": "covers/flame-step.webp"
+  },
+  {
+    "slug": "galvanic-step",
+    "subject": "chem",
+    "title": "原電池：單液到雙液",
+    "type": "原理與現象",
+    "question": "單液與雙液原電池有什麼差異？鹽橋為什麼重要？",
+    "steps": [
+      "兩臺裝置",
+      "接通導線",
+      "誰在流",
+      "單液的代價",
+      "換成雙液",
+      "拔出鹽橋",
+      "看進去",
+      "濃度",
+      "考核 · 組裝"
+    ],
+    "file": "courses/galvanic-step.html",
+    "cover": "covers/galvanic-step.webp"
+  },
+  {
+    "slug": "conductivity-step",
+    "subject": "chem",
+    "title": "電解質的電離與溶液導電性、離子反應的實質",
+    "type": "原理與現象",
+    "question": "物質溶於水或熔融後，為什麼有些能導電、有些不能？",
+    "steps": [
+      "認識檯面",
+      "乾燥與熔融",
+      "溶於水",
+      "水與蔗糖",
+      "強與弱",
+      "滴加稀硫酸",
+      "看進去",
+      "換錯滴定劑",
+      "考核 · 找終點"
+    ],
+    "file": "courses/conductivity-step.html",
+    "cover": "covers/conductivity-step.webp"
+  },
+  {
+    "slug": "energy-step",
+    "subject": "phys",
+    "title": "實驗：驗證機械能守恆定律",
+    "type": "原理與現象",
+    "question": "重物下落時，減少的重力位能和增加的動能有什麼關係？",
+    "steps": [
+      "認識器材",
+      "先通電後釋放",
+      "選點",
+      "量 h 算 v",
+      "記錄作圖",
+      "換重物",
+      "誤差",
+      "考核"
+    ],
+    "file": "courses/energy-step.html",
+    "cover": "covers/energy-step.webp"
+  },
+  {
+    "slug": "soil-step",
+    "subject": "geo",
+    "title": "土壤的主要形成因素與土壤剖面觀察",
+    "type": "原理與現象",
+    "question": "母質、氣候、生物、地形與時間如何共同影響土壤？",
+    "steps": [
+      "剖面",
+      "母質",
+      "生物",
+      "氣候",
+      "地貌",
+      "時間",
+      "人",
+      "考核"
+    ],
+    "file": "courses/soil-step.html",
+    "cover": "covers/soil-step.webp"
+  },
+  {
+    "slug": "projectile-step",
+    "subject": "phys",
+    "title": "實驗：探究水平拋射運動的特點",
+    "type": "原理與現象",
+    "question": "只靠一個斜槽和一塊擋板，能不能把水平拋射拆成兩個分運動、量出初速度？",
+    "steps": [
+      "認識器材",
+      "先做鉛直",
+      "末端要水平",
+      "描四個點",
+      "定時間間隔",
+      "水平是勻速",
+      "換一條刻線",
+      "兩種偏大",
+      "考核"
+    ],
+    "file": "courses/projectile-step.html",
+    "cover": "covers/projectile-step.webp"
+  },
+  {
+    "slug": "transport-step",
+    "subject": "bio",
+    "title": "物質跨膜運輸",
+    "type": "原理與現象",
+    "question": "不同物質如何跨越細胞膜？哪些運輸方式需要能量？",
+    "steps": [
+      "自由擴散",
+      "選擇透過",
+      "協助擴散",
+      "載體與通道",
+      "主動運輸",
+      "胞吞胞吐",
+      "彙總",
+      "考核"
+    ],
+    "file": "courses/transport-step.html",
+    "cover": "covers/transport-step.webp"
+  },
+  {
+    "slug": "nitric-lab-step",
+    "subject": "chem",
+    "title": "濃、稀硝酸的性質與氮氧化物的轉化",
+    "type": "原理與現象",
+    "question": "銅與不同濃度的硝酸反應時，為什麼可能產生不同氣體？",
+    "steps": [
+      "整套裝置",
+      "銅絲插進去",
+      "換成稀硝酸",
+      "換成鐵片",
+      "尾氣去哪了",
+      "棕色瓶的道理",
+      "通入空氣",
+      "振盪與看進去",
+      "考核 · 轉化掉它"
+    ],
+    "file": "courses/nitric-lab-step.html",
+    "cover": "covers/nitric-lab-step.webp"
+  },
+  {
+    "slug": "centripetal-step",
+    "subject": "phys",
+    "title": "探究向心力大小與半徑、角速度、質量的關係",
+    "type": "原理與現象",
+    "question": "如何利用演示器探究向心力與質量、半徑及角速度的關係？",
+    "steps": [
+      "認識演示器",
+      "儀器自檢",
+      "質量關係",
+      "半徑關係",
+      "角速度關係",
+      "三條合成一條式子",
+      "誤差與錯誤操作",
+      "考核 · ω 是平方"
+    ],
+    "file": "courses/centripetal-step.html",
+    "cover": "covers/centripetal-step.webp"
+  },
+  {
+    "slug": "self-induction-step",
+    "subject": "phys",
+    "title": "自感與渦流",
+    "type": "原理與實驗",
+    "question": "電流改變時，線圈為什麼會產生自感？渦電流如何影響運動？",
+    "steps": [
+      "認識器材",
+      "通電自感",
+      "斷電自感",
+      "I-t 曲線",
+      "換線圈",
+      "真實器材",
+      "渦流",
+      "電磁阻尼",
+      "考核"
+    ],
+    "file": "courses/self-induction-step.html",
+    "cover": "covers/self-induction-step.webp"
+  },
+  {
+    "slug": "emf-step",
+    "subject": "phys",
+    "title": "測電源電動勢和內阻",
+    "type": "原理與實驗",
+    "question": "如何利用電壓與電流資料測量電源的電動勢及內阻？",
+    "steps": [
+      "認識接法",
+      "先到最大",
+      "多測幾組",
+      "作 U-I 圖",
+      "縱軸起點",
+      "只測兩組",
+      "換接法",
+      "誤差分析",
+      "考核"
+    ],
+    "file": "courses/emf-step.html",
+    "cover": "covers/emf-step.webp"
+  },
+  {
+    "slug": "impulse-step",
+    "subject": "bio",
+    "title": "神經衝動的產生和傳導",
+    "type": "原理與現象",
+    "question": "神經衝動如何產生、沿神經元傳導並跨越突觸？",
+    "steps": [
+      "神經衝動",
+      "靜止電位",
+      "動作電位",
+      "局部電流",
+      "突觸",
+      "單向與延擱",
+      "可卡因",
+      "膜外 Na⁺",
+      "考核"
+    ],
+    "file": "courses/impulse-step.html",
+    "cover": "covers/impulse-step.webp"
+  },
+  {
+    "slug": "bromine-step",
+    "subject": "chem",
+    "title": "海水提溴：空氣吹出法",
+    "type": "工業流程",
+    "question": "如何從濃度較低的海水中富集並提取溴？",
+    "steps": [
+      "全場",
+      "酸化",
+      "氧化",
+      "吹出",
+      "吸收",
+      "提純",
+      "考核"
+    ],
+    "file": "courses/bromine-step.html",
+    "cover": "covers/bromine-step.webp"
+  },
+  {
+    "slug": "thermal-step",
+    "subject": "geo",
+    "title": "大氣熱力環流",
+    "type": "原理與現象",
+    "question": "地表受熱不均如何形成熱力環流，以及海風與陸風？",
+    "steps": [
+      "溫差",
+      "高空",
+      "近地面",
+      "成環",
+      "強弱",
+      "海風",
+      "陸風",
+      "熱島",
+      "考核"
+    ],
+    "file": "courses/thermal-step.html",
+    "cover": "covers/thermal-step.webp"
+  },
+  {
+    "slug": "mitosis-step",
+    "subject": "bio",
+    "title": "觀察根尖分生區組織細胞的有絲分裂",
+    "type": "原理與現象",
+    "question": "如何辨認根尖細胞的有絲分裂時期，並估計各時期的相對長短？",
+    "steps": [
+      "製片",
+      "找分生區",
+      "前期",
+      "中期",
+      "後期",
+      "末期",
+      "計數",
+      "算時長",
+      "考核"
+    ],
+    "file": "courses/mitosis-step.html",
+    "cover": "covers/mitosis-step.webp"
+  },
+  {
+    "slug": "sodium-step",
+    "subject": "chem",
+    "title": "金屬鈉的性質（含鈉著火撲救）",
+    "type": "原理與現象",
+    "question": "金屬鈉為什麼需要隔絕空氣保存？與水接觸或燃燒時有什麼風險？",
+    "steps": [
+      "認識實驗",
+      "銀白變暗",
+      "泡在煤油裡",
+      "加熱燃燒",
+      "浮熔遊響紅",
+      "鈉塊大小",
+      "看進去",
+      "著火撲救",
+      "考核"
+    ],
+    "file": "courses/sodium-step.html",
+    "cover": "covers/sodium-step.webp"
+  },
+  {
+    "slug": "sulfur-step",
+    "subject": "chem",
+    "title": "硫、二氧化硫、濃硫酸的性質與不同價態含硫物質的轉化",
+    "type": "原理與現象",
+    "question": "硫及其化合物有哪些不同的氧化態，如何在反應中轉化？",
+    "steps": [
+      "整套裝置",
+      "硫粉 + 鐵粉",
+      "濃硫酸與銅",
+      "濃還是稀",
+      "加熱復原",
+      "三支檢驗管與棉團",
+      "歸中到零價",
+      "看進去 · 價態電梯",
+      "考核 · 漂白到底"
+    ],
+    "file": "courses/sulfur-step.html",
+    "cover": "covers/sulfur-step.webp"
+  },
+  {
+    "slug": "wind-step",
+    "subject": "geo",
+    "title": "大氣的水平運動——風",
+    "type": "原理與現象",
+    "question": "氣壓梯度、地球自轉與摩擦力如何共同影響風向？",
+    "steps": [
+      "等壓線",
+      "梯度力",
+      "地轉偏向",
+      "高空風",
+      "近地面",
+      "南半球",
+      "疏密",
+      "考核"
+    ],
+    "file": "courses/wind-step.html",
+    "cover": "covers/wind-step.webp"
+  },
+  {
+    "slug": "corrosion-step",
+    "subject": "chem",
+    "title": "吸氧腐蝕與暖貼的設計",
+    "type": "原理與現象",
+    "question": "鐵的腐蝕與氧化放熱需要什麼條件？如何減緩腐蝕？",
+    "steps": [
+      "檯面四站",
+      "液柱為什麼升",
+      "碳粉的角色",
+      "換成酸性",
+      "看進去",
+      "暖貼發熱",
+      "捂住的代價",
+      "讓鋅替它鏽",
+      "考核 · 設計暖貼"
+    ],
+    "file": "courses/corrosion-step.html",
+    "cover": "covers/corrosion-step.webp"
+  },
+  {
+    "slug": "enzyme-step",
+    "subject": "bio",
+    "title": "影響酵素活性的條件",
+    "type": "原理與現象",
+    "question": "溫度與酸鹼度如何影響酵素活性？降低與變性的差別是什麼？",
+    "steps": [
+      "認識實驗台",
+      "溫度",
+      "pH",
+      "高溫不可逆",
+      "低溫可恢復",
+      "看進去",
+      "過酸過鹼",
+      "考核 · 當實驗員"
+    ],
+    "file": "courses/enzyme-step.html",
+    "cover": "covers/enzyme-step.webp"
+  },
+  {
+    "slug": "chlor-alkali-step",
+    "subject": "chem",
+    "title": "氯鹼工業",
+    "type": "工業流程",
+    "question": "電解食鹽水如何產生氯氣、氫氣與氫氧化鈉？",
+    "steps": [
+      "三樣產品",
+      "先洗鹽",
+      "剖開槽",
+      "膜裡看",
+      "多加電",
+      "調槽溫",
+      "拆掉膜",
+      "值班考核"
+    ],
+    "file": "courses/chlor-alkali-step.html",
+    "cover": "covers/chlor-alkali-step.webp"
+  },
+  {
+    "slug": "hou-soda-step",
+    "subject": "chem",
+    "title": "侯氏製鹼",
+    "type": "工業流程",
+    "question": "侯氏製鹼法如何製造碳酸鈉並回收利用物質？",
+    "steps": [
+      "從鹽到鹼",
+      "先氨後碳",
+      "為什麼它自己析出",
+      "碳化溫度",
+      "過濾分兩路",
+      "煅燒成鹼",
+      "母液與循環",
+      "你來當班長"
+    ],
+    "file": "courses/hou-soda-step.html",
+    "cover": "covers/hou-soda-step.webp"
+  },
+  {
+    "slug": "current-field-step",
+    "subject": "phys",
+    "title": "電流的磁場",
+    "type": "原理與現象",
+    "question": "如何觀察通電導線及線圈的磁場，並判斷磁場方向？",
+    "steps": [
+      "鐵屑顯形",
+      "一圈圈同心圓",
+      "握導線定方向",
+      "疏密就是強弱",
+      "穿環繞回",
+      "多匝疊加",
+      "軸向衰減",
+      "內部勻強",
+      "考核 · 找管口"
+    ],
+    "file": "courses/current-field-step.html",
+    "cover": "covers/current-field-step.webp"
+  },
+  {
+    "slug": "brownian-step",
+    "subject": "phys",
+    "title": "布朗運動與擴散",
+    "type": "原理與現象",
+    "question": "懸浮微粒的不規則運動與分子的熱運動有什麼關係？",
+    "steps": [
+      "看見它在動",
+      "30 秒一個點",
+      "越久越遠",
+      "微粒越小越明顯",
+      "溫度越高越劇烈",
+      "撞出來的",
+      "單次不等於統計",
+      "擴散：濃度展開",
+      "考核 · 動得更明顯"
+    ],
+    "file": "courses/brownian-step.html",
+    "cover": "covers/brownian-step.webp"
+  },
+  {
+    "slug": "water-cycle-step",
+    "subject": "geo",
+    "title": "水循環的過程與地理意義",
+    "type": "原理與現象",
+    "question": "水如何在海洋、陸地與大氣之間循環？",
+    "steps": [
+      "全景",
+      "蒸發",
+      "蒸騰",
+      "輸送",
+      "下滲",
+      "三類",
+      "砂田",
+      "意義",
+      "考核"
+    ],
+    "file": "courses/water-cycle-step.html",
+    "cover": "covers/water-cycle-step.webp"
+  },
+  {
+    "slug": "circulation-step",
+    "subject": "geo",
+    "title": "氣壓帶、風帶與三圈環流",
+    "type": "原理與現象",
+    "question": "全球的氣壓帶與盛行風帶如何形成，又如何影響航行與氣候？",
+    "steps": [
+      "赤道低壓",
+      "30° 下沉",
+      "60° 爬升",
+      "七帶六風",
+      "季節移動",
+      "海陸分布",
+      "考核 · 麥哲倫"
+    ],
+    "file": "courses/circulation-step.html",
+    "cover": "covers/circulation-step.webp"
+  }
+]
