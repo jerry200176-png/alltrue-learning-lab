@@ -37,4 +37,4 @@ npm run check:release
 
 未部署。本變更合併後若需回滾，還原合併 commit，或部署前切回合併前的 commit `71302b6bb04452c4e2cc942502a3e6cbdcd95292`。不要刪除上游授權或第三方聲明而保留其素材。
 
-版本與維護流程見 [CHANGELOG.md](CHANGELOG.md) 和 [docs/operations.md](docs/operations.md)。
+版本、發佈紀錄與維護流程見 [CHANGELOG.md](CHANGELOG.md)、[docs/releases.md](docs/releases.md) 和 [docs/operations.md](docs/operations.md)。
