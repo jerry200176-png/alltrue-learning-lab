@@ -83,20 +83,20 @@
 .globe-bar>div{gap:5px}
 .globe-bar button{width:32px;height:32px;font-size:15px}
 .earth-controls{background:#25372f;color:#f5f4e9;padding:23px 21px;display:flex;flex-direction:column;gap:19px}
-.lab-kicker{font-size:9px;letter-spacing:.15em;font-weight:800;color:#e4c56e;margin:0 0 10px}
+.lab-kicker{font-size:10px;letter-spacing:.15em;font-weight:800;color:#e4c56e;margin:0 0 10px}
 .earth-controls h2{font-size:21px;letter-spacing:-.03em;margin:0 0 5px}
-.lab-lead{font-size:11px;line-height:1.55;color:#c7d4c5;margin:0}
-.earth-slider label{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:12px;font-weight:700;color:#e2e9dd}
+.lab-lead{font-size:12px;line-height:1.55;color:#c7d4c5;margin:0}
+.earth-slider label{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:13px;font-weight:700;color:#e2e9dd}
 .earth-slider output{font-variant-numeric:tabular-nums;color:#f6d164;font-size:14px}
 .earth-slider input{display:block;width:100%;accent-color:#e3b52f;margin:13px 0 6px;cursor:pointer}
 .earth-slider input:focus-visible{outline:2px solid #f7d46d;outline-offset:4px}
-.range-ends{display:flex;justify-content:space-between;font-size:9px;color:#bdcbbb}
+.range-ends{display:flex;justify-content:space-between;font-size:10px;color:#bdcbbb}
 .sun-results{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .sun-results div{background:#ffffff0c;border:1px solid #ffffff1a;border-radius:10px;padding:10px 9px;min-width:0}
-.sun-results span{display:block;color:#b9c9b7;font-size:10px;margin-bottom:5px}
+.sun-results span{display:block;color:#b9c9b7;font-size:11px;margin-bottom:5px}
 .sun-results strong{font-size:20px;font-variant-numeric:tabular-nums;color:#fff8df;white-space:nowrap}
 #sun-state{font-size:15px}
-.lab-note{color:#c5d0c2;font-size:10px;line-height:1.6;margin:-5px 0 0}
+.lab-note{color:#c5d0c2;font-size:11px;line-height:1.6;margin:-5px 0 0}
 .lab-link{font-size:12px;font-weight:700;color:#f4d36f;margin-top:auto}
 .lab-link span{margin-left:8px}
 @media(max-width:1050px){.hero-inner{gap:20px}.hero-demo{grid-template-columns:minmax(0,1fr) minmax(200px,.8fr)}.earth-controls{padding:20px 16px}.globe-bar>span{font-size:10px}}
