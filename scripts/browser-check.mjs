@@ -92,6 +92,7 @@ try {
         const context = canvas.getContext('webgl2');
         const release = child.__alltrueReleaseGraphics;
         child.__alltrueReleaseGraphics = () => {
+          child.requestAnimationFrame(() => { child.parent.document.documentElement.dataset.lateLessonFrame = 'true'; });
           release();
           child.parent.document.documentElement.dataset.lessonContextReleased = String(context.isContextLost());
         };
@@ -99,6 +100,8 @@ try {
       await frame.locator('a.home').click();
       await page.locator('#catalog').waitFor();
       assert.equal(await page.locator('html').getAttribute('data-lesson-context-released'), 'true', 'lesson WebGL context is released on navigation');
+      await page.waitForTimeout(100);
+      assert.equal(await page.locator('html').getAttribute('data-late-lesson-frame'), null, 'pending lesson animation is cancelled on navigation');
       assert.equal(await page.locator('.lesson-card').count(), 54);
     }
     console.log(`PASS: ${slug} loads a translated 3D lesson`);
