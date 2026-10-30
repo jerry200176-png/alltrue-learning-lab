@@ -7,15 +7,29 @@ import { xiaobaiLessons, xiaobaiTeaching } from '../src/xiaobai';
 describe('小白教育教材', () => {
   it('adds the authorised mirror lesson without replacing the 54 upstream lessons', () => {
     expect(lessons).toHaveLength(54);
-    expect(xiaobaiLessons).toHaveLength(2);
-    expect(allLessons).toHaveLength(56);
-    expect(new Set(allLessons.map(lesson => lesson.slug)).size).toBe(56);
+    expect(xiaobaiLessons).toHaveLength(3);
+    expect(allLessons).toHaveLength(57);
+    expect(new Set(allLessons.map(lesson => lesson.slug)).size).toBe(57);
     expect(filterLessons('平面鏡', 'phys').map(lesson => lesson.slug)).toEqual(['xiaobai-mirror']);
     expect(filterLessons('等高線', 'geo').map(lesson => lesson.slug)).toEqual(['xiaobai-terrain']);
+    expect(filterLessons('元素辨認', 'chem').map(lesson => lesson.slug)).toEqual(['xiaobai-atom']);
+    const atom = xiaobaiTeaching['xiaobai-atom'];
+    expect(atom.operations).toHaveLength(3);
+    expect(atom.questions).toHaveLength(3);
+    expect(atom.questions.every(item => item.question && item.guidance)).toBe(true);
     const terrain = xiaobaiTeaching['xiaobai-terrain'];
     expect(terrain.operations).toHaveLength(3);
     expect(terrain.questions).toHaveLength(3);
     expect(terrain.questions.every(item => item.question && item.guidance)).toBe(true);
+    for (const lesson of xiaobaiLessons) {
+      const content = xiaobaiTeaching[lesson.slug];
+      expect(content.objectives.length).toBeGreaterThan(0);
+      expect(content.principle).toBeTruthy();
+      expect(content.operations.length).toBeGreaterThanOrEqual(3);
+      expect(content.questions.length).toBeGreaterThanOrEqual(3);
+      expect(content.misconceptions.length).toBeGreaterThan(0);
+      expect(content.teacherTips.length).toBeGreaterThan(0);
+    }
     const plan = xiaobaiTeaching['xiaobai-mirror'];
     expect(plan.objectives.length).toBeGreaterThan(0);
     expect(plan.principle).toBeTruthy();
@@ -24,6 +38,12 @@ describe('小白教育教材', () => {
     expect(plan.questions.every(item => item.question && item.guidance)).toBe(true);
     expect(plan.misconceptions.length).toBeGreaterThan(0);
     expect(plan.teacherTips.length).toBeGreaterThan(0);
+  });
+  it('pins the authorised atom lesson without a temporary delivery identifier', () => {
+    const html = readFileSync('public/xiaobai/atom.html');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('ad4aa0aae14b070b2b00adee447b3f783cb0144310506c0bb0a4d778f44d2929');
+    expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).toContain('three.js authors');
   });
   it('pins the authorised terrain lesson without a temporary delivery identifier', () => {
     const html = readFileSync('public/xiaobai/terrain.html');
