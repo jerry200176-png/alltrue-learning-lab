@@ -32,7 +32,8 @@ try {
     assert.equal(await frame.locator('#hValue').innerText(), '80');
     await frame.locator('#chapterSelect').selectOption('4');
     await frame.locator('#incidentAngle').fill('60');
-    assert.ok((await frame.locator('body').innerText()).includes('60°'));
+    await frame.getByText('i = 60°', { exact: true }).waitFor();
+    await frame.getByText('r = 60°', { exact: true }).waitFor();
     assert.equal(await page.locator('.lesson-content details').count(), 3);
     assert.deepEqual(errors, []);
     await context.close();
