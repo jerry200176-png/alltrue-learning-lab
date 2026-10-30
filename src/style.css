@@ -56,6 +56,8 @@
 .hero-simulation::before{content:'';position:absolute;z-index:0;left:8%;top:27%;width:84%;height:46%;border:1px solid rgba(198,148,35,.38);border-radius:50%;transform:rotate(-20deg);pointer-events:none;transition:border-color .2s,box-shadow .2s}
 .hero-simulation.is-dragging::before{border-color:rgba(198,148,35,.8);box-shadow:0 0 18px rgba(235,180,41,.18)}
 .hero-simulation canvas{position:relative;z-index:1}
+.hero-simulation .sim-message{color:#293b30}
+.hero-simulation .sim-message p{color:#536452}
 .hero-demo::before,.hero-demo::after{position:absolute;z-index:2;color:#c6972b;pointer-events:none}
 .hero-demo::before{content:'✦';top:13%;right:13%;font-size:15px}
 .hero-demo::after{content:'·';top:61%;left:12%;font-size:32px}
