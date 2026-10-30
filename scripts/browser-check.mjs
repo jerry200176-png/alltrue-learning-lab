@@ -14,6 +14,8 @@ try {
   const homeCanvas = page.locator('#home-simulation canvas');
   await homeCanvas.waitFor({ timeout: 30000 });
   await page.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.ready === 'true');
+  const rotationToggle = page.getByRole('button', { name: '自動旋轉' });
+  assert.equal(await rotationToggle.getAttribute('aria-pressed'), 'false', 'reduced motion starts with rotation paused');
   await homeCanvas.evaluate(canvas => {
     canvas.dataset.pointerCount = '0';
     canvas.addEventListener('pointermove', () => { canvas.dataset.pointerCount = String(Number(canvas.dataset.pointerCount) + 1); });
@@ -30,9 +32,17 @@ try {
   const afterButton = await homeCanvas.screenshot();
   assert.equal(initial.equals(afterButton), false, 'homepage Earth responds to the keyboard control');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.waitForFunction(() => document.querySelector('[data-earth-toggle]')?.getAttribute('aria-pressed') === 'true');
   await page.waitForTimeout(1500);
   const afterAnimation = await homeCanvas.screenshot();
   assert.equal(afterButton.equals(afterAnimation), false, 'homepage Earth animates');
+  await rotationToggle.click();
+  assert.equal(await rotationToggle.getAttribute('aria-pressed'), 'false', 'rotation can be paused');
+  const paused = await homeCanvas.screenshot();
+  await page.waitForTimeout(400);
+  assert.equal(paused.equals(await homeCanvas.screenshot()), true, 'paused globe stays still');
+  await rotationToggle.click();
+  assert.equal(await rotationToggle.getAttribute('aria-pressed'), 'true', 'rotation can resume');
   await page.getByRole('link', { name: '教材來源與授權' }).click();
   await page.getByRole('heading', { name: '教材來源與授權' }).waitFor();
   assert.equal(await page.getByRole('link', { name: '铜匠实验室（Tongjiang Lab）' }).getAttribute('href'), 'https://lab.tongjiang.app/');
