@@ -16,6 +16,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run test
       - run: npm run build
+      - run: npm run check:release
       - name: Browser and science checks
         env:
           CHROMIUM_PATH: /usr/bin/google-chrome

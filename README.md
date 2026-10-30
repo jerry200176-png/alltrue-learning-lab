@@ -13,6 +13,7 @@ npm run lint
 npm run typecheck
 npm run test
 npm run build
+npm run check:release
 ```
 
 如本機有 Chromium，可先執行 `npm run build && npm run preview`，再以另一個終端執行 `node scripts/browser-check.mjs`；若要逐一檢查 54 個單元的基本載入，可執行 `node scripts/all-lessons-check.mjs`；各單元控制項可用 `node scripts/control-check.mjs` 及 `node scripts/toggle-check.mjs` 檢查；代表性科學數值可另以 `node scripts/science-check.mjs` 檢查。可用 `CHROMIUM_PATH` 指定 Chromium 路徑。此檢查使用模擬器及軟體 WebGL，不代表實體手機、平板驗收。
@@ -35,3 +36,5 @@ npm run build
 ## 回滾
 
 未部署。本變更合併後若需回滾，還原合併 commit，或部署前切回合併前的 commit `71302b6bb04452c4e2cc942502a3e6cbdcd95292`。不要刪除上游授權或第三方聲明而保留其素材。
+
+版本與維護流程見 [CHANGELOG.md](CHANGELOG.md) 和 [docs/operations.md](docs/operations.md)。
