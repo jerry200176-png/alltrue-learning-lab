@@ -57,6 +57,7 @@ jobs:
         env:
           LAB_URL: http://127.0.0.1:4173/
           LIBGL_ALWAYS_SOFTWARE: '1'
+          # Keep the full mobile navigation check while using a virtual display.
           WEBKIT_HEADED: '1'
         run: |
           npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/alltrue-webkit-preview.log 2>&1 &
