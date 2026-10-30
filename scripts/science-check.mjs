@@ -26,4 +26,33 @@ try {
   const k = Number(await frame.locator('#right .sub[data-k=k] b').innerText());
   assert.ok(Math.abs(k - 9.8 / (2 * v * v)) < 0.001);
   console.log('PASS: projectile controls and x=v₀√(2y/g), equal-time horizontal intervals, y=kx²');
+  await page.goto(`${origin}#lesson/earth-motion-step`);
+  await page.locator('iframe').waitFor();
+  const earth = page.frames()[1];
+  await earth.locator('#right input[data-key=lat]').waitFor();
+  // Model date 172 is approximately the June solstice (declination +23.44°).
+  for (const latitude of [0, 23, 40, -20]) {
+    await earth.locator('#right input[data-key=lat]').fill(String(latitude));
+    const expected = 90 - Math.abs(latitude - 23.44);
+    await earth.waitForFunction(expectedValue => {
+      const value = Number.parseFloat(document.querySelector('#right .sub[data-k=noonAlt] b')?.textContent || '');
+      return Number.isFinite(value) && Math.abs(value - expectedValue) < 0.15;
+    }, expected, { timeout: 15000 });
+    const actual = Number.parseFloat(await earth.locator('#right .sub[data-k=noonAlt] b').innerText());
+    assert.ok(Math.abs(actual - expected) < 0.15, `latitude ${latitude}: noon=${actual}, expected=${expected}`);
+  }
+  console.log('PASS: latitude control and June-solstice noon altitude 90−|φ−δ|');
+  await page.goto(`${origin}#lesson/enzyme-step`);
+  await page.locator('iframe').waitFor();
+  const enzyme = page.frames()[1];
+  await enzyme.locator('#right input[data-key=T]').waitFor();
+  for (const [temperature, minimum, maximum] of [[37, 80, 101], [0, 0, 50], [37, 80, 101], [70, 0, 50]]) {
+    await enzyme.locator('#right input[data-key=T]').fill(String(temperature));
+    await enzyme.waitForFunction(({ min, max }) => {
+      const text = document.querySelector('#right .kpi .vv')?.textContent || '';
+      const value = Number.parseFloat(text);
+      return Number.isFinite(value) && value >= min && value < max;
+    }, { min: minimum, max: maximum }, { timeout: 20000 });
+  }
+  console.log('PASS: enzyme activity changes with temperature in the upstream model');
 } finally { await browser.close(); }
