@@ -24,12 +24,16 @@ jobs:
             const page=await browser.newPage();
             await page.goto('https://xbjiaoyu.com/#catalog',{waitUntil:'domcontentloaded',timeout:30000});
             await page.locator('main article h3').first().waitFor({timeout:45000});
-            for (const id of ['mirror','lens','terrain','chemistry-c07']) {
-              await page.goto('https://xbjiaoyu.com/#course/' + id, {waitUntil:'domcontentloaded'});
-              await page.waitForTimeout(3000);
-              console.log('COURSE', id, 'URL', page.url(), 'TEXT', (await page.locator('main').innerText()).slice(0,5000));
-              console.log('CONTROLS', JSON.stringify(await page.locator('main a,main button').evaluateAll(es=>es.map(e=>({tag:e.tagName,text:e.innerText,href:e.href,action:e.getAttribute('data-action')})))));
-            }
+            page.on('response', response=>{if(response.url().startsWith('https://xbjiaoyu.com/') && !/\.(?:png|jpg|jpeg|webp|svg|css|woff2?)(?:\?|$)/i.test(response.url())) console.log('RESPONSE',response.status(),response.url(),response.headers()['content-type']);});
+            await page.goto('https://xbjiaoyu.com/#course/mirror', {waitUntil:'domcontentloaded'});
+            await page.getByRole('button',{name:'免费在线使用 ↗'}).click();
+            await page.waitForTimeout(8000);
+            console.log('AFTER_TRIAL',page.url(),(await page.locator('body').innerText()).slice(0,8000));
+            console.log('FRAMES',JSON.stringify(page.frames().map(f=>({url:f.url(),name:f.name()}))));
+            await page.goto('https://xbjiaoyu.com/#course/mirror', {waitUntil:'domcontentloaded'});
+            await page.getByRole('button',{name:'↓ 下载课件'}).click();
+            await page.waitForTimeout(2000);
+            console.log('AFTER_DOWNLOAD',(await page.locator('body').innerText()).slice(-4000));
 
           } finally {await browser.close()}
           JS
