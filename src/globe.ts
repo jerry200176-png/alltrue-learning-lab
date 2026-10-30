@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 /** A decorative globe using the Blue Marble texture bundled with the upstream Earth lesson. */
-export function mountGlobe(holder: HTMLElement, textureUrl: string) {
+export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationChange: (playing: boolean) => void) {
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -14,7 +14,7 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string) {
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 20);
   camera.position.z = 3.8;
   scene.add(new THREE.HemisphereLight(0xffffff, 0x46657c, 2));
-  const sunlight = new THREE.DirectionalLight(0xffffff, 1.5);
+  const sunlight = new THREE.DirectionalLight(0xfff2cf, 1.5);
   sunlight.position.set(-3, 2, 4); scene.add(sunlight);
   const geometry = new THREE.SphereGeometry(1, 64, 48);
   const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95 });
@@ -29,6 +29,10 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string) {
   let animationFrame = 0;
   let lastTime = 0;
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let playing = !motion.matches;
+  const onMotionChange = (event: MediaQueryListEvent) => { playing = !event.matches; onRotationChange(playing); };
+  motion.addEventListener('change', onMotionChange);
+  onRotationChange(playing);
   const render = () => { if (!disposed) renderer.render(scene, camera); };
   const rotate = (direction: number) => { earth.rotation.y += direction * 0.35; render(); };
   const resize = () => {
@@ -43,11 +47,12 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string) {
   const animate = (time: number) => {
     if (disposed) return;
     const elapsed = lastTime ? Math.min((time - lastTime) / 1000, 0.1) : 0; lastTime = time;
-    if (visible && !document.hidden && !motion.matches && !dragging) { earth.rotation.y += elapsed * 0.09; render(); }
+    if (visible && !document.hidden && playing && !dragging) { earth.rotation.y += elapsed * 0.09; render(); }
     animationFrame = requestAnimationFrame(animate);
   };
   canvas.addEventListener('pointerdown', event => {
     dragging = true; previousX = event.clientX; previousY = event.clientY;
+    holder.classList.add('is-dragging');
     canvas.setPointerCapture(event.pointerId);
   });
   canvas.addEventListener('pointermove', event => {
@@ -56,7 +61,7 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string) {
     earth.rotation.x = Math.max(-1.1, Math.min(1.1, earth.rotation.x + (event.clientY - previousY) * 0.008));
     previousX = event.clientX; previousY = event.clientY; render();
   });
-  const release = () => { dragging = false; };
+  const release = () => { dragging = false; holder.classList.remove('is-dragging'); };
   canvas.addEventListener('pointerup', release); canvas.addEventListener('pointercancel', release);
   canvas.addEventListener('keydown', event => {
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
@@ -69,8 +74,9 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string) {
     if (!disposed) holder.classList.add('texture-unavailable');
   });
   resize(); animationFrame = requestAnimationFrame(animate);
-  return { rotate, dispose() {
+  return { rotate, toggleRotation() { playing = !playing; onRotationChange(playing); }, dispose() {
     disposed = true; cancelAnimationFrame(animationFrame); resizeObserver.disconnect(); visibilityObserver.disconnect();
+    motion.removeEventListener('change', onMotionChange);
     material.map?.dispose(); material.dispose(); geometry.dispose(); renderer.dispose();
   } };
 }
