@@ -29,6 +29,8 @@ npm run check:release
 
 上游基準：Tongjiang Lab commit `4d63ce0a72d987c850ec6d919e570bdb752c87a6`。`public/upstream/` 保存未修改的教材、封面、目錄和授權聲明；`docs/upstream-sha256.json` 記錄上游檔案雜湊並由單元測試核對。網站外殼、教材草稿及顯示文字轉換層是本專案新增內容；所提供的全真 Logo 保存在 `logo.jpg` 和 `public/logo.jpg`。
 
+首頁地球貼圖 `public/derived/earth-blue-marble.jpg` 逐位元組取自上述上游 `courses/earth-motion-step.html` 中的 JPEG，上游在教材中標示來源為 NASA Blue Marble；SHA-256 為 `05d06639f1afcdba63ae009fc2d1191bb148c1fe27ddbcef008c64ae2e72b8dc`。首頁以 MIT 授權的 three.js 產生裝飾性球體，四科圖片使用上游教材封面；自動旋轉是視覺展示，不代表實際時間尺度。
+
 上游教材、封面與目錄採 [CC BY-NC 4.0](public/upstream/LICENSE)，使用或改編時須署名 Tongjiang Lab、連結授權並說明修改，且僅限非商業用途。內嵌 three.js 使用 MIT 授權，見 [第三方聲明](public/upstream/THIRD_PARTY_NOTICES.md)。
 
 翻譯目錄由 `scripts/generate-catalog.mjs` 從上游目錄產生；人工校訂寫在 `src/catalog-overrides.json`，重新產生時會套用這些修訂。使用 `node scripts/extract-lesson-text.mjs <單元 slug> <輸出 JSON 路徑>` 可按語法情境列出上游文字、UTF-16 位置及來源雜湊，供校對追溯；標示 `unclassified` 的項目必須人工判斷，不會自動改寫引擎或程式鍵值。`src/glossary.json` 為轉換術語表，`src/education.ts` 與 `src/teaching-*.ts` 為教案草稿，`src/bridge.ts` 為單元頁的顯示層轉換。

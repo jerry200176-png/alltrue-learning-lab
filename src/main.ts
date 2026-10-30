@@ -4,15 +4,18 @@ import { filterLessons, lessons, lessonUrl, subjects, type Lesson, type Subject 
 import { teaching } from './education';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
+let globeController: ReturnType<typeof import('./globe').mountGlobe> | undefined;
 const base = import.meta.env.BASE_URL;
 const asset = (path: string) => `${base}${path}`;
 const escape = (value: string) => value.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 const subjectKeys: Subject[] = ['phys', 'chem', 'bio', 'geo'];
+// These subject images are the unmodified covers from the pinned upstream release.
+const subjectCovers: Record<Subject, string> = { phys: 'current-field-step', chem: 'ball-stick-step', bio: 'mitosis-step', geo: 'river-step' };
 const brand = `<a class="brand" href="#" aria-label="全真 Learning Lab 首頁"><img src="${asset('logo.jpg')}" alt="全真" /><span><b>全真</b><small>LEARNING LAB</small></span></a>`;
 const header = `<header class="topbar"><div class="wrap topbar-inner">${brand}<nav aria-label="主要導覽"><a href="#catalog">探索教材</a><a href="#about">關於本站</a></nav><a class="top-cta" href="#catalog">開始探索 <span>↗</span></a></div></header>`;
 const footer = `<footer id="about"><div class="wrap footer-inner"><div>${brand}<p>讓好奇心，成為理解世界的起點。</p></div><a class="credits-link" href="#credits">教材來源與授權 ↗</a></div></footer>`;
 function credits(): void {
-  app.innerHTML = `${header}<main class="credits-page wrap"><a class="back-link" href="#catalog">← 返回教材庫</a><h1>教材來源與授權</h1><p>本網站的 3D 教材、目錄與封面改編自 <a href="https://lab.tongjiang.app/" target="_blank" rel="noreferrer">铜匠实验室（Tongjiang Lab）</a>（<a href="https://github.com/smithjohn78390/tongjiang-lab" target="_blank" rel="noreferrer">原始碼</a>），採 <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh-hant" target="_blank" rel="noreferrer">CC BY-NC 4.0</a> 授權，僅限非商業用途。</p><p>本網站新增繁體中文介面、文字轉換、教案及操作輔助；保留上游教材的原始程式。內含 three.js 等第三方元件，詳見下列聲明。</p><p><a href="${asset('upstream/LICENSE')}">上游授權條款</a> · <a href="${asset('upstream/THIRD_PARTY_NOTICES.md')}">第三方授權聲明</a></p><p>教學內容與模擬仍待逐項專業審查，課堂使用前請由教師確認。</p></main>${footer}`;
+  app.innerHTML = `${header}<main class="credits-page wrap"><a class="back-link" href="#catalog">← 返回教材庫</a><h1>教材來源與授權</h1><p>本網站的 3D 教材、目錄與封面改編自 <a href="https://lab.tongjiang.app/" target="_blank" rel="noreferrer">铜匠实验室（Tongjiang Lab）</a>（<a href="https://github.com/smithjohn78390/tongjiang-lab" target="_blank" rel="noreferrer">原始碼</a>），採 <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh-hant" target="_blank" rel="noreferrer">CC BY-NC 4.0</a> 授權，僅限非商業用途。</p><p>本網站新增繁體中文介面、文字轉換、教案及操作輔助；保留上游教材的原始程式。首頁地球貼圖沿用該教材內標示的 NASA Blue Marble。內含 three.js 等第三方元件，詳見下列聲明。</p><p><a href="${asset('upstream/LICENSE')}">上游授權條款</a> · <a href="${asset('upstream/THIRD_PARTY_NOTICES.md')}">第三方授權聲明</a></p><p>教學內容與模擬仍待逐項專業審查，課堂使用前請由教師確認。</p></main>${footer}`;
 }
 function count(subject: Subject) { return lessons.filter(l => l.subject === subject).length; }
 function card(l: Lesson): string {
@@ -20,7 +23,7 @@ function card(l: Lesson): string {
   return `<a class="lesson-card" href="${lessonUrl(l.slug)}"><div class="card-image"><img src="${asset(`upstream/${l.cover}`)}" alt="" loading="lazy"><span class="card-badge ${s.color}">${s.name}</span><span class="card-arrow">↗</span></div><div class="card-body"><div class="card-meta">${escape(l.type)} <span>·</span> ${l.steps.length} 個探索步驟</div><h3>${escape(l.title)}</h3><p>${escape(l.question)}</p><span class="card-link">進入單元 <span>→</span></span></div></a>`;
 }
 function home(): void {
-  app.innerHTML = `${header}<main><section class="hero"><div class="wrap hero-inner"><div class="hero-copy"><div class="eyebrow"><i></i> 讓學習，看見更多可能</div><h1>把好奇，<br><em>變成理解。</em></h1><p>從一個問題出發，動手探索科學。<br>讓抽象的知識，在眼前真實展開。</p><div class="hero-actions"><a class="button dark" href="#catalog">探索所有教材 <span>↗</span></a><a class="text-link" href="#about">認識 Learning Lab <span>↓</span></a></div><div class="hero-stats"><div><b>54</b><span>互動單元</span></div><div><b>04</b><span>探索領域</span></div><div><b>3D</b><span>動手學習</span></div></div></div><div class="hero-demo"><div class="demo-heading"><div><span>ALLTRUE LEARNING LAB</span><strong>動手探索地球運動</strong></div><a href="#lesson/earth-motion-step">完整教材 ↗</a></div><div id="home-simulation" class="hero-simulation"><div class="sim-message">正在載入互動地球…</div></div><p>拖曳旋轉視角、使用滾輪縮放；點選右側分頁調整控制項，觀察地球與日照的變化。</p></div></div></section><section class="subjects-section wrap"><div class="section-intro"><div><p class="overline">FIND YOUR CURIOSITY <span>✳</span></p><h2>今天，想探索什麼？</h2><p>選一個領域，打開你的學習旅程。</p></div><span class="section-index">01 / 領域</span></div><div class="subject-grid">${subjectKeys.map((key, i) => { const s=subjects[key]; return `<button class="subject-tile ${s.color}" data-subject="${key}"><span class="subject-number">0${i+1} / ${s.english}</span><span class="subject-icon">${['↗','✳','✿','◉'][i]}</span><strong>${s.name}</strong><small>${count(key)} 個互動單元</small><span class="tile-arrow">↗</span></button>`; }).join('')}</div></section><section class="catalog-section" id="catalog"><div class="wrap"><div class="section-intro"><div><p class="overline">THE LEARNING LIBRARY <span>✳</span></p><h2>一起動手，探索科學。</h2><p>從教材中找到你的下一個問題。</p></div><span class="section-index">02 / 教材庫</span></div><div class="catalog-tools"><div class="filters" aria-label="教材分類"><button class="active" data-filter="all">全部 <span>54</span></button>${subjectKeys.map(k=>`<button data-filter="${k}">${subjects[k].name} <span>${count(k)}</span></button>`).join('')}</div><label class="search"><span aria-hidden="true">⌕</span><input type="search" placeholder="搜尋教材或主題" aria-label="搜尋教材或主題"></label></div><div class="results-label" id="result-count"></div><div class="lesson-grid" id="lesson-grid"></div></div></section><section class="closing"><div class="wrap closing-inner"><span class="closing-symbol">✳</span><div><p class="overline">KEEP ASKING QUESTIONS</p><h2>每一次提問，<br>都是探索的開始。</h2></div><a href="#catalog" class="button light">找到你的教材 <span>↗</span></a></div></section></main>${footer}`;
+  app.innerHTML = `${header}<main><section class="hero"><div class="wrap hero-inner"><div class="hero-copy"><h1>把好奇，<br><em>變成理解。</em></h1><p>動手探索，讓科學看得見。</p><div class="hero-actions"><a class="button dark" href="#catalog">探索所有教材 <span>↗</span></a></div><div class="hero-stats"><div><b>54</b><span>互動單元</span></div><div><b>04</b><span>探索領域</span></div><div><b>3D</b><span>動手學習</span></div></div></div><div class="hero-demo"><div id="home-simulation" class="hero-simulation"><div class="sim-message">正在載入地球…</div></div><div class="globe-bar"><span>拖曳地球，探索世界</span><div><button type="button" data-earth-turn="-1" aria-label="向左旋轉地球">←</button><button type="button" data-earth-turn="1" aria-label="向右旋轉地球">→</button><a href="#lesson/earth-motion-step">探索地球 ↗</a></div></div></div></div></section><section class="subjects-section wrap"><div class="section-intro"><div><h2>選擇探索領域</h2></div></div><div class="subject-grid">${subjectKeys.map(key => { const s=subjects[key]; return `<button class="subject-tile" data-subject="${key}"><img src="${asset(`upstream/covers/${subjectCovers[key]}.webp`)}" alt="" loading="lazy"><span class="subject-copy"><span class="subject-number">${s.english}</span><strong>${s.name}</strong><small>${count(key)} 個互動單元 <span aria-hidden="true">↗</span></small></span></button>`; }).join('')}</div></section><section class="catalog-section" id="catalog"><div class="wrap"><div class="section-intro"><div><p class="overline">THE LEARNING LIBRARY <span>✳</span></p><h2>一起動手，探索科學。</h2><p>從教材中找到你的下一個問題。</p></div><span class="section-index">02 / 教材庫</span></div><div class="catalog-tools"><div class="filters" aria-label="教材分類"><button class="active" data-filter="all">全部 <span>54</span></button>${subjectKeys.map(k=>`<button data-filter="${k}">${subjects[k].name} <span>${count(k)}</span></button>`).join('')}</div><label class="search"><span aria-hidden="true">⌕</span><input type="search" placeholder="搜尋教材或主題" aria-label="搜尋教材或主題"></label></div><div class="results-label" id="result-count"></div><div class="lesson-grid" id="lesson-grid"></div></div></section><section class="closing"><div class="wrap closing-inner"><span class="closing-symbol">✳</span><div><p class="overline">KEEP ASKING QUESTIONS</p><h2>每一次提問，<br>都是探索的開始。</h2></div><a href="#catalog" class="button light">找到你的教材 <span>↗</span></a></div></section></main>${footer}`;
   let filter = 'all';
   const input = app.querySelector<HTMLInputElement>('.search input')!;
   const grid = app.querySelector<HTMLElement>('#lesson-grid')!;
@@ -28,13 +31,19 @@ function home(): void {
   app.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach(b => b.addEventListener('click', () => {filter = b.dataset.filter!; update();}));
   app.querySelectorAll<HTMLButtonElement>('[data-subject]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.subject!; update(); document.querySelector('#catalog')?.scrollIntoView({behavior:'smooth'});}));
   input.addEventListener('input', update); update();
-  const earth = lessons.find(lesson => lesson.slug === 'earth-motion-step');
-  const demo = app.querySelector<HTMLElement>('#home-simulation');
-  if (earth && demo) void loadSimulation(earth, demo, true);
+  const demo = app.querySelector<HTMLElement>('#home-simulation')!;
+  void import('./globe').then(({ mountGlobe }) => {
+    if (!demo.isConnected) return;
+    try { globeController = mountGlobe(demo, asset('derived/earth-blue-marble.jpg')); }
+    catch { demo.innerHTML = '<div class="sim-message"><b>無法啟動 3D 地球</b><p>請更新瀏覽器或啟用硬體加速。</p></div>'; }
+  }).catch(() => { if (demo.isConnected) demo.innerHTML = '<div class="sim-message"><b>地球載入失敗</b><p>請重新整理頁面。</p></div>'; });
+  app.querySelectorAll<HTMLButtonElement>('[data-earth-turn]').forEach(button => button.addEventListener('click', () => {
+    globeController?.rotate(Number(button.dataset.earthTurn));
+  }));
 }
 function bullets(items: string[]) { return `<ul>${items.map(i=>`<li>${escape(i)}</li>`).join('')}</ul>`; }
 function supportsWebGL(): boolean { try { const c = document.createElement('canvas'); return !!c.getContext('webgl2'); } catch { return false; } }
-async function loadSimulation(lesson: Lesson, holder: HTMLElement, homepage = false): Promise<void> {
+async function loadSimulation(lesson: Lesson, holder: HTMLElement): Promise<void> {
   if (!supportsWebGL()) { holder.innerHTML = '<div class="sim-message"><b>無法啟動 3D 模擬</b><p>此瀏覽器或裝置不支援 WebGL 2。請更新瀏覽器、啟用硬體加速，或改用支援 WebGL 2 的裝置。</p></div>'; return; }
   try {
     const response = await fetch(asset(`upstream/${lesson.file}`));
@@ -43,10 +52,7 @@ async function loadSimulation(lesson: Lesson, holder: HTMLElement, homepage = fa
     if (!holder.isConnected) return;
     const frame = document.createElement('iframe'); frame.title = `${lesson.title} 3D 互動教材`; frame.allow = 'fullscreen'; frame.className='simulation-frame';
     const scriptUrl = new URL(bridgeUrl, window.location.href).href;
-    // In the smaller homepage preview, keep the original panels accessible but
-    // collapsed initially so they do not cover the 3D scene.
-    const previewControls = homepage ? `<style>#gl{transform:scale(1.8)}#eqb,#anno,#labels{display:none!important}#left.collapsed,#right.collapsed{visibility:hidden!important}#tabL,#tabR{min-width:36px;min-height:44px}</style><script>document.addEventListener('DOMContentLoaded',()=>{const l=document.querySelector('#left'),r=document.querySelector('#right'),lf=l?.querySelector('.fold'),rf=r?.querySelector('.fold');if(!l||!r||!lf||!rf)return;if(!l.classList.contains('collapsed'))lf.click();if(!r.classList.contains('collapsed'))rf.click();document.querySelector('#tabL')?.addEventListener('click',()=>{if(!r.classList.contains('collapsed'))rf.click()});document.querySelector('#tabR')?.addEventListener('click',()=>{if(!l.classList.contains('collapsed'))lf.click()})});</script>` : '';
-    const injected = `<base href="${new URL(asset('upstream/courses/'), window.location.href).href}"><script type="module" src="${scriptUrl}"></script>${previewControls}`;
+    const injected = `<base href="${new URL(asset('upstream/courses/'), window.location.href).href}"><script type="module" src="${scriptUrl}"></script>`;
     frame.srcdoc = html.replace('<head>', `<head>${injected}`); holder.replaceChildren(frame);
   } catch { if (holder.isConnected) holder.innerHTML = '<div class="sim-message"><b>教材載入失敗</b><p>請檢查網路連線後重新整理頁面。</p></div>'; }
 }
@@ -59,5 +65,5 @@ function detail(lesson: Lesson): void {
   });
   void loadSimulation(lesson, app.querySelector<HTMLElement>('#simulation')!);
 }
-function render(): void { if (location.hash === '#credits') { credits(); window.scrollTo(0,0); return; } const match = location.hash.match(/^#lesson\/([^/]+)$/); if (match) { let slug = ''; try { slug=decodeURIComponent(match[1]); } catch { /* invalid route */ } const lesson=lessons.find(l=>l.slug===slug); if (lesson) { detail(lesson); window.scrollTo(0,0); return; } } home(); if(location.hash === '#catalog' || location.hash === '#about') requestAnimationFrame(()=>document.querySelector(location.hash)?.scrollIntoView()); }
+function render(): void { globeController?.dispose(); globeController = undefined; if (location.hash === '#credits') { credits(); window.scrollTo(0,0); return; } const match = location.hash.match(/^#lesson\/([^/]+)$/); if (match) { let slug = ''; try { slug=decodeURIComponent(match[1]); } catch { /* invalid route */ } const lesson=lessons.find(l=>l.slug===slug); if (lesson) { detail(lesson); window.scrollTo(0,0); return; } } home(); if(location.hash === '#catalog' || location.hash === '#about') requestAnimationFrame(()=>document.querySelector(location.hash)?.scrollIntoView()); }
 window.addEventListener('hashchange', render); render();

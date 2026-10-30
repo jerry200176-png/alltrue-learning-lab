@@ -42,4 +42,10 @@ describe('教材目錄', () => {
       expect(actual, path).toBe(expected);
     }
   });
+  it('uses exactly the Earth texture embedded in the pinned upstream lesson', () => {
+    const source = readFileSync('public/upstream/courses/earth-motion-step.html', 'utf8');
+    const embedded = source.match(/data:image\/jpeg;base64,([A-Za-z0-9+/=]+)/)?.[1];
+    expect(embedded).toBeTruthy();
+    expect(readFileSync('public/derived/earth-blue-marble.jpg')).toEqual(Buffer.from(embedded!, 'base64'));
+  });
 });
