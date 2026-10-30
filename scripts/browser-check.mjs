@@ -11,6 +11,17 @@ try {
   await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 54);
   const homeFrame = page.frameLocator('#home-simulation iframe');
   await homeFrame.locator('canvas').first().waitFor({ timeout: 30000 });
+  const homeCanvas = homeFrame.locator('#gl');
+  await homeCanvas.evaluate(canvas => {
+    canvas.dataset.pointerCount = '0';
+    canvas.addEventListener('pointermove', () => { canvas.dataset.pointerCount = String(Number(canvas.dataset.pointerCount) + 1); });
+  });
+  const homeBox = await page.locator('#home-simulation iframe').boundingBox();
+  assert.ok(homeBox);
+  const homeX = homeBox.x + homeBox.width * 0.5; const homeY = homeBox.y + homeBox.height * 0.55;
+  await page.mouse.move(homeX, homeY); await page.mouse.down();
+  await page.mouse.move(homeX + 35, homeY + 15, { steps: 3 }); await page.mouse.up();
+  assert.ok(Number(await homeCanvas.getAttribute('data-pointer-count')) > 0, 'homepage drag reaches 3D canvas');
   await homeFrame.locator('#tabR').click();
   const homeSlider = homeFrame.locator('#right input[type=range]').first();
   await homeSlider.waitFor({ state: 'visible' });
