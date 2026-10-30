@@ -15,9 +15,14 @@ try {
   await page.locator('#home-simulation canvas').waitFor({ timeout: 30000 });
   for (const [index, lesson] of lessons.entries()) {
     const { slug } = lesson;
+    console.log(`Loading ${index + 1}/${lessons.length}: ${slug}`);
     await page.goto(`${origin}#lesson/${slug}`);
     const frame = page.frameLocator('#simulation iframe');
-    await frame.locator('#gl').waitFor({ timeout: 30000 });
+    try { await frame.locator('#gl').waitFor({ timeout: 30000 }); }
+    catch (error) {
+      console.error(`FAILED ${slug}; simulation: ${(await page.locator('#simulation').innerText()).slice(0, 400)}; errors: ${errors.join('; ')}`);
+      throw error;
+    }
     await frame.locator('#steps button').first().waitFor({ state: 'visible', timeout: 30000 });
     await frame.locator('#tabL').waitFor({ state: 'visible', timeout: 30000 });
     await frame.locator('#tabR').waitFor({ state: 'visible', timeout: 30000 });
