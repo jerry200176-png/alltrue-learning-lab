@@ -48,6 +48,7 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string) {
   };
   canvas.addEventListener('pointerdown', event => {
     dragging = true; previousX = event.clientX; previousY = event.clientY;
+    canvas.setPointerCapture(event.pointerId);
   });
   canvas.addEventListener('pointermove', event => {
     if (!dragging) return;
@@ -56,7 +57,7 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string) {
     previousX = event.clientX; previousY = event.clientY; render();
   });
   const release = () => { dragging = false; };
-  window.addEventListener('pointerup', release); window.addEventListener('pointercancel', release);
+  canvas.addEventListener('pointerup', release); canvas.addEventListener('pointercancel', release);
   canvas.addEventListener('keydown', event => {
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
     event.preventDefault(); rotate(event.key === 'ArrowLeft' ? -1 : 1);
@@ -70,7 +71,6 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string) {
   resize(); animationFrame = requestAnimationFrame(animate);
   return { rotate, dispose() {
     disposed = true; cancelAnimationFrame(animationFrame); resizeObserver.disconnect(); visibilityObserver.disconnect();
-    window.removeEventListener('pointerup', release); window.removeEventListener('pointercancel', release);
     material.map?.dispose(); material.dispose(); geometry.dispose(); renderer.dispose();
   } };
 }

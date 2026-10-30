@@ -71,15 +71,15 @@ try {
     console.log(`PASS: ${slug} loads a translated 3D lesson`);
   }
   assert.deepEqual(errors, []);
-  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
-  await mobile.emulateMedia({ reducedMotion: 'reduce' });
-  await mobile.goto(origin); assert.equal(await mobile.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-  const mobileGlobe = mobile.locator('#home-simulation canvas');
-  await mobile.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.ready === 'true');
+  const mobileGlobePage = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  await mobileGlobePage.emulateMedia({ reducedMotion: 'reduce' });
+  await mobileGlobePage.goto(origin); assert.equal(await mobileGlobePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  const mobileGlobe = mobileGlobePage.locator('#home-simulation canvas');
+  await mobileGlobePage.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.ready === 'true');
   await mobileGlobe.scrollIntoViewIfNeeded();
   const mobileBefore = await mobileGlobe.screenshot();
   const globeRect = await mobileGlobe.boundingBox(); assert.ok(globeRect);
-  const globeTouch = await mobile.context().newCDPSession(mobile);
+  const globeTouch = await mobileGlobePage.context().newCDPSession(mobileGlobePage);
   const globeX = globeRect.x + globeRect.width * 0.5; const globeY = globeRect.y + globeRect.height * 0.5;
   await globeTouch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: globeX, y: globeY }] });
   await globeTouch.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: globeX + 65, y: globeY + 5 }] });
@@ -87,6 +87,11 @@ try {
   const mobileAfter = await mobileGlobe.screenshot();
   assert.equal(mobileBefore.equals(mobileAfter), false, 'homepage Earth responds to touch drag');
   await globeTouch.detach();
+  // Chromium's CDP-synthesized drag suppresses the next tap even in a minimal
+  // touch-action:none fixture. Use a fresh page for the separate navigation check.
+  await mobileGlobePage.close();
+  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  await mobile.goto(origin); assert.equal(await mobile.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   await mobile.locator('[data-subject=phys]').tap(); assert.equal(await mobile.locator('.lesson-card').count(), 10);
   for (const slug of ['projectile-step', 'rate-step', 'enzyme-step', 'earth-motion-step']) {
     await mobile.goto(`${origin}#lesson/${slug}`);
