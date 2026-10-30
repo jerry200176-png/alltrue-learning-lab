@@ -2,9 +2,8 @@ import * as THREE from 'three';
 import { earthVector, TAIPEI } from './solar';
 
 /** A decorative globe using the Blue Marble texture bundled with the upstream Earth lesson. */
-export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationChange: (playing: boolean) => void) {
+export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationChange: (playing: boolean) => void, detailedTextureUrl?: string) {
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const canvas = renderer.domElement;
   canvas.tabIndex = 0;
@@ -19,7 +18,7 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   view.rotation.set(0.12, 2.3, 0.08); scene.add(view);
   const sunlight = new THREE.DirectionalLight(0xfff3da, 2.8);
   view.add(sunlight);
-  const geometry = new THREE.SphereGeometry(1, 64, 48);
+  const geometry = new THREE.SphereGeometry(1, 96, 64);
   const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95 });
   const earth = new THREE.Mesh(geometry, material);
   view.add(earth);
@@ -49,6 +48,9 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   const resize = () => {
     const { width, height } = holder.getBoundingClientRect();
     if (!width || !height) return;
+    // Keep high-density screens sharp while bounding the drawing buffer on large displays.
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2.5, Math.sqrt(1_200_000 / (width * height)));
+    renderer.setPixelRatio(pixelRatio);
     camera.aspect = width / height; camera.updateProjectionMatrix();
     renderer.setSize(width, height, false); render();
   };
@@ -78,9 +80,24 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
     event.preventDefault(); rotate(event.key === 'ArrowLeft' ? -1 : 1);
   });
-  new THREE.TextureLoader().load(textureUrl, texture => {
+  const loader = new THREE.TextureLoader();
+  const applyTexture = (texture: THREE.Texture, quality: 'standard' | 'detailed') => {
     if (disposed) { texture.dispose(); return; }
-    texture.colorSpace = THREE.SRGBColorSpace; material.map = texture; material.needsUpdate = true; canvas.dataset.ready = 'true'; render();
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
+    material.map?.dispose(); material.map = texture; material.needsUpdate = true;
+    canvas.dataset.ready = 'true'; canvas.dataset.texture = quality; render();
+  };
+  loader.load(textureUrl, texture => {
+    applyTexture(texture, 'standard');
+    // The large texture needs about 78 MB of GPU memory with mipmaps. Keep the
+    // smaller map on touch devices and GPUs that cannot fit its dimensions.
+    if (!disposed && detailedTextureUrl && renderer.capabilities.maxTextureSize >= 5400 && !window.matchMedia('(pointer: coarse)').matches) {
+      canvas.dataset.detailLoading = 'true';
+      loader.load(detailedTextureUrl, detailed => {
+        delete canvas.dataset.detailLoading; applyTexture(detailed, 'detailed');
+      }, undefined, () => { delete canvas.dataset.detailLoading; });
+    }
   }, undefined, () => {
     if (!disposed) holder.classList.add('texture-unavailable');
   });

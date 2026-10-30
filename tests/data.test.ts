@@ -42,6 +42,10 @@ describe('教材目錄', () => {
       expect(actual, path).toBe(expected);
     }
   });
+  it('keeps the detailed NASA Blue Marble image byte-identical to its documented source', () => {
+    const image = readFileSync('public/derived/earth-blue-marble-nasa-5400.jpg');
+    expect(createHash('sha256').update(image).digest('hex')).toBe('4f4240673a3a1b173d61b92ca4b07bac5fd17059ea5f725ba6da5a9c5386b7ba');
+  });
   it('uses exactly the Earth texture embedded in the pinned upstream lesson', () => {
     const source = readFileSync('public/upstream/courses/earth-motion-step.html', 'utf8');
     const embedded = source.match(/data:image\/jpeg;base64,([A-Za-z0-9+/=]+)/)?.[1];
