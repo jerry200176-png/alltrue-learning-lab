@@ -12,7 +12,7 @@ const escape = (value: string) => value.replace(/[&<>"']/g, c => ({ '&': '&amp;'
 const subjectKeys: Subject[] = ['phys', 'chem', 'bio', 'geo'];
 // These subject images are the unmodified covers from the pinned upstream release.
 const subjectCovers: Record<Subject, string> = { phys: 'current-field-step', chem: 'ball-stick-step', bio: 'mitosis-step', geo: 'river-step' };
-const brand = `<a class="brand" href="#" aria-label="全真 Learning Lab 首頁"><img src="${asset('logo.jpg')}" alt="全真" /><span><b>全真</b><small>LEARNING LAB</small></span></a>`;
+const brand = `<a class="brand" href="#" aria-label="台北全真一對一首頁"><img src="${asset('logo.jpg')}" alt="全真標誌" /><span><b>台北全真一對一</b><small>LEARNING LAB</small></span></a>`;
 const header = `<header class="topbar"><div class="wrap topbar-inner">${brand}<nav aria-label="主要導覽"><a href="#catalog">探索教材</a><a href="#about">關於本站</a></nav><a class="top-cta" href="#catalog">開始探索 <span>↗</span></a></div></header>`;
 const footer = `<footer id="about"><div class="wrap footer-inner"><div>${brand}<p>讓好奇心，成為理解世界的起點。</p></div><a class="credits-link" href="#credits">教材來源與授權 ↗</a></div></footer>`;
 function credits(): void {
