@@ -66,12 +66,15 @@ function home(): void {
   app.querySelector<HTMLButtonElement>('[data-earth-toggle]')!.addEventListener('click', () => globeController?.toggleRotation());
 }
 function bullets(items: string[]) { return `<ul>${items.map(i=>`<li>${escape(i)}</li>`).join('')}</ul>`; }
+let webGLProbed = false;
 function supportsWebGL(): boolean {
+  if (webGLProbed) return true;
   try {
     const context = document.createElement('canvas').getContext('webgl2');
     if (!context) return false;
     // This is only a probe; do not retain a second context alongside the lesson.
     context.getExtension('WEBGL_lose_context')?.loseContext();
+    webGLProbed = true;
     return true;
   } catch { return false; }
 }
