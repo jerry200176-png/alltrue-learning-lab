@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { earthVector, TAIPEI } from './solar';
 
 /** A decorative globe using the Blue Marble texture bundled with the upstream Earth lesson. */
 export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationChange: (playing: boolean) => void) {
@@ -13,13 +14,20 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 20);
   camera.position.z = 3.8;
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x46657c, 2));
-  const sunlight = new THREE.DirectionalLight(0xfff2cf, 1.5);
-  sunlight.position.set(-3, 2, 4); scene.add(sunlight);
+  scene.add(new THREE.AmbientLight(0xa6b9db, 0.24));
+  const view = new THREE.Group();
+  view.rotation.set(0.12, 2.3, 0.08); scene.add(view);
+  const sunlight = new THREE.DirectionalLight(0xfff3da, 2.8);
+  view.add(sunlight);
   const geometry = new THREE.SphereGeometry(1, 64, 48);
   const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95 });
   const earth = new THREE.Mesh(geometry, material);
-  earth.rotation.set(0.12, 2.3, 0.08); scene.add(earth);
+  view.add(earth);
+  const markerGeometry = new THREE.SphereGeometry(0.022, 16, 12);
+  const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xffd354 });
+  const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+  marker.position.fromArray(earthVector(TAIPEI.latitude, TAIPEI.longitude)).multiplyScalar(1.008);
+  view.add(marker);
 
   let disposed = false;
   let visible = true;
@@ -34,7 +42,10 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   motion.addEventListener('change', onMotionChange);
   onRotationChange(playing);
   const render = () => { if (!disposed) renderer.render(scene, camera); };
-  const rotate = (direction: number) => { earth.rotation.y += direction * 0.35; render(); };
+  const rotate = (direction: number) => { view.rotation.y += direction * 0.35; render(); };
+  const setSun = (latitude: number, longitude: number) => {
+    sunlight.position.fromArray(earthVector(latitude, longitude)).multiplyScalar(5); render();
+  };
   const resize = () => {
     const { width, height } = holder.getBoundingClientRect();
     if (!width || !height) return;
@@ -47,7 +58,7 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   const animate = (time: number) => {
     if (disposed) return;
     const elapsed = lastTime ? Math.min((time - lastTime) / 1000, 0.1) : 0; lastTime = time;
-    if (visible && !document.hidden && playing && !dragging) { earth.rotation.y += elapsed * 0.09; render(); }
+    if (visible && !document.hidden && playing && !dragging) { view.rotation.y += elapsed * 0.09; render(); }
     animationFrame = requestAnimationFrame(animate);
   };
   canvas.addEventListener('pointerdown', event => {
@@ -57,8 +68,8 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   });
   canvas.addEventListener('pointermove', event => {
     if (!dragging) return;
-    earth.rotation.y += (event.clientX - previousX) * 0.008;
-    earth.rotation.x = Math.max(-1.1, Math.min(1.1, earth.rotation.x + (event.clientY - previousY) * 0.008));
+    view.rotation.y += (event.clientX - previousX) * 0.008;
+    view.rotation.x = Math.max(-1.1, Math.min(1.1, view.rotation.x + (event.clientY - previousY) * 0.008));
     previousX = event.clientX; previousY = event.clientY; render();
   });
   const release = () => { dragging = false; holder.classList.remove('is-dragging'); };
@@ -74,9 +85,9 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
     if (!disposed) holder.classList.add('texture-unavailable');
   });
   resize(); animationFrame = requestAnimationFrame(animate);
-  return { rotate, toggleRotation() { playing = !playing; onRotationChange(playing); }, dispose() {
+  return { rotate, setSun, toggleRotation() { playing = !playing; onRotationChange(playing); }, dispose() {
     disposed = true; cancelAnimationFrame(animationFrame); resizeObserver.disconnect(); visibilityObserver.disconnect();
     motion.removeEventListener('change', onMotionChange);
-    material.map?.dispose(); material.dispose(); geometry.dispose(); renderer.dispose();
+    material.map?.dispose(); material.dispose(); geometry.dispose(); markerGeometry.dispose(); markerMaterial.dispose(); renderer.dispose();
   } };
 }
