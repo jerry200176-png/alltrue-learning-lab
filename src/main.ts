@@ -13,8 +13,8 @@ const subjectKeys: Subject[] = ['phys', 'chem', 'bio', 'geo'];
 // These subject images are the unmodified covers from the pinned upstream release.
 const subjectCovers: Record<Subject, string> = { phys: 'current-field-step', chem: 'ball-stick-step', bio: 'mitosis-step', geo: 'river-step' };
 const brand = `<a class="brand" href="#" aria-label="台北全真一對一首頁"><img src="${asset('logo.jpg')}" alt="全真標誌" /><span><b>台北全真一對一</b><small>LEARNING LAB</small></span></a>`;
-const header = `<header class="topbar"><div class="wrap topbar-inner">${brand}<nav aria-label="主要導覽"><a href="#catalog">探索教材</a><a href="#about">關於本站</a></nav><a class="top-cta" href="#catalog">開始探索 <span>↗</span></a></div></header>`;
-const footer = `<footer id="about"><div class="wrap footer-inner"><div>${brand}<p>讓好奇心，成為理解世界的起點。</p></div><a class="credits-link" href="#credits">教材來源與授權 ↗</a></div></footer>`;
+const header = `<header class="topbar"><div class="wrap topbar-inner">${brand}<nav aria-label="主要導覽"><a href="#catalog">探索教材</a><a href="#credits">關於本站</a></nav><a class="mobile-about" href="#credits" aria-label="關於本站" title="關於本站">ⓘ</a><a class="top-cta" href="#catalog">開始探索 <span>↗</span></a></div></header>`;
+const footer = `<footer id="about"><div class="wrap footer-inner"><div>${brand}<p>讓好奇心，成為理解世界的起點。</p></div></div></footer>`;
 function credits(): void {
   app.innerHTML = `${header}<main class="credits-page wrap"><a class="back-link" href="#catalog">← 返回教材庫</a><h1>教材來源與授權</h1><p>本網站的 3D 教材、目錄與封面改編自 <a href="https://lab.tongjiang.app/" target="_blank" rel="noreferrer">铜匠实验室（Tongjiang Lab）</a>（<a href="https://github.com/smithjohn78390/tongjiang-lab" target="_blank" rel="noreferrer">原始碼</a>），採 <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh-hant" target="_blank" rel="noreferrer">CC BY-NC 4.0</a> 授權，僅限非商業用途。</p><p>本網站新增繁體中文介面、文字轉換、教案及操作輔助；保留上游教材的原始程式。首頁地球貼圖沿用該教材內標示的 NASA Blue Marble。內含 three.js 等第三方元件，詳見下列聲明。</p><p><a href="${asset('upstream/LICENSE')}">上游授權條款</a> · <a href="${asset('upstream/THIRD_PARTY_NOTICES.md')}">第三方授權聲明</a></p><p>教學內容與模擬仍待逐項專業審查，課堂使用前請由教師確認。</p></main>${footer}`;
 }
@@ -66,12 +66,15 @@ function home(): void {
   app.querySelector<HTMLButtonElement>('[data-earth-toggle]')!.addEventListener('click', () => globeController?.toggleRotation());
 }
 function bullets(items: string[]) { return `<ul>${items.map(i=>`<li>${escape(i)}</li>`).join('')}</ul>`; }
+let webGLProbed = false;
 function supportsWebGL(): boolean {
+  if (webGLProbed) return true;
   try {
     const context = document.createElement('canvas').getContext('webgl2');
     if (!context) return false;
     // This is only a probe; do not retain a second context alongside the lesson.
     context.getExtension('WEBGL_lose_context')?.loseContext();
+    webGLProbed = true;
     return true;
   } catch { return false; }
 }
@@ -93,7 +96,7 @@ async function loadSimulation(lesson: Lesson, holder: HTMLElement): Promise<void
     const scriptUrl = new URL(bridgeUrl, window.location.href).href;
     // A successful probe does not guarantee the lesson can create or retain a context.
     // Report explicit WebGL errors from the iframe; ordinary lesson errors are not masked.
-    const monitor = `<script>(()=>{const report=()=>parent.postMessage({type:'alltrue-webgl-failed'},parent.location.origin);const isContextError=text=>/webgl/i.test(text)&&/(context|not supported)/i.test(text);addEventListener('error',e=>{if(isContextError(e.message))report()},true);addEventListener('unhandledrejection',e=>{if(isContextError(String(e.reason)))report()},true);addEventListener('webglcontextlost',report,true)})();</script>`;
+    const monitor = `<script>(()=>{const contexts=new Set(),frames=new Set(),original=HTMLCanvasElement.prototype.getContext,request=window.requestAnimationFrame,cancel=window.cancelAnimationFrame;let releasing=false;window.requestAnimationFrame=callback=>{const id=request.call(window,time=>{frames.delete(id);if(!releasing)callback(time)});frames.add(id);return id};window.cancelAnimationFrame=id=>{frames.delete(id);cancel.call(window,id)};HTMLCanvasElement.prototype.getContext=function(type,...args){const result=original.call(this,type,...args);if((type==='webgl'||type==='webgl2')&&result)contexts.add(result);return result};window.__alltrueReleaseGraphics=()=>{releasing=true;for(const id of frames)cancel.call(window,id);frames.clear();for(const context of contexts){try{context.getExtension('WEBGL_lose_context')?.loseContext()}catch{}}contexts.clear()};const report=()=>{if(!releasing)parent.postMessage({type:'alltrue-webgl-failed'},parent.location.origin)};const isContextError=text=>/webgl/i.test(text)&&/(context|not supported)/i.test(text);addEventListener('error',e=>{if(isContextError(e.message))report()},true);addEventListener('unhandledrejection',e=>{if(isContextError(String(e.reason)))report()},true);addEventListener('webglcontextlost',report,true)})();</script>`;
     const injected = `<base href="${new URL(asset('upstream/courses/'), window.location.href).href}">${monitor}<script type="module" src="${scriptUrl}"></script>`;
     frame.srcdoc = html.replace('<head>', `<head>${injected}`); holder.replaceChildren(frame);
   } catch { if (holder.isConnected) holder.innerHTML = '<div class="sim-message"><b>教材載入失敗</b><p>請檢查網路連線後重新整理頁面。</p></div>'; }
@@ -107,5 +110,5 @@ function detail(lesson: Lesson): void {
   });
   void loadSimulation(lesson, app.querySelector<HTMLElement>('#simulation')!);
 }
-function render(): void { globeController?.dispose(); globeController = undefined; if (location.hash === '#credits') { credits(); window.scrollTo(0,0); return; } const match = location.hash.match(/^#lesson\/([^/]+)$/); if (match) { let slug = ''; try { slug=decodeURIComponent(match[1]); } catch { /* invalid route */ } const lesson=lessons.find(l=>l.slug===slug); if (lesson) { detail(lesson); window.scrollTo(0,0); return; } } home(); if(location.hash === '#catalog' || location.hash === '#about') requestAnimationFrame(()=>document.querySelector(location.hash)?.scrollIntoView()); }
+function render(): void { globeController?.dispose(); globeController = undefined; const frame = app.querySelector<HTMLIFrameElement>('.simulation-frame'); try { (frame?.contentWindow as (Window & { __alltrueReleaseGraphics?: () => void }) | null)?.__alltrueReleaseGraphics?.(); } catch { /* The frame may already be gone. */ } if (location.hash === '#credits') { credits(); window.scrollTo(0,0); return; } const match = location.hash.match(/^#lesson\/([^/]+)$/); if (match) { let slug = ''; try { slug=decodeURIComponent(match[1]); } catch { /* invalid route */ } const lesson=lessons.find(l=>l.slug===slug); if (lesson) { detail(lesson); window.scrollTo(0,0); return; } } home(); if(location.hash === '#catalog' || location.hash === '#about') requestAnimationFrame(()=>document.querySelector(location.hash)?.scrollIntoView()); }
 window.addEventListener('hashchange', render); render();

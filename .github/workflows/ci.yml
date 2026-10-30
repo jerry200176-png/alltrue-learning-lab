@@ -41,9 +41,41 @@ jobs:
         with:
           path: dist
 
+  webkit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps webkit
+      - run: npm run build
+      - name: WebKit mobile browser checks
+        env:
+          LAB_URL: http://127.0.0.1:4173/
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/alltrue-webkit-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail "$LAB_URL" > /dev/null; then break; fi
+            sleep 1
+          done
+          curl --silent --fail "$LAB_URL" > /dev/null
+          if ! node scripts/webkit-mobile-check.mjs; then
+            echo "WebKit runner diagnostics:"
+            free -h
+            ps -eo pid,ppid,rss,stat,comm --sort=-rss | head -40
+            exit 1
+          fi
+
   deploy:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: checks
+    needs: [checks, webkit]
     runs-on: ubuntu-24.04
     permissions:
       pages: write

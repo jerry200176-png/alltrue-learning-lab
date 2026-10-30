@@ -25,7 +25,7 @@
 
 ## GitHub Pages：以 main 發佈
 
-將儲存庫 Settings → Pages → Build and deployment 的 Source 設為 **GitHub Actions**。之後 `.github/workflows/ci.yml` 在 `main` 的 push 或手動執行時，先完成 lint、typecheck、單元測試、建置、版本檢查、瀏覽器及科學檢查；只有通過後才上傳同一次建置產物並部署。PR 或其他分支不會部署。切換設定之前，舊的 `preview-site` 發佈來源仍然有效；必須確認新的 Actions 部署成功，才能記為切換完成。
+將儲存庫 Settings → Pages → Build and deployment 的 Source 設為 **GitHub Actions**。之後 `.github/workflows/ci.yml` 在 `main` 的 push 或手動執行時，先完成 lint、typecheck、單元測試、建置、版本檢查、Chromium 及 WebKit 模擬瀏覽器和科學檢查；只有所有必要檢查通過後才部署同一次建置產物。PR 或其他分支不會部署。切換設定之前，舊的 `preview-site` 發佈來源仍然有效；必須確認新的 Actions 部署成功，才能記為切換完成。WebKit 模擬並不等於 iPhone Safari 實機驗收。
 
 每次部署後記錄 Pages workflow 與實際來源 SHA，檢查網站和 `version.json`；版本資訊只記錄建置的來源，不代表已完成教學驗收。若需回滾，在 `main` 以新的 revert commit 還原有問題的變更，等待完整 CI 與部署，核對來源 SHA 和功能；緊急時可在 Pages 設定停止發布。不要繞過 CI 或修改既有測試來強制發布。
 

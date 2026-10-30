@@ -56,7 +56,7 @@ try {
   assert.ok(Number.parseFloat(await page.locator('#sun-altitude').innerText()) < noonAltitude - 40, 'winter noon sun is lower');
   await rotationToggle.click();
   assert.equal(await rotationToggle.getAttribute('aria-pressed'), 'true', 'rotation can resume');
-  await page.getByRole('link', { name: '教材來源與授權' }).click();
+  await page.locator('header').getByRole('link', { name: '關於本站' }).click();
   await page.getByRole('heading', { name: '教材來源與授權' }).waitFor();
   assert.equal(await page.getByRole('link', { name: '铜匠实验室（Tongjiang Lab）' }).getAttribute('href'), 'https://lab.tongjiang.app/');
   assert.ok(await page.getByRole('link', { name: 'CC BY-NC 4.0' }).getAttribute('href'));
@@ -87,8 +87,21 @@ try {
       const initialValue = await slider.inputValue();
       await slider.focus(); await page.keyboard.press('ArrowRight');
       assert.notEqual(await slider.inputValue(), initialValue, 'lesson Earth slider responds to keyboard');
+      await frame.locator('#gl').evaluate(canvas => {
+        const child = canvas.ownerDocument.defaultView;
+        const context = canvas.getContext('webgl2');
+        const release = child.__alltrueReleaseGraphics;
+        child.__alltrueReleaseGraphics = () => {
+          child.requestAnimationFrame(() => { child.parent.document.documentElement.dataset.lateLessonFrame = 'true'; });
+          release();
+          child.parent.document.documentElement.dataset.lessonContextReleased = String(context.isContextLost());
+        };
+      });
       await frame.locator('a.home').click();
       await page.locator('#catalog').waitFor();
+      assert.equal(await page.locator('html').getAttribute('data-lesson-context-released'), 'true', 'lesson WebGL context is released on navigation');
+      await page.waitForTimeout(100);
+      assert.equal(await page.locator('html').getAttribute('data-late-lesson-frame'), null, 'pending lesson animation is cancelled on navigation');
       assert.equal(await page.locator('.lesson-card').count(), 54);
     }
     console.log(`PASS: ${slug} loads a translated 3D lesson`);
@@ -120,6 +133,7 @@ try {
   await mobileGlobePage.close();
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   await mobile.goto(origin); assert.equal(await mobile.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  assert.equal(await mobile.getByRole('link', { name: '關於本站' }).count(), 1);
   await mobile.locator('[data-subject=phys]').tap(); assert.equal(await mobile.locator('.lesson-card').count(), 10);
   for (const slug of ['projectile-step', 'rate-step', 'enzyme-step', 'earth-motion-step']) {
     await mobile.goto(`${origin}#lesson/${slug}`);
