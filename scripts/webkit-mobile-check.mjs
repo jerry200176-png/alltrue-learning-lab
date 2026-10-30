@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 const origin = process.env.LAB_URL || 'http://127.0.0.1:4173/';
 const lessons = JSON.parse(readFileSync('src/lessons.json', 'utf8'));
 const device = Object.fromEntries(Object.entries(devices['iPhone 13']).filter(([key]) => key !== 'defaultBrowserType'));
-const browser = await webkit.launch({ headless: true });
+const browser = await webkit.launch({ headless: process.env.WEBKIT_HEADED !== '1' });
 try {
   const context = await browser.newContext(device);
   const page = await context.newPage();
