@@ -29,7 +29,7 @@ function home(): void {
   const grid = app.querySelector<HTMLElement>('#lesson-grid')!;
   const update = () => { const found = filterLessons(input.value, filter); grid.innerHTML = found.map(card).join('') || '<p class="empty">找不到符合的單元，試試其他關鍵字。</p>'; app.querySelector('#result-count')!.textContent = `顯示 ${found.length} 個單元`; app.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach(b => { b.classList.toggle('active', b.dataset.filter === filter); b.setAttribute('aria-pressed', String(b.dataset.filter === filter)); }); };
   app.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach(b => b.addEventListener('click', () => {filter = b.dataset.filter!; update();}));
-  app.querySelectorAll<HTMLButtonElement>('[data-subject]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.subject!; update(); document.querySelector('#catalog')?.scrollIntoView({behavior:'smooth'});}));
+  app.querySelectorAll<HTMLButtonElement>('[data-subject]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.subject!; update(); document.querySelector('#catalog')?.scrollIntoView({behavior:'instant'});}));
   input.addEventListener('input', update); update();
   const demo = app.querySelector<HTMLElement>('#home-simulation')!;
   void import('./globe').then(({ mountGlobe }) => {
