@@ -18,6 +18,8 @@ npm run check:release
 
 如本機有 Chromium，可先執行 `npm run build && npm run preview`，再以另一個終端執行 `node scripts/browser-check.mjs`；若要逐一檢查 54 個單元的基本載入，可執行 `node scripts/all-lessons-check.mjs`；手機尺寸的全部單元基本載入可用 `node scripts/mobile-lessons-check.mjs` 檢查；各單元控制項可用 `node scripts/control-check.mjs` 及 `node scripts/toggle-check.mjs` 檢查；代表性科學數值可另以 `node scripts/science-check.mjs` 檢查。可用 `CHROMIUM_PATH` 指定 Chromium 路徑。此檢查使用模擬器及軟體 WebGL，不代表實體手機、平板驗收。
 
+CI 另以 Playwright 的 Linux WebKit 和手機視窗設定，檢查四個代表單元與控制面板的基本載入；可在已安裝 Playwright WebKit 的環境執行 `node scripts/webkit-mobile-check.mjs`。這不是 iOS Safari 或 iPhone 實機，不得視為實體裝置驗收。
+
 ## 狀態與限制
 
 - 已加入 54 個上游教材的目錄、封面和未修改原始 HTML。54 個單元均有專屬教學內容草稿，尚待逐單元專業審查。
