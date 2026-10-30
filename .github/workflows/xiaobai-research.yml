@@ -12,26 +12,39 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci
-      - name: Read public catalogue cards and links
+      - run: npm install --ignore-scripts --no-save rea-agents@6.8.0
+      - name: Inspect authorised public lesson with REA
         run: |
           node --input-type=module <<'JS'
           import {chromium} from 'playwright';
-          const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox']});
+          import {execFile} from 'node:child_process';
+          import {promisify} from 'node:util';
+          const run=promisify(execFile);
+          const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox','--remote-debugging-port=9222']});
           try {
             const page=await browser.newPage();
             await page.goto('https://xbjiaoyu.com/#catalog',{waitUntil:'domcontentloaded',timeout:30000});
             await page.locator('main article h3').first().waitFor({timeout:45000});
-            page.on('response', async response=>{if(response.url().includes('/api/launch/') || response.url().includes('/api/access/')) {const data=await response.json().catch(()=>null); console.log('API_META',new URL(response.url()).pathname,response.status(),data?Object.keys(data):'non-json');}});
+            page.on('response', async response=>{
+              const path=new URL(response.url()).pathname;
+              if(path==='/courseware/mirror') {
+                const body=await response.text().catch(()=>'');
+                console.log('COURSEWARE_META',JSON.stringify({path,status:response.status(),contentType:response.headers()['content-type'],bytes:Buffer.byteLength(body),title:body.match(/<title>([^<]*)/i)?.[1]||null,scriptCount:(body.match(/<script/gi)||[]).length,hasCanvas:body.includes('canvas'),hasWebGL:/webgl/i.test(body)}));
+              }
+            });
             await page.goto('https://xbjiaoyu.com/#course/mirror', {waitUntil:'domcontentloaded'});
             await page.getByRole('button',{name:'免费在线使用 ↗'}).click();
             await page.waitForTimeout(45000);
+            const targets=await (await fetch('http://127.0.0.1:9222/json/list')).json();
+            const target=targets.find(t=>t.type==='page');
+            const result=await run('./node_modules/.bin/rea',['inspect-web-page','http://127.0.0.1:9222',target.id,'--observation-ms','1000','--json'],{maxBuffer:20*1024*1024});
+            const evidence=JSON.parse(result.stdout);
+            console.log('REA_EVIDENCE',JSON.stringify({id:evidence.evidence_id,operation:evidence.operation,limitations:evidence.limitations}));
             console.log('PUBLIC_PLAY', page.url());
-            console.log('CLASSROOM', (await page.locator('#classroom').innerText()).slice(0,3000));
             console.log('FRAMES', JSON.stringify(page.frames().map(f=>({url:f.url().split('?')[0],name:f.name()}))));
-            console.log('IFRAMES', JSON.stringify(await page.locator('iframe').evaluateAll(es=>es.map(e=>({src:e.getAttribute('src')?.split('?')[0],hasSrcdoc:e.hasAttribute('srcdoc')})))));
 
           } finally {await browser.close()}
           JS
