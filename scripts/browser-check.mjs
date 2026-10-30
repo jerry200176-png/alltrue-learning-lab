@@ -9,7 +9,17 @@ try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 850 } });
   const errors = []; page.on('pageerror', error => errors.push(error.message));
   await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 54);
-  assert.equal(await page.locator('.earth svg').count(), 1);
+  const homeFrame = page.frameLocator('#home-simulation iframe');
+  await homeFrame.locator('canvas').first().waitFor({ timeout: 30000 });
+  await homeFrame.locator('#tabR').click();
+  const homeSlider = homeFrame.locator('#right input[type=range]').first();
+  await homeSlider.waitFor({ state: 'visible' });
+  await homeSlider.focus();
+  await page.keyboard.press('Home');
+  const initial = await homeSlider.inputValue();
+  await homeSlider.focus(); // Upstream may rebuild the control after a value change.
+  await page.keyboard.press('ArrowRight');
+  assert.notEqual(await homeSlider.inputValue(), initial, 'homepage Earth control responds to keyboard');
   await page.getByRole('link', { name: '教材來源與授權' }).click();
   await page.getByRole('heading', { name: '教材來源與授權' }).waitFor();
   assert.equal(await page.getByRole('link', { name: '铜匠实验室（Tongjiang Lab）' }).getAttribute('href'), 'https://lab.tongjiang.app/');
@@ -90,5 +100,6 @@ try {
   console.log('PASS: tablet viewport and step touch');
   const noWebGL = await browser.newPage();
   await noWebGL.addInitScript(() => { const original=HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function(type, ...args) { if (type === 'webgl2') return null; return original.call(this, type, ...args); }; });
+  await noWebGL.goto(origin); await noWebGL.getByText('無法啟動 3D 模擬').waitFor(); assert.equal(await noWebGL.locator('#home-simulation iframe').count(), 0);
   await noWebGL.goto(`${origin}#lesson/projectile-step`); await noWebGL.getByText('無法啟動 3D 模擬').waitFor(); assert.equal(await noWebGL.locator('iframe').count(),0); console.log('PASS: WebGL fallback');
 } finally { await browser.close(); }
