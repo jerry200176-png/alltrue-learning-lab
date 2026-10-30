@@ -1,6 +1,6 @@
 {
   "name": "alltrue-learning-lab",
-  "version": "0.1.0-preview.2",
+  "version": "0.1.0-preview.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,11 +13,13 @@
     "check:release": "node scripts/check-build-metadata.mjs"
   },
   "dependencies": {
-    "opencc-js": "^1.0.5"
+    "opencc-js": "^1.0.5",
+    "three": "^0.186.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/node": "^26.6.6",
+    "@types/three": "^0.186.0",
     "acorn": "^8.19.0",
     "eslint": "^9.39.2",
     "playwright": "^1.58.2",

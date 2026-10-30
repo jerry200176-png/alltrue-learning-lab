@@ -22,3 +22,30 @@
 .credits-page p a{color:#2e6247;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:900px){.hero-demo{margin:35px 0}.hero-simulation{height:400px}}
 @media(max-width:600px){.hero-demo{margin:32px 0 45px}.hero-simulation{height:380px}.demo-heading{padding:13px 15px}.demo-heading strong{font-size:15px}.hero-demo>p{padding:12px 15px}.credits-link{align-self:flex-start}}
+
+/* Image-led subject cards reuse the licensed upstream covers. */
+.hero-inner{min-height:520px}
+.hero-copy>p{max-width:28rem}
+.hero-stats{margin-top:48px}
+.hero-demo{background:#eef2ec;border:0;box-shadow:none;position:relative;margin:24px 0}
+.hero-simulation{height:380px;background:#e8eee8}
+.globe-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;color:#536f5c;font-size:12px}
+.globe-bar>div{display:flex;align-items:center;gap:8px}
+.globe-bar button{border:1px solid #b7c9b8;background:#fff;color:#314c3a;border-radius:50%;width:36px;height:36px;font-size:18px}
+.globe-bar a{font-weight:700;margin-left:8px;color:#314c3a;white-space:nowrap}
+.subjects-section{padding:48px 0 70px}
+.subject-tile{padding:0;background:#fff;color:#263c31;overflow:hidden;min-height:0;box-shadow:0 8px 30px #2b3f2f0c}
+.subject-tile img{display:block;width:100%;aspect-ratio:1.6;object-fit:cover;transition:transform .3s}
+.subject-tile:hover img{transform:scale(1.04)}
+.subject-copy{width:100%;padding:18px 20px;display:flex;flex-direction:column;gap:7px}
+.subject-copy strong{color:#263c31;font-size:21px}
+.subject-copy small{color:#597660;font-size:12px;margin:0;font-weight:600}
+.subject-copy small span{margin-left:5px}
+.subject-number{color:#6c896e}
+@media(max-width:900px){.hero-simulation{height:360px}}
+@media(max-width:600px){.hero-copy{padding-top:40px}.hero-stats{margin-top:32px}.hero-simulation{height:340px}.hero-demo{margin:25px 0 35px}.globe-bar{padding:10px 12px;font-size:11px}.globe-bar>div{gap:5px}.globe-bar button{width:34px;height:34px}.globe-bar a{margin-left:4px}.subjects-section{padding:50px 0 65px}.subject-copy{padding:13px 14px}.subject-copy strong{font-size:18px}.subject-copy small{font-size:11px}}
+.hero-simulation{position:relative;background:radial-gradient(circle at 50% 47%,#e7f2e4 0%,#dcebdc 45%,#d1e1d1 100%)}
+.hero-simulation canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+.hero-simulation canvas:active{cursor:grabbing}
+.hero-simulation canvas:focus-visible{outline:3px solid #315f48;outline-offset:-5px}
+.hero-simulation.texture-unavailable:after{content:'地球貼圖載入失敗，請重新整理頁面。';position:absolute;bottom:16px;left:16px;right:16px;color:#263c31;text-align:center;font-size:13px}
