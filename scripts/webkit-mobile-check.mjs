@@ -1,5 +1,6 @@
 import { webkit, devices } from 'playwright';
 import { readFileSync } from 'node:fs';
+import assert from 'node:assert/strict';
 
 // WebKit on Linux can uncover browser-engine issues but is not iPhone Safari.
 const origin = process.env.LAB_URL || 'http://127.0.0.1:4173/';
@@ -13,6 +14,12 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(origin);
   await page.locator('#home-simulation canvas').waitFor({ timeout: 30000 });
+  await page.getByRole('button', { name: '深夜', exact: true }).tap();
+  assert.equal(await page.locator('#earth-hour').inputValue(), '0');
+  assert.equal(await page.locator('#sun-state').innerText(), '夜晚');
+  await page.getByRole('button', { name: '北極', exact: true }).tap();
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  if (errors.length) throw new Error(errors.join('; '));
   for (const [index, lesson] of lessons.entries()) {
     const { slug } = lesson;
     console.log(`Loading ${index + 1}/${lessons.length}: ${slug}`);
