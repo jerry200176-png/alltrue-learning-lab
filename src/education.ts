@@ -1,4 +1,9 @@
-/** Curated material. Entries without an entry here are explicitly marked as drafts. */
+import { physics } from './teaching-physics';
+import { chemistry } from './teaching-chemistry';
+import { biology } from './teaching-biology';
+import { earth } from './teaching-earth';
+
+/** Teaching drafts remain subject to scientific and classroom review. */
 export interface TeachingContent {
   objectives: string[];
   principle: string;
@@ -8,6 +13,7 @@ export interface TeachingContent {
   teacherTips: string[];
 }
 export const teaching: Record<string, TeachingContent> = {
+  ...physics, ...chemistry, ...biology, ...earth,
   'rate-step': {
     objectives: ['觀察濃度、溫度與催化劑對反應速率的影響。', '比較實驗時辨認需要控制的條件。'],
     principle: '反應速率可用反應物濃度的減少或生成物濃度的增加除以時間表示。濃度、溫度和催化劑可能改變有效碰撞的頻率；比較時應控制其他條件。',

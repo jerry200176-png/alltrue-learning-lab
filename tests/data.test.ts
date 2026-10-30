@@ -25,11 +25,14 @@ describe('教材目錄', () => {
     expect(filterLessons('找不到的教材', 'all')).toHaveLength(0);
   });
   it('validates the structure of the teaching drafts', () => {
+    expect(Object.keys(teaching).sort()).toEqual(lessons.map(l => l.slug).sort());
     for (const [slug, plan] of Object.entries(teaching)) {
       expect(lessons.some(l => l.slug === slug)).toBe(true);
       expect(plan.objectives.length).toBeGreaterThan(0); expect(plan.principle).toBeTruthy();
-      expect(plan.operations.length).toBeGreaterThan(0); expect(plan.questions.length).toBeGreaterThanOrEqual(3);
-      expect(plan.questions.every(q => q.question && q.guidance)).toBe(true);
+      expect(plan.operations.length).toBeGreaterThanOrEqual(3); expect(plan.questions.length).toBeGreaterThanOrEqual(3);
+      expect(plan.questions.every(q => q.question.trim() && q.guidance.trim())).toBe(true);
+      expect(new Set(plan.questions.map(q => q.question)).size).toBe(plan.questions.length);
+      expect(plan.operations.every(step => step.trim())).toBe(true);
       expect(plan.misconceptions.length).toBeGreaterThan(0); expect(plan.teacherTips.length).toBeGreaterThan(0);
     }
   });

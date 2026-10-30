@@ -15,14 +15,14 @@ npm run test
 npm run build
 ```
 
-如本機有 Chromium，可先執行 `npm run build && npm run preview`，再以另一個終端執行 `node scripts/browser-check.mjs`；若要逐一檢查 54 個單元的基本載入，可執行 `node scripts/all-lessons-check.mjs`。可用 `CHROMIUM_PATH` 指定 Chromium 路徑。此檢查使用模擬器及軟體 WebGL，不代表實體手機、平板驗收。
+如本機有 Chromium，可先執行 `npm run build && npm run preview`，再以另一個終端執行 `node scripts/browser-check.mjs`；若要逐一檢查 54 個單元的基本載入，可執行 `node scripts/all-lessons-check.mjs`；水平拋射數據可另以 `node scripts/science-check.mjs` 檢查。可用 `CHROMIUM_PATH` 指定 Chromium 路徑。此檢查使用模擬器及軟體 WebGL，不代表實體手機、平板驗收。
 
 ## 狀態與限制
 
-- 已加入 54 個上游教材的目錄、封面和未修改原始 HTML。四個單元有完整教學內容草稿，其餘 50 個的專屬教案尚未完成。
+- 已加入 54 個上游教材的目錄、封面和未修改原始 HTML。54 個單元均有專屬教學內容草稿，尚待逐單元專業審查。
 - 顯示文字以獨立轉換層套用 OpenCC 及台灣術語表。這是輔助轉換，並非逐句校對；尚未確認所有互動、畫布標籤、回饋與術語。原始教材程式未改動，但轉換層可能影響依賴顯示文字的互動，須逐單元檢查。
-- 四個教案草稿、全部模擬的科學與數學正確性及三道概念題的可操作性均待專業審查。實際裝置驗收 **PENDING**。逐項紀錄見 [docs/acceptance.md](docs/acceptance.md)。
-- 不支援 WebGL 2 時顯示替代說明。行動裝置上的上游控制器及效能仍待真實裝置測試。
+- 全部教案草稿、模擬的科學與數學正確性及三道概念題的可操作性均待專業審查。實際裝置驗收 **PENDING**。逐項紀錄見 [docs/acceptance.md](docs/acceptance.md)。
+- 不支援 WebGL 2 時顯示替代說明。窄螢幕預設收起兩側面板，並可透過分頁切換；上游控制器及效能仍待真實裝置測試。
 
 ## 來源與授權
 
@@ -30,7 +30,7 @@ npm run build
 
 上游教材、封面與目錄採 [CC BY-NC 4.0](public/upstream/LICENSE)，使用或改編時須署名 Tongjiang Lab、連結授權並說明修改，且僅限非商業用途。內嵌 three.js 使用 MIT 授權，見 [第三方聲明](public/upstream/THIRD_PARTY_NOTICES.md)。
 
-翻譯目錄由 `scripts/generate-catalog.mjs` 從上游目錄產生；重新產生會覆寫 `src/lessons.json` 的人工修改。`src/glossary.json` 為轉換術語表，`src/education.ts` 為教案草稿，`src/bridge.ts` 為單元頁的顯示層轉換。
+翻譯目錄由 `scripts/generate-catalog.mjs` 從上游目錄產生；人工校訂寫在 `src/catalog-overrides.json`，重新產生時會套用這些修訂。`src/glossary.json` 為轉換術語表，`src/education.ts` 與 `src/teaching-*.ts` 為教案草稿，`src/bridge.ts` 為單元頁的顯示層轉換。
 
 ## 回滾
 

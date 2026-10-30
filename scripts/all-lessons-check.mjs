@@ -13,6 +13,15 @@ try {
       const frame = page.frameLocator('iframe');
       await frame.locator('canvas').first().waitFor({ timeout: 15000 });
       await frame.getByText('目錄', { exact: true }).first().waitFor({ timeout: 15000 });
+      if (await page.locator('.lesson-content details').count() < 3) throw new Error('少於三道概念題');
+      const navigation = await frame.locator('#steps').evaluate(root => {
+        const buttons = [...root.querySelectorAll('button[data-i]')];
+        const failures = [];
+        for (const button of buttons) { button.click(); if (!button.classList.contains('on')) failures.push(button.dataset.i); }
+        buttons[0]?.click();
+        return { count: buttons.length, failures };
+      });
+      if (navigation.count !== lesson.steps.length || navigation.failures.length) throw new Error(`步驟導覽：${JSON.stringify(navigation)}`);
       if (errors.length) throw new Error(errors.join('; '));
     } catch (error) { failures.push(`${lesson.slug}: ${String(error).slice(0, 300)}`); }
     await page.close();

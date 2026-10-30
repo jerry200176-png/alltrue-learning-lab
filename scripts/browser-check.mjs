@@ -13,17 +13,35 @@ try {
     const frame = page.frameLocator('iframe'); await frame.locator('canvas').first().waitFor({ timeout: 20000 });
     await frame.locator('body').getByText('目錄', { exact: true }).first().waitFor({ timeout: 20000 });
     assert.ok((await frame.locator('body').innerText()).length > 100, slug);
+    assert.equal(await page.locator('.lesson-content details').count(), 3, `${slug} concepts`);
     if (slug === 'projectile-step') {
       await frame.getByRole('button', { name: '›', exact: true }).click();
       await frame.getByText('兩球同時落地', { exact: false }).first().waitFor();
-      assert.equal(await page.locator('.lesson-content details').count(), 3);
+      await page.locator('.lesson-content details').first().locator('summary').click();
+      assert.ok(await page.locator('.lesson-content details').first().getAttribute('open') !== null);
+    }
+    if (slug === 'earth-motion-step') {
+      await frame.locator('a.home').click();
+      await page.locator('#catalog').waitFor();
+      assert.equal(await page.locator('.lesson-card').count(), 54);
     }
     console.log(`PASS: ${slug} loads a translated 3D lesson`);
   }
   assert.deepEqual(errors, []);
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   await mobile.goto(origin); assert.equal(await mobile.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-  await mobile.locator('[data-subject=phys]').tap(); assert.equal(await mobile.locator('.lesson-card').count(), 10); console.log('PASS: mobile viewport and category touch');
+  await mobile.locator('[data-subject=phys]').tap(); assert.equal(await mobile.locator('.lesson-card').count(), 10);
+  await mobile.goto(`${origin}#lesson/projectile-step`);
+  await mobile.locator('#simulation').scrollIntoViewIfNeeded();
+  const mobileFrame = mobile.frameLocator('iframe');
+  await mobileFrame.locator('#tabL').waitFor({ state: 'visible', timeout: 20000 });
+  await mobileFrame.locator('#tabR').waitFor({ state: 'visible', timeout: 20000 });
+  await mobileFrame.locator('#tabL').tap();
+  assert.equal(await mobileFrame.locator('#left').evaluate(el => el.classList.contains('collapsed')), false);
+  await mobileFrame.locator('#tabR').tap();
+  assert.equal(await mobileFrame.locator('#left').evaluate(el => el.classList.contains('collapsed')), true);
+  assert.equal(await mobileFrame.locator('#right').evaluate(el => el.classList.contains('collapsed')), false);
+  console.log('PASS: mobile viewport and panel touch');
   const noWebGL = await browser.newPage();
   await noWebGL.addInitScript(() => { const original=HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function(type, ...args) { if (type === 'webgl2') return null; return original.call(this, type, ...args); }; });
   await noWebGL.goto(`${origin}#lesson/projectile-step`); await noWebGL.getByText('無法啟動 3D 模擬').waitFor(); assert.equal(await noWebGL.locator('iframe').count(),0); console.log('PASS: WebGL fallback');

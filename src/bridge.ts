@@ -36,3 +36,33 @@ context.fillText = function (text, x, y, maxWidth) { if (maxWidth === undefined)
 context.strokeText = function (text, x, y, maxWidth) { if (maxWidth === undefined) strokeText.call(this, translate(String(text)), x, y); else strokeText.call(this, translate(String(text)), x, y, maxWidth); };
 context.measureText = function (text) { return measureText.call(this, translate(String(text))); };
 document.documentElement.lang = 'zh-Hant-TW';
+
+// Standalone upstream lessons link to a local index that does not exist in the host app.
+document.addEventListener('click', event => {
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+  const link = target.closest<HTMLAnchorElement>('a.home');
+  if (link?.getAttribute('href') === './index.html' && window.parent !== window) {
+    event.preventDefault();
+    window.parent.location.hash = '#catalog';
+  }
+});
+
+// Keep the upstream fold controls, but avoid their overlapping panels on narrow screens.
+window.addEventListener('DOMContentLoaded', () => {
+  if (!window.matchMedia('(max-width: 600px)').matches) return;
+  const left = document.querySelector<HTMLElement>('#left');
+  const right = document.querySelector<HTMLElement>('#right');
+  const leftTab = document.querySelector<HTMLButtonElement>('#tabL');
+  const rightTab = document.querySelector<HTMLButtonElement>('#tabR');
+  const leftFold = left?.querySelector<HTMLButtonElement>('.fold');
+  const rightFold = right?.querySelector<HTMLButtonElement>('.fold');
+  if (!left || !right || !leftTab || !rightTab || !leftFold || !rightFold) return;
+  const style = document.createElement('style');
+  style.textContent = '@media(max-width:600px){#left.collapsed,#right.collapsed{visibility:hidden!important}#top .row1{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}#top .hud{flex-shrink:0}#tabL,#tabR{min-width:36px;min-height:44px}}';
+  document.head.appendChild(style);
+  if (!left.classList.contains('collapsed')) leftFold.click();
+  if (!right.classList.contains('collapsed')) rightFold.click();
+  leftTab.addEventListener('click', () => { if (!right.classList.contains('collapsed')) rightFold.click(); });
+  rightTab.addEventListener('click', () => { if (!left.classList.contains('collapsed')) leftFold.click(); });
+});
