@@ -1,0 +1,30 @@
+name: Inspect authorised public lesson catalogue
+on:
+  push:
+    branches: [diag/xiaobai-catalog]
+permissions:
+  contents: read
+jobs:
+  catalogue:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Read public catalogue cards and links
+        run: |
+          node --input-type=module <<'JS'
+          import {chromium} from 'playwright';
+          const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox']});
+          try {
+            const page=await browser.newPage();
+            await page.goto('https://xbjiaoyu.com/#catalog',{waitUntil:'domcontentloaded',timeout:30000});
+            await page.locator('main article h3').first().waitFor({timeout:45000});
+            const cards=await page.locator('main article').evaluateAll(els=>els.map(el=>({title:el.querySelector('h3')?.innerText,text:el.innerText,links:[...el.querySelectorAll('a')].map(a=>({text:a.innerText,href:a.href})),buttons:[...el.querySelectorAll('button')].map(b=>({text:b.innerText,action:b.getAttribute('data-action'),id:b.getAttribute('data-id')}))})));
+            console.log('VISIBLE_CATALOGUE',JSON.stringify(cards));
+          } finally {await browser.close()}
+          JS
