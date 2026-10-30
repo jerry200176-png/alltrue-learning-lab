@@ -69,3 +69,36 @@
 .globe-bar [data-earth-toggle]{font-size:13px;font-weight:800}
 .globe-bar a{color:#4b4930}
 @media(prefers-reduced-motion:reduce){.globe-bar button,.hero-simulation::before{transition:none}}
+
+/* An interactive first experiment: the 3D scene and its controls form one card. */
+.hero-inner{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:38px}
+.hero-demo{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.7fr);gap:0;overflow:hidden;border-radius:22px;background:#f8f8f0;border:1px solid #dedfce;box-shadow:0 18px 50px #233b2c12}
+.hero-demo::before,.hero-demo::after{content:none}
+.earth-scene{min-width:0;display:flex;flex-direction:column;justify-content:center;position:relative;background:radial-gradient(ellipse 60% 50% at 50% 48%,#f6d77b55 0%,#f5e9c43b 55%,transparent 100%)}
+.scene-kicker{position:absolute;top:18px;left:20px;font-size:11px;color:#5a6c53;font-weight:700;z-index:2;letter-spacing:.03em}
+.scene-kicker span{display:inline-block;width:7px;height:7px;border-radius:50%;background:#c9951b;margin-right:5px}
+.hero-simulation{height:330px;background:transparent}
+.globe-bar{padding:8px 14px 16px;gap:5px}
+.globe-bar>span{font-size:11px;white-space:nowrap}
+.globe-bar>div{gap:5px}
+.globe-bar button{width:32px;height:32px;font-size:15px}
+.earth-controls{background:#25372f;color:#f5f4e9;padding:23px 21px;display:flex;flex-direction:column;gap:19px}
+.lab-kicker{font-size:10px;letter-spacing:.15em;font-weight:800;color:#e4c56e;margin:0 0 10px}
+.earth-controls h2{font-size:21px;letter-spacing:-.03em;margin:0 0 5px}
+.lab-lead{font-size:12px;line-height:1.55;color:#c7d4c5;margin:0}
+.earth-slider label{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:13px;font-weight:700;color:#e2e9dd}
+.earth-slider output{font-variant-numeric:tabular-nums;color:#f6d164;font-size:14px}
+.earth-slider input{display:block;width:100%;accent-color:#e3b52f;margin:13px 0 6px;cursor:pointer}
+.earth-slider input:focus-visible{outline:2px solid #f7d46d;outline-offset:4px}
+.range-ends{display:flex;justify-content:space-between;font-size:10px;color:#bdcbbb}
+.sun-results{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sun-results div{background:#ffffff0c;border:1px solid #ffffff1a;border-radius:10px;padding:10px 9px;min-width:0}
+.sun-results span{display:block;color:#b9c9b7;font-size:11px;margin-bottom:5px}
+.sun-results strong{font-size:20px;font-variant-numeric:tabular-nums;color:#fff8df;white-space:nowrap}
+#sun-state{font-size:15px}
+.lab-note{color:#c5d0c2;font-size:11px;line-height:1.6;margin:-5px 0 0}
+.lab-link{font-size:12px;font-weight:700;color:#f4d36f;margin-top:auto}
+.lab-link span{margin-left:8px}
+@media(max-width:1050px){.hero-inner{gap:20px}.hero-demo{grid-template-columns:minmax(0,1fr) minmax(200px,.8fr)}.earth-controls{padding:20px 16px}.globe-bar>span{font-size:10px}}
+@media(max-width:900px){.hero-inner{display:flex;flex-direction:column;align-items:stretch}.hero-copy{padding:42px 0 0}.hero-demo{margin:22px 0 45px}.hero-simulation{height:340px}.earth-controls{padding:24px}}
+@media(max-width:600px){.hero-demo{grid-template-columns:1fr;margin:25px 0 35px}.hero-simulation{height:310px}.earth-controls{padding:22px;gap:18px}.scene-kicker{top:14px;left:16px}.globe-bar{padding:8px 16px 15px}.earth-controls h2{font-size:20px}.sun-results strong{font-size:20px}}

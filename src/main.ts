@@ -2,6 +2,7 @@ import './style.css';
 import bridgeUrl from './bridge.ts?worker&url';
 import { filterLessons, lessons, lessonUrl, subjects, type Lesson, type Subject } from './data';
 import { teaching } from './education';
+import { solarPosition } from './solar';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 let globeController: ReturnType<typeof import('./globe').mountGlobe> | undefined;
@@ -11,7 +12,7 @@ const escape = (value: string) => value.replace(/[&<>"']/g, c => ({ '&': '&amp;'
 const subjectKeys: Subject[] = ['phys', 'chem', 'bio', 'geo'];
 // These subject images are the unmodified covers from the pinned upstream release.
 const subjectCovers: Record<Subject, string> = { phys: 'current-field-step', chem: 'ball-stick-step', bio: 'mitosis-step', geo: 'river-step' };
-const brand = `<a class="brand" href="#" aria-label="全真 Learning Lab 首頁"><img src="${asset('logo.jpg')}" alt="全真" /><span><b>全真</b><small>LEARNING LAB</small></span></a>`;
+const brand = `<a class="brand" href="#" aria-label="台北全真一對一首頁"><img src="${asset('logo.jpg')}" alt="全真標誌" /><span><b>台北全真一對一</b><small>LEARNING LAB</small></span></a>`;
 const header = `<header class="topbar"><div class="wrap topbar-inner">${brand}<nav aria-label="主要導覽"><a href="#catalog">探索教材</a><a href="#about">關於本站</a></nav><a class="top-cta" href="#catalog">開始探索 <span>↗</span></a></div></header>`;
 const footer = `<footer id="about"><div class="wrap footer-inner"><div>${brand}<p>讓好奇心，成為理解世界的起點。</p></div><a class="credits-link" href="#credits">教材來源與授權 ↗</a></div></footer>`;
 function credits(): void {
@@ -23,7 +24,7 @@ function card(l: Lesson): string {
   return `<a class="lesson-card" href="${lessonUrl(l.slug)}"><div class="card-image"><img src="${asset(`upstream/${l.cover}`)}" alt="" loading="lazy"><span class="card-badge ${s.color}">${s.name}</span><span class="card-arrow">↗</span></div><div class="card-body"><div class="card-meta">${escape(l.type)} <span>·</span> ${l.steps.length} 個探索步驟</div><h3>${escape(l.title)}</h3><p>${escape(l.question)}</p><span class="card-link">進入單元 <span>→</span></span></div></a>`;
 }
 function home(): void {
-  app.innerHTML = `${header}<main><section class="hero"><div class="wrap hero-inner"><div class="hero-copy"><h1>把好奇，<br><em>變成理解。</em></h1><p>動手探索，讓科學看得見。</p><div class="hero-actions"><a class="button dark" href="#catalog">探索所有教材 <span>↗</span></a></div><div class="hero-stats"><div><b>54</b><span>互動單元</span></div><div><b>04</b><span>探索領域</span></div><div><b>3D</b><span>動手學習</span></div></div></div><div class="hero-demo"><div id="home-simulation" class="hero-simulation"><div class="sim-message">正在載入地球…</div></div><div class="globe-bar"><span>拖曳地球，探索世界</span><div><button type="button" data-earth-turn="-1" aria-label="向左旋轉地球" disabled>←</button><button type="button" data-earth-toggle aria-label="自動旋轉" aria-pressed="false" title="自動旋轉" disabled>▶</button><button type="button" data-earth-turn="1" aria-label="向右旋轉地球" disabled>→</button><a href="#lesson/earth-motion-step">探索地球 ↗</a></div></div></div></div></section><section class="subjects-section wrap"><div class="section-intro"><div><h2>選擇探索領域</h2></div></div><div class="subject-grid">${subjectKeys.map(key => { const s=subjects[key]; return `<button class="subject-tile" data-subject="${key}"><img src="${asset(`upstream/covers/${subjectCovers[key]}.webp`)}" alt="" loading="lazy"><span class="subject-copy"><span class="subject-number">${s.english}</span><strong>${s.name}</strong><small>${count(key)} 個互動單元 <span aria-hidden="true">↗</span></small></span></button>`; }).join('')}</div></section><section class="catalog-section" id="catalog"><div class="wrap"><div class="section-intro"><div><p class="overline">THE LEARNING LIBRARY <span>✳</span></p><h2>一起動手，探索科學。</h2><p>從教材中找到你的下一個問題。</p></div><span class="section-index">02 / 教材庫</span></div><div class="catalog-tools"><div class="filters" aria-label="教材分類"><button class="active" data-filter="all">全部 <span>54</span></button>${subjectKeys.map(k=>`<button data-filter="${k}">${subjects[k].name} <span>${count(k)}</span></button>`).join('')}</div><label class="search"><span aria-hidden="true">⌕</span><input type="search" placeholder="搜尋教材或主題" aria-label="搜尋教材或主題"></label></div><div class="results-label" id="result-count"></div><div class="lesson-grid" id="lesson-grid"></div></div></section><section class="closing"><div class="wrap closing-inner"><span class="closing-symbol">✳</span><div><p class="overline">KEEP ASKING QUESTIONS</p><h2>每一次提問，<br>都是探索的開始。</h2></div><a href="#catalog" class="button light">找到你的教材 <span>↗</span></a></div></section></main>${footer}`;
+  app.innerHTML = `${header}<main><section class="hero"><div class="wrap hero-inner"><div class="hero-copy"><h1>台北全真<br><em>一對一</em></h1><p>動手探索，讓科學看得見。</p><div class="hero-actions"><a class="button dark" href="#catalog">探索所有教材 <span>↗</span></a></div><div class="hero-stats"><div><b>54</b><span>互動單元</span></div><div><b>04</b><span>探索領域</span></div><div><b>3D</b><span>動手學習</span></div></div></div><div class="hero-demo"><div class="earth-scene"><div class="scene-kicker"><span></span> 互動地球</div><div id="home-simulation" class="hero-simulation"><div class="sim-message">正在載入地球…</div></div><div class="globe-bar"><span>拖曳地球轉動視角</span><div><button type="button" data-earth-turn="-1" aria-label="向左旋轉地球" disabled>←</button><button type="button" data-earth-toggle aria-label="自動旋轉" aria-pressed="false" title="自動旋轉" disabled>▶</button><button type="button" data-earth-turn="1" aria-label="向右旋轉地球" disabled>→</button></div></div></div><aside class="earth-controls" aria-label="地球日照探索"><div><p class="lab-kicker">ALLTRUE · 3D LAB</p><h2>探索晝與夜</h2><p class="lab-lead">改變時間，看看陽光如何移動。</p></div><div class="earth-slider"><label for="earth-hour">臺北時間 <output id="earth-hour-value" for="earth-hour">12:00</output></label><input id="earth-hour" type="range" min="0" max="23.5" step="0.5" value="12"><div class="range-ends"><span>00:00</span><span>12:00</span><span>23:30</span></div></div><div class="earth-slider"><label for="earth-day">日期 <output id="earth-day-value" for="earth-day">6 月 21 日</output></label><input id="earth-day" type="range" min="1" max="365" step="1" value="172"><div class="range-ends"><span>1 月</span><span>6 月</span><span>12 月</span></div></div><div class="sun-results" aria-live="polite" aria-atomic="true"><div><span>臺北太陽高度</span><strong id="sun-altitude">—</strong></div><div><span>日照狀態</span><strong id="sun-state">—</strong></div></div><p class="lab-note">黃色標記：臺北。高度為幾何估算，未計大氣折射。</p><a class="lab-link" href="#lesson/earth-motion-step">深入探索地球運動 <span>↗</span></a></aside></div></div></section><section class="subjects-section wrap"><div class="section-intro"><div><h2>選擇探索領域</h2></div></div><div class="subject-grid">${subjectKeys.map(key => { const s=subjects[key]; return `<button class="subject-tile" data-subject="${key}"><img src="${asset(`upstream/covers/${subjectCovers[key]}.webp`)}" alt="" loading="lazy"><span class="subject-copy"><span class="subject-number">${s.english}</span><strong>${s.name}</strong><small>${count(key)} 個互動單元 <span aria-hidden="true">↗</span></small></span></button>`; }).join('')}</div></section><section class="catalog-section" id="catalog"><div class="wrap"><div class="section-intro"><div><p class="overline">THE LEARNING LIBRARY <span>✳</span></p><h2>一起動手，探索科學。</h2><p>從教材中找到你的下一個問題。</p></div><span class="section-index">02 / 教材庫</span></div><div class="catalog-tools"><div class="filters" aria-label="教材分類"><button class="active" data-filter="all">全部 <span>54</span></button>${subjectKeys.map(k=>`<button data-filter="${k}">${subjects[k].name} <span>${count(k)}</span></button>`).join('')}</div><label class="search"><span aria-hidden="true">⌕</span><input type="search" placeholder="搜尋教材或主題" aria-label="搜尋教材或主題"></label></div><div class="results-label" id="result-count"></div><div class="lesson-grid" id="lesson-grid"></div></div></section><section class="closing"><div class="wrap closing-inner"><span class="closing-symbol">✳</span><div><p class="overline">KEEP ASKING QUESTIONS</p><h2>每一次提問，<br>都是探索的開始。</h2></div><a href="#catalog" class="button light">找到你的教材 <span>↗</span></a></div></section></main>${footer}`;
   let filter = 'all';
   const input = app.querySelector<HTMLInputElement>('.search input')!;
   const grid = app.querySelector<HTMLElement>('#lesson-grid')!;
@@ -32,6 +33,19 @@ function home(): void {
   app.querySelectorAll<HTMLButtonElement>('[data-subject]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.subject!; update(); document.querySelector('#catalog')?.scrollIntoView({behavior:'instant'});}));
   input.addEventListener('input', update); update();
   const demo = app.querySelector<HTMLElement>('#home-simulation')!;
+  const hour = app.querySelector<HTMLInputElement>('#earth-hour')!;
+  const day = app.querySelector<HTMLInputElement>('#earth-day')!;
+  const updateSun = () => {
+    const localHour = Number(hour.value); const dayNumber = Number(day.value);
+    const position = solarPosition(dayNumber, localHour);
+    const date = new Date(Date.UTC(2025, 0, dayNumber));
+    app.querySelector<HTMLOutputElement>('#earth-hour-value')!.textContent = `${String(Math.floor(localHour)).padStart(2, '0')}:${localHour % 1 ? '30' : '00'}`;
+    app.querySelector<HTMLOutputElement>('#earth-day-value')!.textContent = `${date.getUTCMonth() + 1} 月 ${date.getUTCDate()} 日`;
+    app.querySelector<HTMLElement>('#sun-altitude')!.textContent = `${position.altitude.toFixed(1)}°`;
+    app.querySelector<HTMLElement>('#sun-state')!.textContent = Math.abs(position.altitude) < 1 ? '接近地平線' : position.altitude > 0 ? '白天' : '夜晚';
+    globeController?.setSun(position.declination, position.subsolarLongitude);
+  };
+  hour.addEventListener('input', updateSun); day.addEventListener('input', updateSun); updateSun();
   void import('./globe').then(({ mountGlobe }) => {
     if (!demo.isConnected) return;
     try {
@@ -42,6 +56,7 @@ function home(): void {
         toggle.title = playing ? '暫停自動旋轉' : '開始自動旋轉';
       });
       app.querySelectorAll<HTMLButtonElement>('[data-earth-turn], [data-earth-toggle]').forEach(button => { button.disabled = false; });
+      updateSun();
     }
     catch { demo.innerHTML = '<div class="sim-message"><b>無法啟動 3D 地球</b><p>請更新瀏覽器或啟用硬體加速。</p></div>'; }
   }).catch(() => { if (demo.isConnected) demo.innerHTML = '<div class="sim-message"><b>地球載入失敗</b><p>請重新整理頁面。</p></div>'; });
@@ -51,9 +66,24 @@ function home(): void {
   app.querySelector<HTMLButtonElement>('[data-earth-toggle]')!.addEventListener('click', () => globeController?.toggleRotation());
 }
 function bullets(items: string[]) { return `<ul>${items.map(i=>`<li>${escape(i)}</li>`).join('')}</ul>`; }
-function supportsWebGL(): boolean { try { const c = document.createElement('canvas'); return !!c.getContext('webgl2'); } catch { return false; } }
+function supportsWebGL(): boolean {
+  try {
+    const context = document.createElement('canvas').getContext('webgl2');
+    if (!context) return false;
+    // This is only a probe; do not retain a second context alongside the lesson.
+    context.getExtension('WEBGL_lose_context')?.loseContext();
+    return true;
+  } catch { return false; }
+}
+const failedSimulation = '<div class="sim-message"><b>無法啟動 3D 模擬</b><p>裝置無法建立或維持 WebGL 2。請關閉其他分頁、重新整理，或改用支援 WebGL 2 的瀏覽器。</p></div>';
+window.addEventListener('message', event => {
+  const frame = app.querySelector<HTMLIFrameElement>('.simulation-frame');
+  if (!frame || event.source !== frame.contentWindow || event.origin !== location.origin || event.data?.type !== 'alltrue-webgl-failed') return;
+  const holder = frame.parentElement;
+  if (holder?.id === 'simulation') holder.innerHTML = failedSimulation;
+});
 async function loadSimulation(lesson: Lesson, holder: HTMLElement): Promise<void> {
-  if (!supportsWebGL()) { holder.innerHTML = '<div class="sim-message"><b>無法啟動 3D 模擬</b><p>此瀏覽器或裝置不支援 WebGL 2。請更新瀏覽器、啟用硬體加速，或改用支援 WebGL 2 的裝置。</p></div>'; return; }
+  if (!supportsWebGL()) { holder.innerHTML = failedSimulation; return; }
   try {
     const response = await fetch(asset(`upstream/${lesson.file}`));
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -61,7 +91,10 @@ async function loadSimulation(lesson: Lesson, holder: HTMLElement): Promise<void
     if (!holder.isConnected) return;
     const frame = document.createElement('iframe'); frame.title = `${lesson.title} 3D 互動教材`; frame.allow = 'fullscreen'; frame.className='simulation-frame';
     const scriptUrl = new URL(bridgeUrl, window.location.href).href;
-    const injected = `<base href="${new URL(asset('upstream/courses/'), window.location.href).href}"><script type="module" src="${scriptUrl}"></script>`;
+    // A successful probe does not guarantee the lesson can create or retain a context.
+    // Report explicit WebGL errors from the iframe; ordinary lesson errors are not masked.
+    const monitor = `<script>(()=>{const report=()=>parent.postMessage({type:'alltrue-webgl-failed'},parent.location.origin);const isContextError=text=>/webgl/i.test(text)&&/(context|not supported)/i.test(text);addEventListener('error',e=>{if(isContextError(e.message))report()},true);addEventListener('unhandledrejection',e=>{if(isContextError(String(e.reason)))report()},true);addEventListener('webglcontextlost',report,true)})();</script>`;
+    const injected = `<base href="${new URL(asset('upstream/courses/'), window.location.href).href}">${monitor}<script type="module" src="${scriptUrl}"></script>`;
     frame.srcdoc = html.replace('<head>', `<head>${injected}`); holder.replaceChildren(frame);
   } catch { if (holder.isConnected) holder.innerHTML = '<div class="sim-message"><b>教材載入失敗</b><p>請檢查網路連線後重新整理頁面。</p></div>'; }
 }

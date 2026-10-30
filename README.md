@@ -16,7 +16,7 @@ npm run build
 npm run check:release
 ```
 
-如本機有 Chromium，可先執行 `npm run build && npm run preview`，再以另一個終端執行 `node scripts/browser-check.mjs`；若要逐一檢查 54 個單元的基本載入，可執行 `node scripts/all-lessons-check.mjs`；各單元控制項可用 `node scripts/control-check.mjs` 及 `node scripts/toggle-check.mjs` 檢查；代表性科學數值可另以 `node scripts/science-check.mjs` 檢查。可用 `CHROMIUM_PATH` 指定 Chromium 路徑。此檢查使用模擬器及軟體 WebGL，不代表實體手機、平板驗收。
+如本機有 Chromium，可先執行 `npm run build && npm run preview`，再以另一個終端執行 `node scripts/browser-check.mjs`；若要逐一檢查 54 個單元的基本載入，可執行 `node scripts/all-lessons-check.mjs`；手機尺寸的全部單元基本載入可用 `node scripts/mobile-lessons-check.mjs` 檢查；各單元控制項可用 `node scripts/control-check.mjs` 及 `node scripts/toggle-check.mjs` 檢查；代表性科學數值可另以 `node scripts/science-check.mjs` 檢查。可用 `CHROMIUM_PATH` 指定 Chromium 路徑。此檢查使用模擬器及軟體 WebGL，不代表實體手機、平板驗收。
 
 ## 狀態與限制
 
@@ -29,7 +29,9 @@ npm run check:release
 
 上游基準：Tongjiang Lab commit `4d63ce0a72d987c850ec6d919e570bdb752c87a6`。`public/upstream/` 保存未修改的教材、封面、目錄和授權聲明；`docs/upstream-sha256.json` 記錄上游檔案雜湊並由單元測試核對。網站外殼、教材草稿及顯示文字轉換層是本專案新增內容；所提供的全真 Logo 保存在 `logo.jpg` 和 `public/logo.jpg`。
 
-首頁地球貼圖 `public/derived/earth-blue-marble.jpg` 逐位元組取自上述上游 `courses/earth-motion-step.html` 中的 JPEG，上游在教材中標示來源為 NASA Blue Marble；SHA-256 為 `05d06639f1afcdba63ae009fc2d1191bb148c1fe27ddbcef008c64ae2e72b8dc`。首頁以 MIT 授權的 three.js 產生裝飾性球體，四科圖片使用上游教材封面；自動旋轉是視覺展示，不代表實際時間尺度。
+首頁地球貼圖 `public/derived/earth-blue-marble.jpg` 逐位元組取自上述上游 `courses/earth-motion-step.html` 中的 JPEG，上游在教材中標示來源為 NASA Blue Marble；SHA-256 為 `05d06639f1afcdba63ae009fc2d1191bb148c1fe27ddbcef008c64ae2e72b8dc`。首頁以 MIT 授權的 three.js 繪製互動地球，四科圖片使用上游教材封面；自動旋轉是視覺展示，不代表實際時間尺度。
+
+首頁的臺北晝夜互動採用 [NOAA 太陽位置公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)的非閏年近似，計算臺北（25.033° N、121.5654° E、UTC+8）的太陽高度與受光方向；不含大氣折射、地形或逐年差異，接近地平線時不得當成精確日出日落時間。自動旋轉只改變視角。互動設計參考 [NASA Eyes on the Earth](https://eyes.nasa.gov/apps/earth/)、[PhET 互動教學設計](https://phet.colorado.edu/translation/1534/about)與 [three.js 地球範例](https://threejs.org/examples/webgpu_tsl_earth.html)，未複製它們的模型或圖片。
 
 上游教材、封面與目錄採 [CC BY-NC 4.0](public/upstream/LICENSE)，使用或改編時須署名 Tongjiang Lab、連結授權並說明修改，且僅限非商業用途。內嵌 three.js 使用 MIT 授權，見 [第三方聲明](public/upstream/THIRD_PARTY_NOTICES.md)。
 

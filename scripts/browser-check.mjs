@@ -10,6 +10,9 @@ try {
   const errors = []; page.on('pageerror', error => errors.push(error.message));
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 54);
+  assert.equal(await page.title(), '台北全真一對一');
+  assert.ok((await page.locator('.hero h1').innerText()).replace(/\s/gu, '').includes('台北全真一對一'));
+  assert.equal(await page.locator('header').getByRole('link', { name: '台北全真一對一首頁' }).count(), 1);
   assert.equal(await page.locator('.subject-tile img').count(), 4);
   const homeCanvas = page.locator('#home-simulation canvas');
   await homeCanvas.waitFor({ timeout: 30000 });
@@ -41,6 +44,16 @@ try {
   const paused = await homeCanvas.screenshot();
   await page.waitForTimeout(400);
   assert.equal(paused.equals(await homeCanvas.screenshot()), true, 'paused globe stays still');
+  const noonAltitude = Number.parseFloat(await page.locator('#sun-altitude').innerText());
+  assert.ok(noonAltitude > 80, 'Taipei summer noon has a high sun');
+  assert.equal(await page.locator('#sun-state').innerText(), '白天');
+  await page.getByLabel('臺北時間').focus(); await page.keyboard.press('Home');
+  assert.equal(await page.locator('#sun-state').innerText(), '夜晚');
+  assert.ok(Number.parseFloat(await page.locator('#sun-altitude').innerText()) < 0);
+  assert.equal(paused.equals(await homeCanvas.screenshot()), false, 'time control changes 3D sunlight');
+  await page.getByLabel('臺北時間').evaluate(input => { input.value = '12'; input.dispatchEvent(new input.ownerDocument.defaultView.Event('input', { bubbles: true })); });
+  await page.getByLabel('日期').evaluate(input => { input.value = '355'; input.dispatchEvent(new input.ownerDocument.defaultView.Event('input', { bubbles: true })); });
+  assert.ok(Number.parseFloat(await page.locator('#sun-altitude').innerText()) < noonAltitude - 40, 'winter noon sun is lower');
   await rotationToggle.click();
   assert.equal(await rotationToggle.getAttribute('aria-pressed'), 'true', 'rotation can resume');
   await page.getByRole('link', { name: '教材來源與授權' }).click();
@@ -86,6 +99,11 @@ try {
   await mobileGlobePage.goto(origin); assert.equal(await mobileGlobePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   const mobileGlobe = mobileGlobePage.locator('#home-simulation canvas');
   await mobileGlobePage.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.ready === 'true');
+  const mobileTime = mobileGlobePage.getByLabel('臺北時間');
+  await mobileTime.scrollIntoViewIfNeeded();
+  const timeRect = await mobileTime.boundingBox(); assert.ok(timeRect);
+  await mobileGlobePage.touchscreen.tap(timeRect.x + 2, timeRect.y + timeRect.height / 2);
+  assert.equal(await mobileGlobePage.locator('#sun-state').innerText(), '夜晚', 'time slider responds to touch');
   await mobileGlobe.scrollIntoViewIfNeeded();
   const mobileBefore = await mobileGlobe.screenshot();
   const globeRect = await mobileGlobe.boundingBox(); assert.ok(globeRect);
@@ -149,4 +167,21 @@ try {
   await noWebGL.addInitScript(() => { const original=HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function(type, ...args) { if (type === 'webgl2') return null; return original.call(this, type, ...args); }; });
   await noWebGL.goto(origin); await noWebGL.getByText('無法啟動 3D 地球').waitFor(); assert.equal(await noWebGL.locator('#home-simulation canvas').count(), 0);
   await noWebGL.goto(`${origin}#lesson/projectile-step`); await noWebGL.getByText('無法啟動 3D 模擬').waitFor(); assert.equal(await noWebGL.locator('iframe').count(),0); console.log('PASS: WebGL fallback');
+  const failedLesson = await browser.newPage();
+  await failedLesson.addInitScript(() => {
+    if (globalThis.parent === globalThis) return;
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(type, ...args) { if (type === 'webgl2') return null; return original.call(this, type, ...args); };
+  });
+  await failedLesson.goto(`${origin}#lesson/projectile-step`);
+  await failedLesson.getByText('無法啟動 3D 模擬').waitFor({ timeout: 30000 });
+  assert.equal(await failedLesson.locator('iframe').count(), 0, 'lesson WebGL initialization failure shows fallback');
+  const lostContext = await browser.newPage();
+  await lostContext.goto(`${origin}#lesson/projectile-step`);
+  const lostCanvas = lostContext.frameLocator('iframe').locator('#gl');
+  await lostCanvas.waitFor({ timeout: 30000 });
+  await lostCanvas.evaluate(canvas => canvas.dispatchEvent(new canvas.ownerDocument.defaultView.Event('webglcontextlost')));
+  await lostContext.getByText('無法啟動 3D 模擬').waitFor();
+  assert.equal(await lostContext.locator('iframe').count(), 0, 'lost WebGL context shows fallback');
+  console.log('PASS: lesson WebGL initialization and context loss fallbacks');
 } finally { await browser.close(); }
