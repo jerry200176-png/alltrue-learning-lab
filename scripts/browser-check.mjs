@@ -1,6 +1,7 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { URL } from 'node:url';
 const lessons = JSON.parse(readFileSync('src/lessons.json', 'utf8'));
 const titleFor = slug => lessons.find(lesson => lesson.slug === slug).title;
 const origin = process.env.LAB_URL || 'http://127.0.0.1:4173/';
@@ -11,6 +12,10 @@ try {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 57);
   assert.equal(await page.locator('.hero').evaluate(element => element.ownerDocument.defaultView.getComputedStyle(element, '::before').animationName), 'none', 'reduced motion disables the star animation');
+  const starImage = await page.locator('.hero').evaluate(element => element.ownerDocument.defaultView.getComputedStyle(element, '::before').backgroundImage);
+  assert.match(starImage, /derived\/nasa-stars-4096\.jpg/u, 'star map resolves relative to the site root');
+  const starResponse = await page.request.get(new URL('derived/nasa-stars-4096.jpg', origin).href);
+  assert.equal(starResponse.status(), 200, 'NASA star map is available');
   assert.equal(await page.title(), '台北全真一對一');
   assert.ok((await page.locator('.hero h1').innerText()).replace(/\s/gu, '').includes('台北全真一對一'));
   assert.equal(await page.locator('header').getByRole('link', { name: '台北全真一對一首頁' }).count(), 1);
@@ -25,7 +30,7 @@ try {
     const gl = canvas.getContext('webgl2');
     return { quality: canvas.dataset.texture, maxSize: gl?.getParameter(gl.MAX_TEXTURE_SIZE), coarse: canvas.ownerDocument.defaultView.matchMedia('(pointer: coarse)').matches };
   });
-  if (!textureDetails.coarse && textureDetails.maxSize >= 5400) assert.equal(textureDetails.quality, 'detailed', 'capable desktop loads the detailed NASA texture');
+  if (!textureDetails.coarse && textureDetails.maxSize >= 4096) assert.equal(textureDetails.quality, 'detailed', 'capable desktop loads the detailed NASA texture');
   const rotationToggle = page.getByRole('button', { name: '自動旋轉' });
   assert.equal(await rotationToggle.getAttribute('aria-pressed'), 'false', 'reduced motion starts with rotation paused');
   await homeCanvas.evaluate(canvas => {
@@ -64,6 +69,14 @@ try {
   assert.equal(await page.locator('#sun-state').innerText(), '夜晚');
   assert.equal(await page.getByRole('button', { name: '深夜', exact: true }).getAttribute('aria-pressed'), 'true');
   await page.getByRole('button', { name: '正午', exact: true }).click();
+  const beforeOverlay = await homeCanvas.screenshot();
+  const overlay = page.locator('[data-earth-overlay]');
+  assert.equal(await overlay.innerText(), '顯示日照線');
+  await overlay.click();
+  assert.equal(await overlay.getAttribute('aria-pressed'), 'true');
+  assert.equal(beforeOverlay.equals(await homeCanvas.screenshot()), false, 'sunlight overlay changes the rendered globe');
+  await page.getByRole('button', { name: '隱藏日照線', exact: true }).click();
+  assert.equal(await overlay.getAttribute('aria-pressed'), 'false');
   const noonAltitude = Number.parseFloat(await page.locator('#sun-altitude').innerText());
   assert.ok(noonAltitude > 80, 'Taipei summer noon has a high sun');
   assert.equal(await page.locator('#sun-state').innerText(), '白天');
@@ -130,7 +143,7 @@ try {
   assert.deepEqual(errors, []);
   await page.close();
   const unavailableTexture = await browser.newPage({ viewport: { width: 1280, height: 850 } });
-  await unavailableTexture.route('**/derived/earth-blue-marble-nasa-5400.jpg', route => route.abort());
+  await unavailableTexture.route('**/derived/nasa-earth-4096.jpg', route => route.abort());
   await unavailableTexture.goto(origin);
   await unavailableTexture.waitForFunction(() => {
     const canvas = document.querySelector('#home-simulation canvas');
@@ -141,6 +154,7 @@ try {
   const sharpMobile = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   await sharpMobile.goto(origin);
   await sharpMobile.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.ready === 'true');
+  assert.equal(await sharpMobile.locator('#home-simulation canvas').getAttribute('data-texture'), 'standard', 'touch devices retain the lower-memory texture');
   const resolution = await sharpMobile.locator('#home-simulation canvas').evaluate(canvas => ({ width: canvas.width, height: canvas.height, cssWidth: canvas.clientWidth }));
   assert.ok(resolution.width >= resolution.cssWidth * 2.4, 'high-density mobile globe uses a sharp drawing buffer');
   assert.ok(resolution.width * resolution.height <= 1_202_000, 'globe drawing buffer stays within its memory budget');
@@ -150,6 +164,9 @@ try {
   await mobileGlobePage.goto(origin); assert.equal(await mobileGlobePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   const mobileGlobe = mobileGlobePage.locator('#home-simulation canvas');
   await mobileGlobePage.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.ready === 'true');
+  const mobileOverlay = mobileGlobePage.locator('[data-earth-overlay]');
+  await mobileOverlay.tap();
+  assert.equal(await mobileOverlay.getAttribute('aria-pressed'), 'true', 'touch can show the sun and grid overlay');
   const mobileTime = mobileGlobePage.getByLabel('臺北時間');
   await mobileGlobePage.getByRole('button', { name: '傍晚', exact: true }).tap();
   assert.equal(await mobileTime.inputValue(), '18', 'sun preset responds to touch');
@@ -242,4 +259,5 @@ try {
   await lostContext.getByText('無法啟動 3D 模擬').waitFor();
   assert.equal(await lostContext.locator('iframe').count(), 0, 'lost WebGL context shows fallback');
   console.log('PASS: lesson WebGL initialization and context loss fallbacks');
+  await lostContext.close();
 } finally { await browser.close(); }

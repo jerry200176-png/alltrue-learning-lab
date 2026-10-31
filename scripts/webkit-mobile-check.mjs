@@ -18,6 +18,9 @@ try {
   assert.equal(await page.locator('#earth-hour').inputValue(), '0');
   assert.equal(await page.locator('#sun-state').innerText(), '夜晚');
   await page.getByRole('button', { name: '北極', exact: true }).tap();
+  const overlay = page.locator('[data-earth-overlay]');
+  await overlay.tap();
+  assert.equal(await overlay.getAttribute('aria-pressed'), 'true');
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   if (errors.length) throw new Error(errors.join('; '));
   for (const [index, lesson] of lessons.entries()) {

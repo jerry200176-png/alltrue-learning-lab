@@ -22,13 +22,24 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95 });
   const earth = new THREE.Mesh(geometry, material);
   view.add(earth);
+  // A subtle atmospheric limb; visual only, not a weather model.
+  const atmosphereGeometry = new THREE.SphereGeometry(1.02, 64, 48);
+  const atmosphereMaterial = new THREE.ShaderMaterial({
+    uniforms: {}, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: `varying vec3 vNormal; varying vec3 vView;
+      void main(){vec4 positionView=modelViewMatrix*vec4(position,1.0);vNormal=normalize(normalMatrix*normal);vView=normalize(-positionView.xyz);gl_Position=projectionMatrix*positionView;}`,
+    fragmentShader: `varying vec3 vNormal; varying vec3 vView;
+      void main(){float rim=pow(1.0-abs(dot(normalize(vNormal),normalize(vView))),3.0);gl_FragColor=vec4(0.20,0.58,1.0,rim*0.24);}`
+  });
+  view.add(new THREE.Mesh(atmosphereGeometry, atmosphereMaterial));
   // Fine geographic graticules echo the Earth lesson while remaining Earth-fixed.
   const gridMaterial = new THREE.LineBasicMaterial({ color: 0x95daf3, transparent: true, opacity: 0.34, depthWrite: false });
   const gridGeometries: THREE.BufferGeometry[] = [];
+  const grid = new THREE.Group(); grid.visible = false; view.add(grid);
   const addGridLine = (points: THREE.Vector3[]) => {
     const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
     gridGeometries.push(lineGeometry);
-    view.add(new THREE.Line(lineGeometry, gridMaterial));
+    grid.add(new THREE.Line(lineGeometry, gridMaterial));
   };
   for (let latitude = -60; latitude <= 60; latitude += 30) {
     const points: THREE.Vector3[] = [];
@@ -56,7 +67,7 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   const rayGeometry = new THREE.BufferGeometry().setFromPoints(rayPoints);
   const rayMaterial = new THREE.LineBasicMaterial({ color: 0xffd36e, transparent: true, opacity: 0.8 });
   const sunRays = new THREE.LineSegments(rayGeometry, rayMaterial);
-  view.add(sunRays);
+  sunRays.visible = false; view.add(sunRays);
   // The gold ring marks the subsolar point: where the Sun is directly overhead.
   const sunMarkerGeometry = new THREE.RingGeometry(0.024, 0.034, 32);
   const sunMarkerMaterial = new THREE.MeshBasicMaterial({ color: 0xffce52, side: THREE.DoubleSide });
@@ -130,9 +141,9 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   };
   loader.load(textureUrl, texture => {
     applyTexture(texture, 'standard');
-    // The large texture needs about 78 MB of GPU memory with mipmaps. Keep the
+    // The 4K texture needs roughly 45 MB of GPU memory with mipmaps. Keep the
     // smaller map on touch devices and GPUs that cannot fit its dimensions.
-    if (!disposed && detailedTextureUrl && renderer.capabilities.maxTextureSize >= 5400 && !window.matchMedia('(pointer: coarse)').matches) {
+    if (!disposed && detailedTextureUrl && renderer.capabilities.maxTextureSize >= 4096 && !window.matchMedia('(pointer: coarse)').matches) {
       canvas.dataset.detailLoading = 'true';
       loader.load(detailedTextureUrl, detailed => {
         delete canvas.dataset.detailLoading; applyTexture(detailed, 'detailed');
@@ -142,13 +153,13 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
     if (!disposed) holder.classList.add('texture-unavailable');
   });
   resize(); animationFrame = requestAnimationFrame(animate);
-  return { rotate, setSun, setView(viewpoint: 'taipei' | 'north') {
+  return { rotate, setSun, setOverlay(visible: boolean) { grid.visible = visible; sunRays.visible = visible; render(); }, setView(viewpoint: 'taipei' | 'north') {
     if (viewpoint === 'north') view.rotation.set(Math.PI / 2, 0, 0);
     else view.rotation.set(0.12, 2.3, 0.08);
     render();
   }, toggleRotation() { playing = !playing; onRotationChange(playing); }, dispose() {
     disposed = true; cancelAnimationFrame(animationFrame); resizeObserver.disconnect(); visibilityObserver.disconnect();
     motion.removeEventListener('change', onMotionChange);
-    material.map?.dispose(); material.dispose(); geometry.dispose(); markerGeometry.dispose(); markerMaterial.dispose(); gridGeometries.forEach(line => line.dispose()); gridMaterial.dispose(); rayGeometry.dispose(); rayMaterial.dispose(); sunMarkerGeometry.dispose(); sunMarkerMaterial.dispose(); renderer.dispose(); renderer.forceContextLoss();
+    material.map?.dispose(); material.dispose(); geometry.dispose(); atmosphereGeometry.dispose(); atmosphereMaterial.dispose(); markerGeometry.dispose(); markerMaterial.dispose(); gridGeometries.forEach(line => line.dispose()); gridMaterial.dispose(); rayGeometry.dispose(); rayMaterial.dispose(); sunMarkerGeometry.dispose(); sunMarkerMaterial.dispose(); renderer.dispose(); renderer.forceContextLoss();
   } };
 }
