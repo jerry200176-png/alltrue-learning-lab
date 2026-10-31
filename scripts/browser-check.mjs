@@ -60,10 +60,17 @@ try {
   assert.equal(afterButton.equals(afterAnimation), false, 'homepage Earth animates');
   await rotationToggle.click();
   assert.equal(await rotationToggle.getAttribute('aria-pressed'), 'false', 'rotation can be paused');
-  // A paused Cesium camera can still finish loading/refining visible tiles.
-  await page.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.tilesPending === '0');
-  await page.waitForTimeout(500);
-  await page.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.tilesPending === '0');
+  // A paused camera can still refine tiles or switch to the NASA fallback.
+  // Require an uninterrupted quiet period before comparing exact pixels.
+  await page.waitForFunction(() => {
+    const canvas = document.querySelector('#home-simulation canvas');
+    if (!canvas) return false;
+    if (canvas.dataset.map !== 'fallback' || canvas.dataset.tilesPending !== '0' || canvas.dataset.detailLoading) {
+      delete canvas.dataset.testSettledSince; return false;
+    }
+    canvas.dataset.testSettledSince ||= String(globalThis.performance.now());
+    return globalThis.performance.now() - Number(canvas.dataset.testSettledSince) >= 2000;
+  }, null, { polling: 100, timeout: 30000 });
   const paused = await homeCanvas.screenshot();
   await page.waitForTimeout(400);
   assert.equal(paused.equals(await homeCanvas.screenshot()), true, 'paused globe stays still');

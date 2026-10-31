@@ -47,6 +47,23 @@ try {
     for (let i = 0; i < 30 && !tileLevels.some(level => level >= 11 && level < 19); i++) await page.waitForTimeout(1000);
     assert.ok(tileLevels.some(level => level >= 11 && level < 19), `zoom requests detailed satellite tiles: ${tileLevels.join(',')}`);
     assert.equal(await page.locator('.globe-attribution').getByRole('link', { name: 'Esri' }).count(), 1);
+    const attributionBounds = await page.locator('.globe-attribution').boundingBox();
+    const cesiumBounds = await page.locator('.cesium-credit-logoContainer').boundingBox();
+    assert.ok(attributionBounds && cesiumBounds && attributionBounds.x + attributionBounds.width <= cesiumBounds.x, 'map credits remain legible without overlapping');
+    const sourceButton = page.getByRole('button', { name: '查看地圖資料來源' });
+    await sourceButton.focus(); await page.keyboard.press('Enter');
+    const sources = page.locator('.cesium-credit-lightbox');
+    assert.equal(await sources.isVisible(), true, 'map source details open with the keyboard');
+    assert.match(await sources.innerText(), /Vantor/u);
+    assert.match(await sources.innerText(), /OpenStreetMap/u);
+    assert.match(await sources.innerText(), /CC BY 4\.0/u);
+    const closeSources = page.getByRole('button', { name: '關閉地圖資料來源' });
+    await closeSources.focus(); await page.keyboard.press('Enter');
+    assert.equal(await sources.isVisible(), false, 'map source details close with the keyboard');
+    if (!mobile) {
+      const scale = await canvas.evaluate(element => element.width / element.clientWidth);
+      assert.ok(scale >= 1.2, `desktop globe renders above CSS resolution: ${scale}`);
+    }
     assert.deepEqual(errors, []);
     await context.close(); console.log(`PASS: ${engine} ${mobile ? 'mobile' : 'desktop'} satellite tile zoom and attribution`);
   }
