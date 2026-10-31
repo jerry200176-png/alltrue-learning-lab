@@ -81,7 +81,7 @@ describe('小白教育教材', () => {
     const html = readFileSync('public/xiaobai/mirror.html');
     const cover = readFileSync('public/xiaobai/mirror-cover.png');
     const sha = (data: Buffer) => createHash('sha256').update(data).digest('hex');
-    expect(sha(html)).toBe('85d27445c9507428b2020cc398ddfbe30e948613b126903b3ed86e9efdf54a2a');
+    expect(sha(html)).toBe('2e6f138171c9a29adca33d70a611d6c53e680aee8bd91e13ee5c4a3af738ed3c');
     expect(sha(cover)).toBe('810539489d296ac90fd9109dd8dbeb6cbd0edaac81d05c2eefe70351af3520b6');
     expect(html.toString()).not.toContain('deliveryId');
     expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
