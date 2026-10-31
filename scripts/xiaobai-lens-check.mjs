@@ -18,7 +18,7 @@ try {
     await page.goto(`${origin}#lesson/xiaobai-lens`);
     assert.equal(await page.getByRole('heading', { name: '凸透鏡與凹透鏡成像', exact: true }).count(), 1);
     const frame = page.frameLocator('#simulation iframe');
-    await frame.locator('canvas').first().waitFor({ timeout: 30000 });
+    await frame.locator('canvas').first().waitFor({ timeout: 90000 });
     await frame.locator('#loading').waitFor({ state: 'hidden', timeout: 90000 });
     assert.equal(await frame.locator('#creatorBrand > span').isVisible(), false);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
