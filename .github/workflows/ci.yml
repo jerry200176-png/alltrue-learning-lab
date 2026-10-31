@@ -40,7 +40,6 @@ jobs:
           node scripts/xiaobai-lens-check.mjs
           node scripts/xiaobai-nuclear-check.mjs
           node scripts/xiaobai-blocks-check.mjs
-          node scripts/open-science-orbital-check.mjs
           node scripts/science-check.mjs
       - name: Upload tested site
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
@@ -168,7 +167,6 @@ jobs:
           curl --silent --fail "$LAB_URL" > /dev/null
           LAB_ENGINE=webkit xvfb-run -a node scripts/xiaobai-blocks-check.mjs
           LAB_ENGINE=webkit xvfb-run -a node scripts/xiaobai-oxygen-check.mjs
-          LAB_ENGINE=webkit xvfb-run -a node scripts/open-science-orbital-check.mjs
 
   deploy:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
