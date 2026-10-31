@@ -68,8 +68,8 @@ try {
     if (canvas.dataset.map !== 'fallback' || canvas.dataset.tilesPending !== '0' || canvas.dataset.detailLoading) {
       delete canvas.dataset.testSettledSince; return false;
     }
-    canvas.dataset.testSettledSince ||= String(performance.now());
-    return performance.now() - Number(canvas.dataset.testSettledSince) >= 2000;
+    canvas.dataset.testSettledSince ||= String(globalThis.performance.now());
+    return globalThis.performance.now() - Number(canvas.dataset.testSettledSince) >= 2000;
   }, null, { polling: 100, timeout: 30000 });
   const paused = await homeCanvas.screenshot();
   await page.waitForTimeout(400);
