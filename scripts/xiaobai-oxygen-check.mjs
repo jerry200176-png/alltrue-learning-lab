@@ -2,10 +2,11 @@ import { chromium, webkit, devices } from 'playwright';
 import assert from 'node:assert/strict';
 
 const engine = process.env.LAB_ENGINE === 'webkit' ? 'webkit' : 'chromium';
-const browser = engine === 'webkit' ? await webkit.launch({ headless: process.env.WEBKIT_HEADED !== '1' }) : await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--mute-audio'] });
 const origin = process.env.LAB_URL || 'http://127.0.0.1:4173/';
-try {
-  for (const mobile of [false, true]) {
+for (const mobile of [false, true]) {
+  // Each device gets a fresh browser process so GPU state does not leak between sessions.
+  const browser = engine === 'webkit' ? await webkit.launch({ headless: process.env.WEBKIT_HEADED !== '1' }) : await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--mute-audio'] });
+  try {
     const device = engine === 'webkit' && mobile ? Object.fromEntries(Object.entries(devices['iPhone 13']).filter(([key]) => key !== 'defaultBrowserType')) : { viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 850 }, ...(mobile ? { isMobile: true, hasTouch: true } : {}) };
     const context = await browser.newContext(device); const page = await context.newPage(); const errors = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -64,5 +65,5 @@ try {
     assert.deepEqual(errors, []);
     await context.close();
     console.log(`PASS: Xiaobai oxygen ${engine} ${mobile ? 'mobile' : 'desktop'} controls, chemistry and isolation`);
-  }
-} finally { await browser.close(); }
+  } finally { await browser.close(); }
+}
