@@ -51,7 +51,7 @@ describe('小白教育教材', () => {
   });
   it('pins the authorised nuclear lesson without a temporary delivery identifier', () => {
     const html = readFileSync('public/xiaobai/nuclear-energy.html');
-    expect(createHash('sha256').update(html).digest('hex')).toBe('77e1f43ed318bdd7eec342ecc398fa553c76fc468a619b3d068283b8aca33a1f');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('9a790f6e9cf3297437f00402d3ecd4363de39de9caf62a84261b27113d109a18');
     expect(html.toString()).not.toContain('deliveryId');
     expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
     expect(html.toString()).toContain('three.js authors');

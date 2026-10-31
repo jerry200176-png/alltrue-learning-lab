@@ -43,7 +43,7 @@
 
 - 來源：[小白教育：核能、核裂變與核電站](https://xbjiaoyu.com/#course/nuclear-energy)，公開線上播放版本，2026-10-31（臺北時間）取得；權利人於本次工作對話確認授權本站使用及翻譯。
 - 原始播放 HTML 快照 SHA-256：`23be3f8493d6cc9d24cc9ea0ff0cbc2fe3244fecad0c9c3ea2b4a4b1e435ba50`，含臨時識別碼而未存入儲存庫。
-- 本站版本 `public/xiaobai/nuclear-energy.html` SHA-256：`77e1f43ed318bdd7eec342ecc398fa553c76fc468a619b3d068283b8aca33a1f`。移除原站注入的兩個播放驗證區塊及短期播放識別標記，其餘模型及計算保留，原始 three.js MIT 聲明仍在檔內。
+- 本站版本 `public/xiaobai/nuclear-energy.html` SHA-256：`9a790f6e9cf3297437f00402d3ecd4363de39de9caf62a84261b27113d109a18`。移除原站注入的兩個播放驗證區塊及短期播放識別標記，控制器僅在數值變化時更新文字，避免 WebKit 點擊時文字節點反覆重建；模型及計算保留，原始 three.js MIT 聲明仍在檔內。
 - 封面為本站整合頁中的核電廠模型擷取：`public/xiaobai/nuclear-energy-cover.png`，SHA-256 `bb4bcc2d4ecee7f647a29f7c0f9d3f35c262e750d98d595561189b9c2c4e63a1`。未引入其他 3D 模型。
 - 獨立轉換層處理「核電廠」、「核反應爐」及「連鎖反應」等用語；自動測試檢查演示中的一次裂變、三個中子及完全吸收時的反應。設備比例、能量數據及速度皆為模型示意。
 - 完整模型、教案、術語專業審查與實體手機平板驗收仍為 **PENDING**。
