@@ -2,6 +2,8 @@
 
 以 [Tongjiang Lab](https://github.com/smithjohn78390/tongjiang-lab) 的 54 個 3D 單元為基礎，並加入小白教育授權的平面鏡成像、等高線、原子結構、透鏡成像、核裂變、立體積木及空氣與氧氣單元的繁體中文教材網站。**目前為未完成的教學原型，不可視為已通過課堂或正式上線驗收。**
 
+原子軌域單元改編自 MIT 授權的 [Science Simulations](https://github.com/ai-science-sims/science-simulations)；來源、修正與科學限制詳見 [來源紀錄](docs/open-science-source.md)。其他候選見 [開源教材比對](docs/open-source-candidates.md)。
+
 ## 執行與檢查
 
 需要 Node.js 22 或更新版本。

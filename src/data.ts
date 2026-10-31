@@ -1,9 +1,10 @@
 import lessonsJson from './lessons.json';
 import { xiaobaiLessons } from './xiaobai';
+import { openScienceLessons } from './open-science';
 export type Subject = 'phys' | 'chem' | 'bio' | 'geo' | 'math';
-export interface Lesson { source?: 'xiaobai'; slug: string; subject: Subject; title: string; type: string; question: string; steps: string[]; file: string; cover: string }
+export interface Lesson { source?: 'xiaobai' | 'open-science'; slug: string; subject: Subject; title: string; type: string; question: string; steps: string[]; file: string; cover: string }
 export const lessons = lessonsJson as Lesson[];
-export const allLessons = [...lessons, ...xiaobaiLessons];
+export const allLessons = [...lessons, ...xiaobaiLessons, ...openScienceLessons];
 export const subjects: Record<Subject, {name: string; english: string; color: string; description: string}> = {
   phys: { name: '物理', english: 'PHYSICS', color: 'blue', description: '從運動、力到電與磁，探索自然的規律。' },
   chem: { name: '化學', english: 'CHEMISTRY', color: 'orange', description: '走進物質的結構、反應與變化。' },

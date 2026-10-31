@@ -10,7 +10,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 850 } });
   const errors = []; page.on('pageerror', error => errors.push(error.message));
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 61);
+  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 62);
   assert.equal(await page.locator('.hero').evaluate(element => element.ownerDocument.defaultView.getComputedStyle(element, '::before').animationName), 'none', 'reduced motion disables the star animation');
   const starImage = await page.locator('.hero').evaluate(element => element.ownerDocument.defaultView.getComputedStyle(element, '::before').backgroundImage);
   assert.match(starImage, /derived\/nasa-stars-4096\.jpg/u, 'star map resolves relative to the site root');
@@ -128,7 +128,7 @@ try {
   assert.equal(await page.getByRole('link', { name: '铜匠实验室（Tongjiang Lab）' }).getAttribute('href'), 'https://lab.tongjiang.app/');
   assert.ok(await page.getByRole('link', { name: 'CC BY-NC 4.0' }).getAttribute('href'));
   assert.equal(await page.getByRole('link', { name: '第三方授權聲明' }).count(), 1);
-  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 61);
+  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 62);
   await page.locator('[data-filter=math]').click(); assert.equal(await page.locator('.lesson-card').count(), 1);
   await page.locator('[data-filter=bio]').click(); assert.equal(await page.locator('.lesson-card').count(), 5);
   await page.getByRole('searchbox').fill('酵素'); assert.equal(await page.locator('.lesson-card').count(), 1);
@@ -170,7 +170,7 @@ try {
       assert.equal(await page.locator('html').getAttribute('data-lesson-context-released'), 'true', 'lesson WebGL context is released on navigation');
       await page.waitForTimeout(100);
       assert.equal(await page.locator('html').getAttribute('data-late-lesson-frame'), null, 'pending lesson animation is cancelled on navigation');
-      assert.equal(await page.locator('.lesson-card').count(), 61);
+      assert.equal(await page.locator('.lesson-card').count(), 62);
     }
     console.log(`PASS: ${slug} loads a translated 3D lesson`);
   }

@@ -2,6 +2,11 @@
 
 版本號遵循 [Semantic Versioning](https://semver.org/)。`preview` 代表試用版本，不代表教學內容或實體裝置已驗收。
 
+## 0.1.0-preview.17 — 準備中
+
+- 新增改編自 MIT 授權 Science Simulations 的原子軌域與電子組態單元。
+- 修正原始預覽中的鉀、鉻、銅電子數，圖形僅作形狀示意。
+
 ## 0.1.0-preview.16 — 準備中
 
 - 首頁地球支援滑鼠滾輪及鍵盤加減鍵縮放，並限制縮放範圍。

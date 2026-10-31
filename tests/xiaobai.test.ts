@@ -8,8 +8,8 @@ describe('小白教育教材', () => {
   it('adds the authorised mirror lesson without replacing the 54 upstream lessons', () => {
     expect(lessons).toHaveLength(54);
     expect(xiaobaiLessons).toHaveLength(7);
-    expect(allLessons).toHaveLength(61);
-    expect(new Set(allLessons.map(lesson => lesson.slug)).size).toBe(61);
+    expect(allLessons).toHaveLength(62);
+    expect(new Set(allLessons.map(lesson => lesson.slug)).size).toBe(62);
     expect(filterLessons('平面鏡', 'phys').map(lesson => lesson.slug)).toEqual(['xiaobai-mirror']);
     expect(filterLessons('等高線', 'geo').map(lesson => lesson.slug)).toEqual(['xiaobai-terrain']);
     expect(filterLessons('元素辨認', 'chem').map(lesson => lesson.slug)).toEqual(['xiaobai-atom']);
