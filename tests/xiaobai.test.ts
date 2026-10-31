@@ -51,26 +51,30 @@ describe('小白教育教材', () => {
   });
   it('pins the authorised nuclear lesson without a temporary delivery identifier', () => {
     const html = readFileSync('public/xiaobai/nuclear-energy.html');
-    expect(createHash('sha256').update(html).digest('hex')).toBe('591ef69095009cfe783fc60e04a568875f1da74d3050cd025dd127905dfa132a');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('77e1f43ed318bdd7eec342ecc398fa553c76fc468a619b3d068283b8aca33a1f');
     expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
     expect(html.toString()).toContain('three.js authors');
   });
   it('pins the authorised lens lesson without a temporary delivery identifier', () => {
     const html = readFileSync('public/xiaobai/lens.html');
-    expect(createHash('sha256').update(html).digest('hex')).toBe('08dc2a5f430f724333f0739aa7375ec20d62ff4e3b7e6a2d290416814a7199a0');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('c1c88572e16cc70249aef774349a744362fe95185df33d8f59976a449ea2d7ae');
     expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
     expect(html.toString()).toContain('three.js authors');
   });
   it('pins the authorised atom lesson without a temporary delivery identifier', () => {
     const html = readFileSync('public/xiaobai/atom.html');
-    expect(createHash('sha256').update(html).digest('hex')).toBe('ad4aa0aae14b070b2b00adee447b3f783cb0144310506c0bb0a4d778f44d2929');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('226c6c15e69c7a32a19513d26ccc7e3531d7f375bfe5642cc1398774d5ed2af6');
     expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
     expect(html.toString()).toContain('three.js authors');
   });
   it('pins the authorised terrain lesson without a temporary delivery identifier', () => {
     const html = readFileSync('public/xiaobai/terrain.html');
-    expect(createHash('sha256').update(html).digest('hex')).toBe('fd7fd44a588317fb23b6e209f9d9bf8217fa4376ffb4b691ea0b50981de06964');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('f4a54dd5c332300061987fbbd6f113e2082df3aadd826c0be7d9d6363dce2425');
     expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
     expect(html.toString()).toContain('three.js authors');
   });
   it('keeps the reviewed lesson and derived preview pinned and omits temporary access identifiers', () => {
@@ -80,6 +84,7 @@ describe('小白教育教材', () => {
     expect(sha(html)).toBe('85d27445c9507428b2020cc398ddfbe30e948613b126903b3ed86e9efdf54a2a');
     expect(sha(cover)).toBe('810539489d296ac90fd9109dd8dbeb6cbd0edaac81d05c2eefe70351af3520b6');
     expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
     expect(html.toString()).toContain('three.js authors');
     expect(html.toString()).toContain('小小小白');
   });

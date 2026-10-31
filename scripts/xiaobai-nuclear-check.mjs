@@ -18,6 +18,12 @@ try {
     assert.equal(await page.getByRole('heading', { name: '核裂變與核電廠', exact: true }).count(), 1);
     const frame = page.frameLocator('#simulation iframe');
     await frame.locator('canvas').first().waitFor({ timeout: 90000 });
+    // The canvas is inserted before the scene has finished initialising.
+    await frame.locator('body').evaluate(element => new Promise((resolve, reject) => {
+      const win = element.ownerDocument.defaultView; const started = Date.now();
+      const check = () => { if (win.__nuclear?.ready) resolve(true); else if (Date.now() - started > 90000) reject(new Error('Nuclear scene failed to initialise')); else win.setTimeout(check, 100); };
+      check();
+    }), null, { timeout: 120000 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     assert.equal(await frame.locator('body').evaluate(element => { try { return !!element.ownerDocument.defaultView.parent.document; } catch { return false; } }), false);
     await frame.getByText('核能', { exact: true }).first().waitFor();
