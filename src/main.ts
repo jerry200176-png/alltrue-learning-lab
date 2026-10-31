@@ -127,7 +127,7 @@ async function loadSimulation(lesson: Lesson, holder: HTMLElement): Promise<void
     let nestedBridge = '';
     if (lesson.slug === 'xiaobai-oxygen') {
       // Keep the two tube labels readable on narrow screens; their content and positions remain tied to the model.
-      const mobileLabels = '<style>@media(max-width:600px){#label-a,#label-b{min-width:0!important;width:68px!important;white-space:normal!important;line-height:1.2!important}#label-a b,#label-b b{font-size:9px!important;letter-spacing:0!important}#label-a small,#label-b small{display:none!important}}</style>';
+      const mobileLabels = '<style>@media(max-width:600px){#label-a,#label-b{min-width:0!important;width:58px!important;white-space:normal!important;line-height:1.2!important}#label-a b,#label-b b{font-size:9px!important;letter-spacing:0!important}#label-a small,#label-b small{display:none!important}}</style>';
       const childPrefix = `${monitor}${localization}${mobileLabels}`;
       const encoded = JSON.stringify(childPrefix).replace(/<\/script/gi, '<\\/script');
       nestedBridge = `<script>(()=>{const d=Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype,'srcdoc');const prefix=${encoded};Object.defineProperty(HTMLIFrameElement.prototype,'srcdoc',{...d,set(value){d.set.call(this,String(value).replace('<head>','<head>'+prefix))}});addEventListener('message',event=>{if(event.data?.type==='alltrue-webgl-failed'&&event.source===document.querySelector('#stage-host iframe')?.contentWindow)parent.postMessage(event.data,'*')})})();</script>`;
