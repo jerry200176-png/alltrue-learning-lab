@@ -24,8 +24,19 @@ try {
     assert.match(await child.locator('body').innerText(), /2H₂O₂/u);
     assert.match(await child.locator('body').innerText(), /MnO₂/u);
     if (mobile) {
-      const a = await child.locator('#label-a').boundingBox(); const b = await child.locator('#label-b').boundingBox();
-      assert.ok(a && b && (a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y), 'mobile tube labels must not overlap');
+      // Wait for the first 3D frames to position both labels before checking their layout.
+      const layout = await child.locator('body').evaluate(element => new Promise(resolve => {
+        const win = element.ownerDocument.defaultView; const start = Date.now();
+        const check = () => {
+          const a = element.querySelector('#label-a')?.getBoundingClientRect();
+          const b = element.querySelector('#label-b')?.getBoundingClientRect();
+          const separated = !!a && !!b && a.width > 0 && b.width > 0 && (a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top);
+          if (separated || Date.now() - start > 60000) resolve({ separated, a: a?.toJSON(), b: b?.toJSON() });
+          else win.setTimeout(check, 250);
+        };
+        check();
+      }), null, { timeout: 75000 });
+      assert.equal(layout.separated, true, `mobile tube labels must not overlap: ${JSON.stringify(layout)}`);
     }
     if (!mobile) {
       const canvas = child.locator('canvas').first(); await canvas.scrollIntoViewIfNeeded();
