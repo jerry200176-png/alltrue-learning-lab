@@ -21,7 +21,9 @@ try {
     await frame.locator('canvas').first().waitFor({ timeout: 30000 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     assert.equal(await frame.locator('body').evaluate(element => { try { return !!element.ownerDocument.defaultView.parent.document; } catch { return false; } }), false, 'lesson cannot access the host document');
-    await frame.getByText('教材製作者：小小小白').first().waitFor();
+    const authorSignature = frame.getByText('教材製作者：小小小白').first();
+    await authorSignature.waitFor({ state: 'attached' });
+    assert.equal(await authorSignature.isVisible(), false, 'the on-screen signature is hidden while the source remains intact');
     if (mobile) await frame.locator('#xb-mirror-panel-toggle').tap();
     await frame.locator('#chapterSelect').selectOption('1');
     await frame.locator('#distance').fill('120');
