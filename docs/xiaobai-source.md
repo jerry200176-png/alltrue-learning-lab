@@ -5,7 +5,7 @@
 - 來源：[小白教育：平面鏡成像](https://xbjiaoyu.com/#course/mirror)，公開線上播放版本，2026-10-31（臺北時間）取得。
 - 權利人於本次工作對話確認其為小白教育，並授權本站公開重製、翻譯與散布相關教材及素材；尚未取得可查閱的獨立授權文件。
 - 取得的 HTML 快照 SHA-256：`f16387e99dd612ba460b5c5e96eb2275e9a480e2dd78d4a568daac7f5f151230`。公開播放快照包含短期播放識別碼，故不將該原始快照納入儲存庫。
-- 本站版本 `public/xiaobai/mirror.html` SHA-256：`85d27445c9507428b2020cc398ddfbe30e948613b126903b3ed86e9efdf54a2a`。僅移除原網站注入的 `data-xb-classroom-access` 與 `data-xb-content-guard` 兩個程式區塊，以移除原站播放握手及相關臨時識別資訊；其餘教材、模型、操作和計算保留。檔案仍含原作者署名與 three.js MIT 聲明。
+- 本站版本 `public/xiaobai/mirror.html` SHA-256：`2e6f138171c9a29adca33d70a611d6c53e680aee8bd91e13ee5c4a3af738ed3c`。移除原網站注入的 `data-xb-classroom-access` 與 `data-xb-content-guard` 兩個程式區塊及短期播放識別標記，以移除原站播放握手及相關臨時識別資訊；其餘教材、模型、操作和計算保留。檔案仍含原作者署名與 three.js MIT 聲明。
 - 封面 `public/xiaobai/mirror-cover.png` 為本站整合頁中此教材的 3D 畫面擷取；SHA-256：`810539489d296ac90fd9109dd8dbeb6cbd0edaac81d05c2eefe70351af3520b6`。未引入其他 3D 模型。
 - 原始教材以隔離 iframe 執行，限制對本站文件與網路的存取；獨立轉換層處理顯示文字，未改寫教材的計算。
 - 自動檢查涵蓋載入、繁體標籤、控制器、像距等於物距、像高等於物高，與手機尺寸面板操作。模型及教案的專業審查、所有文字逐項校對、實體 iPhone 與平板驗收仍為 **PENDING**。
@@ -16,7 +16,7 @@
 
 - 來源：[小白教育：等高線與地形圖](https://xbjiaoyu.com/#course/terrain)，公開線上播放版本，2026-10-31（臺北時間）取得；權利人於本次工作對話確認授權本站使用及翻譯。
 - 原始播放 HTML 快照 SHA-256：`25f6486ae1e0c7aa7d5bc2300c8d11492405f02009c33ae6d9f4494a32f137c4`，含臨時識別碼而未存入儲存庫。
-- 本站版本 `public/xiaobai/terrain.html` SHA-256：`fd7fd44a588317fb23b6e209f9d9bf8217fa4376ffb4b691ea0b50981de06964`；與平面鏡教材相同，僅移除原站注入的兩個播放驗證區塊，其餘模型、控制與計算保留，原始 three.js MIT 聲明仍在檔內。
+- 本站版本 `public/xiaobai/terrain.html` SHA-256：`f4a54dd5c332300061987fbbd6f113e2082df3aadd826c0be7d9d6363dce2425`；與平面鏡教材相同，移除原站注入的兩個播放驗證區塊及短期播放識別標記，其餘模型、控制與計算保留，原始 three.js MIT 聲明仍在檔內。
 - 封面由本站整合頁內的地形模型畫面擷取：`public/xiaobai/terrain-cover.png`，SHA-256 `ed02c2e62d9209a3464f8a284d16a32a36f243e1b34689db20957aba7680766a`。未引入其他 3D 模型。
 - 獨立轉換層處理顯示文字；隔離 iframe 使用 `about:srcdoc` 作為基底，使教材可在隔離狀態下切換章節。自動檢查觀察點操作、兩點海拔差及水平切面高度。
 - 完整模型、教材與術語的專業審查以及實體手機和平板測試仍為 **PENDING**。
@@ -25,7 +25,25 @@
 
 - 來源：[小白教育：原子結構與元素辨認](https://xbjiaoyu.com/#course/chemistry-c07)，公開線上播放版本，2026-10-31（臺北時間）取得；權利人於本次工作對話確認授權本站使用及翻譯。
 - 原始播放 HTML 快照 SHA-256：`01dc6ca478a3af781ff2206fb7766186e7de20240d575059f5679ae5ac0d5382`，含臨時識別碼而未存入儲存庫。
-- 本站版本 `public/xiaobai/atom.html` SHA-256：`ad4aa0aae14b070b2b00adee447b3f783cb0144310506c0bb0a4d778f44d2929`；僅移除原站注入的兩個播放驗證區塊，其餘模型、控制與計算保留，原始 three.js MIT 聲明仍在檔內。
+- 本站版本 `public/xiaobai/atom.html` SHA-256：`226c6c15e69c7a32a19513d26ccc7e3531d7f375bfe5642cc1398774d5ed2af6`；移除原站注入的兩個播放驗證區塊及短期播放識別標記，其餘模型、控制與計算保留，原始 three.js MIT 聲明仍在檔內。
 - 封面由本站整合頁中的原子模型畫面擷取：`public/xiaobai/atom-cover.png`，SHA-256 `63b3958e4a212cdfd25b35bc48f005611af271bedce4ba4b6d76a5934b48b582`。未引入其他 3D 模型。
 - 獨立轉換層處理顯示文字，並校正「粒子計數組合」等台灣用語；在隔離 iframe 中限制對本站文件及網路的存取。自動檢查質子數決定元素，電子數影響電荷，中子數影響質量數。
 - 完整模型、教材與術語的專業審查以及實體手機和平板測試仍為 **PENDING**。
+
+## 凸透鏡與凹透鏡成像
+
+- 來源：[小白教育：凸透鏡與凹透鏡成像規律](https://xbjiaoyu.com/#course/lens)，公開線上播放版本，2026-10-31（臺北時間）取得；權利人於本次工作對話確認授權本站使用及翻譯。
+- 原始播放 HTML 快照 SHA-256：`3e4dd415355b1dd944271680c99f8ece14316570a53c5fca34845d3bfb96f232`，含臨時識別碼而未存入儲存庫。
+- 本站版本 `public/xiaobai/lens.html` SHA-256：`c1c88572e16cc70249aef774349a744362fe95185df33d8f59976a449ea2d7ae`。移除原站注入的兩個播放驗證區塊及短期播放識別標記，原始模型、計算及 three.js MIT 聲明保留。
+- 封面為本站整合頁內模型畫面擷取：`public/xiaobai/lens-cover.png`，SHA-256 `c42fc95a76d7073511400138ff033ed42898b37370b71107e8abceddabede928`。
+- 原介面將可移動但未必合焦的光屏位置稱為「像距」；本站的獨立顯示轉換層將其改為「光屏距離」，理論像距與光學計算不變。依權利人要求隱藏畫面中的製作者文字，來源及原始聲明仍保留。
+- 自動測試檢查焦距 10 cm、物距 30 cm 時的理想像距 15 cm，以及桌面與手機尺寸的控制操作。完整模型、教案、術語專業審查與實體手機平板驗收為 **PENDING**。
+
+## 核裂變與核電廠
+
+- 來源：[小白教育：核能、核裂變與核電站](https://xbjiaoyu.com/#course/nuclear-energy)，公開線上播放版本，2026-10-31（臺北時間）取得；權利人於本次工作對話確認授權本站使用及翻譯。
+- 原始播放 HTML 快照 SHA-256：`23be3f8493d6cc9d24cc9ea0ff0cbc2fe3244fecad0c9c3ea2b4a4b1e435ba50`，含臨時識別碼而未存入儲存庫。
+- 本站版本 `public/xiaobai/nuclear-energy.html` SHA-256：`9a790f6e9cf3297437f00402d3ecd4363de39de9caf62a84261b27113d109a18`。移除原站注入的兩個播放驗證區塊及短期播放識別標記，控制器僅在數值變化時更新文字，避免 WebKit 點擊時文字節點反覆重建；模型及計算保留，原始 three.js MIT 聲明仍在檔內。
+- 封面為本站整合頁中的核電廠模型擷取：`public/xiaobai/nuclear-energy-cover.png`，SHA-256 `bb4bcc2d4ecee7f647a29f7c0f9d3f35c262e750d98d595561189b9c2c4e63a1`。未引入其他 3D 模型。
+- 獨立轉換層處理「核電廠」、「核反應爐」及「連鎖反應」等用語；自動測試檢查演示中的一次裂變、三個中子及完全吸收時的反應。設備比例、能量數據及速度皆為模型示意。
+- 完整模型、教案、術語專業審查與實體手機平板驗收仍為 **PENDING**。

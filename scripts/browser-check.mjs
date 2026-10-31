@@ -10,7 +10,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 850 } });
   const errors = []; page.on('pageerror', error => errors.push(error.message));
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 57);
+  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 59);
   assert.equal(await page.locator('.hero').evaluate(element => element.ownerDocument.defaultView.getComputedStyle(element, '::before').animationName), 'none', 'reduced motion disables the star animation');
   const starImage = await page.locator('.hero').evaluate(element => element.ownerDocument.defaultView.getComputedStyle(element, '::before').backgroundImage);
   assert.match(starImage, /derived\/nasa-stars-4096\.jpg/u, 'star map resolves relative to the site root');
@@ -95,7 +95,7 @@ try {
   assert.equal(await page.getByRole('link', { name: '铜匠实验室（Tongjiang Lab）' }).getAttribute('href'), 'https://lab.tongjiang.app/');
   assert.ok(await page.getByRole('link', { name: 'CC BY-NC 4.0' }).getAttribute('href'));
   assert.equal(await page.getByRole('link', { name: '第三方授權聲明' }).count(), 1);
-  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 57);
+  await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 59);
   await page.locator('[data-filter=bio]').click(); assert.equal(await page.locator('.lesson-card').count(), 5);
   await page.getByRole('searchbox').fill('酵素'); assert.equal(await page.locator('.lesson-card').count(), 1);
   for (const slug of ['projectile-step', 'rate-step', 'enzyme-step', 'earth-motion-step']) {
@@ -136,7 +136,7 @@ try {
       assert.equal(await page.locator('html').getAttribute('data-lesson-context-released'), 'true', 'lesson WebGL context is released on navigation');
       await page.waitForTimeout(100);
       assert.equal(await page.locator('html').getAttribute('data-late-lesson-frame'), null, 'pending lesson animation is cancelled on navigation');
-      assert.equal(await page.locator('.lesson-card').count(), 57);
+      assert.equal(await page.locator('.lesson-card').count(), 59);
     }
     console.log(`PASS: ${slug} loads a translated 3D lesson`);
   }
@@ -191,7 +191,7 @@ try {
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   await mobile.goto(origin); assert.equal(await mobile.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   assert.equal(await mobile.getByRole('link', { name: '關於本站' }).count(), 1);
-  await mobile.locator('[data-subject=phys]').tap(); assert.equal(await mobile.locator('.lesson-card').count(), 11);
+  await mobile.locator('[data-subject=phys]').tap(); assert.equal(await mobile.locator('.lesson-card').count(), 13);
   for (const slug of ['projectile-step', 'rate-step', 'enzyme-step', 'earth-motion-step']) {
     await mobile.goto(`${origin}#lesson/${slug}`);
     await mobile.getByRole('heading', { name: titleFor(slug), exact: true }).waitFor();

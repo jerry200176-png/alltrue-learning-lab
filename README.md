@@ -1,6 +1,6 @@
 # 全真 Learning Lab
 
-以 [Tongjiang Lab](https://github.com/smithjohn78390/tongjiang-lab) 的 54 個 3D 單元為基礎，並加入小白教育授權的平面鏡成像、等高線及原子結構單元的繁體中文教材網站。**目前為未完成的教學原型，不可視為已通過課堂或正式上線驗收。**
+以 [Tongjiang Lab](https://github.com/smithjohn78390/tongjiang-lab) 的 54 個 3D 單元為基礎，並加入小白教育授權的平面鏡成像、等高線、原子結構、透鏡成像及核裂變單元的繁體中文教材網站。**目前為未完成的教學原型，不可視為已通過課堂或正式上線驗收。**
 
 ## 執行與檢查
 
@@ -22,7 +22,7 @@ CI 另以 Playwright 的 Linux WebKit 和手機視窗設定，依序檢查 54 �
 
 ## 狀態與限制
 
-- 已加入 54 個上游教材的目錄、封面和未修改原始 HTML，及三個小白教育授權教材。小白教材的來源與修改說明見 [docs/xiaobai-source.md](docs/xiaobai-source.md)。54 個單元均有專屬教學內容草稿，尚待逐單元專業審查。
+- 已加入 54 個上游教材的目錄、封面和未修改原始 HTML，及五個小白教育授權教材。小白教材的來源與修改說明見 [docs/xiaobai-source.md](docs/xiaobai-source.md)。54 個單元均有專屬教學內容草稿，尚待逐單元專業審查。
 - 顯示文字以獨立轉換層套用 OpenCC 及台灣術語表。這是輔助轉換，並非逐句校對；尚未確認所有互動、畫布標籤、回饋與術語。原始教材程式未改動，但轉換層可能影響依賴顯示文字的互動，須逐單元檢查。
 - 全部教案草稿、模擬的科學與數學正確性及三道概念題的可操作性均待專業審查。實際裝置驗收 **PENDING**。逐項紀錄見 [docs/acceptance.md](docs/acceptance.md)，代表性科學檢查的依據見 [docs/science-checks.md](docs/science-checks.md)。
 - 不支援 WebGL 2 時顯示替代說明。窄螢幕預設收起兩側面板，並可透過分頁切換；模擬控制項補上可存取名稱。上游控制器、螢幕閱讀器及效能仍待真實裝置測試。

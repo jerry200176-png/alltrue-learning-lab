@@ -7,12 +7,22 @@ import { xiaobaiLessons, xiaobaiTeaching } from '../src/xiaobai';
 describe('小白教育教材', () => {
   it('adds the authorised mirror lesson without replacing the 54 upstream lessons', () => {
     expect(lessons).toHaveLength(54);
-    expect(xiaobaiLessons).toHaveLength(3);
-    expect(allLessons).toHaveLength(57);
-    expect(new Set(allLessons.map(lesson => lesson.slug)).size).toBe(57);
+    expect(xiaobaiLessons).toHaveLength(5);
+    expect(allLessons).toHaveLength(59);
+    expect(new Set(allLessons.map(lesson => lesson.slug)).size).toBe(59);
     expect(filterLessons('平面鏡', 'phys').map(lesson => lesson.slug)).toEqual(['xiaobai-mirror']);
     expect(filterLessons('等高線', 'geo').map(lesson => lesson.slug)).toEqual(['xiaobai-terrain']);
     expect(filterLessons('元素辨認', 'chem').map(lesson => lesson.slug)).toEqual(['xiaobai-atom']);
+    expect(filterLessons('透鏡', 'phys').map(lesson => lesson.slug)).toEqual(['xiaobai-lens']);
+    expect(filterLessons('核裂變', 'phys').map(lesson => lesson.slug)).toEqual(['xiaobai-nuclear']);
+    const nuclear = xiaobaiTeaching['xiaobai-nuclear'];
+    expect(nuclear.operations).toHaveLength(3);
+    expect(nuclear.questions).toHaveLength(3);
+    expect(nuclear.questions.every(item => item.question && item.guidance)).toBe(true);
+    const lens = xiaobaiTeaching['xiaobai-lens'];
+    expect(lens.operations).toHaveLength(3);
+    expect(lens.questions).toHaveLength(3);
+    expect(lens.questions.every(item => item.question && item.guidance)).toBe(true);
     const atom = xiaobaiTeaching['xiaobai-atom'];
     expect(atom.operations).toHaveLength(3);
     expect(atom.questions).toHaveLength(3);
@@ -39,25 +49,42 @@ describe('小白教育教材', () => {
     expect(plan.misconceptions.length).toBeGreaterThan(0);
     expect(plan.teacherTips.length).toBeGreaterThan(0);
   });
+  it('pins the authorised nuclear lesson without a temporary delivery identifier', () => {
+    const html = readFileSync('public/xiaobai/nuclear-energy.html');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('9a790f6e9cf3297437f00402d3ecd4363de39de9caf62a84261b27113d109a18');
+    expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
+    expect(html.toString()).toContain('three.js authors');
+  });
+  it('pins the authorised lens lesson without a temporary delivery identifier', () => {
+    const html = readFileSync('public/xiaobai/lens.html');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('c1c88572e16cc70249aef774349a744362fe95185df33d8f59976a449ea2d7ae');
+    expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
+    expect(html.toString()).toContain('three.js authors');
+  });
   it('pins the authorised atom lesson without a temporary delivery identifier', () => {
     const html = readFileSync('public/xiaobai/atom.html');
-    expect(createHash('sha256').update(html).digest('hex')).toBe('ad4aa0aae14b070b2b00adee447b3f783cb0144310506c0bb0a4d778f44d2929');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('226c6c15e69c7a32a19513d26ccc7e3531d7f375bfe5642cc1398774d5ed2af6');
     expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
     expect(html.toString()).toContain('three.js authors');
   });
   it('pins the authorised terrain lesson without a temporary delivery identifier', () => {
     const html = readFileSync('public/xiaobai/terrain.html');
-    expect(createHash('sha256').update(html).digest('hex')).toBe('fd7fd44a588317fb23b6e209f9d9bf8217fa4376ffb4b691ea0b50981de06964');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('f4a54dd5c332300061987fbbd6f113e2082df3aadd826c0be7d9d6363dce2425');
     expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
     expect(html.toString()).toContain('three.js authors');
   });
   it('keeps the reviewed lesson and derived preview pinned and omits temporary access identifiers', () => {
     const html = readFileSync('public/xiaobai/mirror.html');
     const cover = readFileSync('public/xiaobai/mirror-cover.png');
     const sha = (data: Buffer) => createHash('sha256').update(data).digest('hex');
-    expect(sha(html)).toBe('85d27445c9507428b2020cc398ddfbe30e948613b126903b3ed86e9efdf54a2a');
+    expect(sha(html)).toBe('2e6f138171c9a29adca33d70a611d6c53e680aee8bd91e13ee5c4a3af738ed3c');
     expect(sha(cover)).toBe('810539489d296ac90fd9109dd8dbeb6cbd0edaac81d05c2eefe70351af3520b6');
     expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
     expect(html.toString()).toContain('three.js authors');
     expect(html.toString()).toContain('小小小白');
   });
