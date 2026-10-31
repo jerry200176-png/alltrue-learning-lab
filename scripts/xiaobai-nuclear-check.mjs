@@ -32,7 +32,9 @@ try {
     if (mobile) await press(frame.locator('#restore-panel'));
     await press(frame.locator('[data-module="fission"]'));
     assert.equal(await frame.locator('#single-count').innerText(), '0');
+    await frame.locator('#fire').evaluate(el => { el.dataset.received = '0'; el.addEventListener('click', () => { el.dataset.received = String(Number(el.dataset.received) + 1); }); });
     await press(frame.locator('#fire'));
+    console.log('DIAGNOSTIC', await frame.locator('body').evaluate(el => { const d = el.ownerDocument; const state = d.defaultView.__nuclear?.getState(); return { module: state?.module, singleStarted: state?.singleStarted, clicks: d.querySelector('#fire')?.dataset.received, fireText: d.querySelector('#fire')?.textContent, stepDisabled: d.querySelector('#step')?.disabled }; }));
     // Use the lesson's own single-step control; software rendering can run too slowly for real-time playback.
     for (let step = 0; step < 4; step++) await press(frame.locator('#step'));
     await frame.locator('#single-count').filter({ hasText: /^1$/u }).waitFor({ timeout: 60000 });
