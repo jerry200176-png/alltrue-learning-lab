@@ -10,4 +10,6 @@ it('converts visible text and terminology without repeatedly changing already tr
   expect(translate('课件滑块和参考工况')).toBe('教材滑桿和參考操作條件');
   expect(translate('粒子计数组合不保证稳定存在。')).toBe('粒子計數組合不保證穩定存在。');
   expect(translate('6 个质子、6 个中子')).toBe('6 個質子、6 個中子');
+  expect(translate('压水堆核电站与链式反应')).toBe('壓水式核電廠與連鎖反應');
+  expect(translate('选择当前版块的实验任务')).toBe('選擇目前單元的實驗任務');
 });

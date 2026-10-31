@@ -7,12 +7,22 @@ import { xiaobaiLessons, xiaobaiTeaching } from '../src/xiaobai';
 describe('小白教育教材', () => {
   it('adds the authorised mirror lesson without replacing the 54 upstream lessons', () => {
     expect(lessons).toHaveLength(54);
-    expect(xiaobaiLessons).toHaveLength(3);
-    expect(allLessons).toHaveLength(57);
-    expect(new Set(allLessons.map(lesson => lesson.slug)).size).toBe(57);
+    expect(xiaobaiLessons).toHaveLength(5);
+    expect(allLessons).toHaveLength(59);
+    expect(new Set(allLessons.map(lesson => lesson.slug)).size).toBe(59);
     expect(filterLessons('平面鏡', 'phys').map(lesson => lesson.slug)).toEqual(['xiaobai-mirror']);
     expect(filterLessons('等高線', 'geo').map(lesson => lesson.slug)).toEqual(['xiaobai-terrain']);
     expect(filterLessons('元素辨認', 'chem').map(lesson => lesson.slug)).toEqual(['xiaobai-atom']);
+    expect(filterLessons('透鏡', 'phys').map(lesson => lesson.slug)).toEqual(['xiaobai-lens']);
+    expect(filterLessons('核裂變', 'phys').map(lesson => lesson.slug)).toEqual(['xiaobai-nuclear']);
+    const nuclear = xiaobaiTeaching['xiaobai-nuclear'];
+    expect(nuclear.operations).toHaveLength(3);
+    expect(nuclear.questions).toHaveLength(3);
+    expect(nuclear.questions.every(item => item.question && item.guidance)).toBe(true);
+    const lens = xiaobaiTeaching['xiaobai-lens'];
+    expect(lens.operations).toHaveLength(3);
+    expect(lens.questions).toHaveLength(3);
+    expect(lens.questions.every(item => item.question && item.guidance)).toBe(true);
     const atom = xiaobaiTeaching['xiaobai-atom'];
     expect(atom.operations).toHaveLength(3);
     expect(atom.questions).toHaveLength(3);
@@ -38,6 +48,18 @@ describe('小白教育教材', () => {
     expect(plan.questions.every(item => item.question && item.guidance)).toBe(true);
     expect(plan.misconceptions.length).toBeGreaterThan(0);
     expect(plan.teacherTips.length).toBeGreaterThan(0);
+  });
+  it('pins the authorised nuclear lesson without a temporary delivery identifier', () => {
+    const html = readFileSync('public/xiaobai/nuclear-energy.html');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('591ef69095009cfe783fc60e04a568875f1da74d3050cd025dd127905dfa132a');
+    expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).toContain('three.js authors');
+  });
+  it('pins the authorised lens lesson without a temporary delivery identifier', () => {
+    const html = readFileSync('public/xiaobai/lens.html');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('08dc2a5f430f724333f0739aa7375ec20d62ff4e3b7e6a2d290416814a7199a0');
+    expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).toContain('three.js authors');
   });
   it('pins the authorised atom lesson without a temporary delivery identifier', () => {
     const html = readFileSync('public/xiaobai/atom.html');

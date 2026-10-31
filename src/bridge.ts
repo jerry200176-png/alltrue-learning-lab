@@ -1,4 +1,10 @@
-import { translate } from './locale';
+import { translate as translateBase } from './locale';
+import { lensVisibleLabel } from './lens-labels';
+
+function translate(value: string): string {
+  const result = translateBase(value);
+  return /凸透[鏡镜][與与]凹透[鏡镜]/u.test(document.title) ? lensVisibleLabel(result) : result;
+}
 
 // This layer changes rendered text only. Upstream files and their calculations stay intact.
 function localizeNode(node: Node): void {
