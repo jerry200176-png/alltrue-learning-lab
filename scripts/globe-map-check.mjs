@@ -34,6 +34,12 @@ try {
         await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
       }
       await cdp.detach();
+    } else if (mobile) {
+      // Playwright's mobile WebKit does not implement mouse.wheel. Exercise the
+      // same zoom handler with wheel events; Chromium above tests actual pinch.
+      await canvas.evaluate(element => {
+        for (let i = 0; i < 6; i++) element.dispatchEvent(new element.ownerDocument.defaultView.WheelEvent('wheel', { deltaY: -10000, bubbles: true, cancelable: true }));
+      });
     } else {
       const box = await canvas.boundingBox(); assert.ok(box); await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
       for (let i = 0; i < 6; i++) await page.mouse.wheel(0, -10000);
