@@ -16,7 +16,7 @@ try {
     await child.locator('#interpretation').getByText(/氮氣約 78%.*氧氣約 21%/u).waitFor({ timeout: 90000 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     assert.equal(await child.locator('body').evaluate(element => { try { return !!element.ownerDocument.defaultView.top.document; } catch { return false; } }), false);
-    assert.equal(await child.locator('body').evaluate(async element => { try { await element.ownerDocument.defaultView.fetch('https://example.invalid/alltrue-csp-check'); return true; } catch { return false; } }), false, 'nested frame cannot connect to an external site');
+    assert.equal(await child.locator('body').evaluate(async element => { try { await element.ownerDocument.defaultView.fetch('data:text/plain,alltrue-csp-check'); return true; } catch { return false; } }), false, 'nested frame connect-src blocks even a data URL');
     const press = async locator => mobile ? locator.tap({ timeout: 90000 }) : locator.click({ timeout: 90000 });
     console.log(`Oxygen ${engine} ${mobile ? 'mobile' : 'desktop'}: composition and sandbox passed`);
     await press(outer.getByRole('button', { name: /催化製氧/u }));
