@@ -2,6 +2,10 @@
 
 版本號遵循 [Semantic Versioning](https://semver.org/)。`preview` 代表試用版本，不代表教學內容或實體裝置已驗收。
 
+## 0.1.0-preview.18 — 準備中
+
+- 依需求移除原子軌域與電子組態單元，保留其他教材。
+
 ## 0.1.0-preview.17 — 準備中
 
 - 新增改編自 MIT 授權 Science Simulations 的原子軌域與電子組態單元。
