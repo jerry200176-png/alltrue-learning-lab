@@ -18,7 +18,14 @@ for (const mobile of [false, true]) {
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     assert.equal(await child.locator('body').evaluate(element => { try { return !!element.ownerDocument.defaultView.top.document; } catch { return false; } }), false);
     assert.equal(await child.locator('body').evaluate(async element => { try { await element.ownerDocument.defaultView.fetch('data:text/plain,alltrue-csp-check'); return true; } catch { return false; } }), false, 'nested frame connect-src blocks even a data URL');
-    const press = async locator => mobile ? locator.tap({ timeout: 90000 }) : locator.click({ timeout: 90000 });
+    const press = async locator => {
+      if (!mobile) return locator.click({ timeout: 90000 });
+      // Check actionability first, then send a real touch without waiting on
+      // the child srcdoc navigation that the chapter button starts.
+      await locator.tap({ trial: true, timeout: 90000 });
+      const box = await locator.boundingBox(); assert.ok(box);
+      await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+    };
     console.log(`Oxygen ${engine} ${mobile ? 'mobile' : 'desktop'}: composition and sandbox passed`);
     await press(outer.getByRole('button', { name: /催化製氧/u }));
     await child.locator('#guide h1').getByText('過氧化氫分解', { exact: true }).waitFor({ timeout: 90000 });
