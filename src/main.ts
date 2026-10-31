@@ -97,6 +97,7 @@ window.addEventListener('message', event => {
   if (holder?.id === 'simulation') holder.innerHTML = failedSimulation;
 });
 async function loadSimulation(lesson: Lesson, holder: HTMLElement): Promise<void> {
+  holder.classList.toggle('spatial-simulation', lesson.slug === 'xiaobai-spatial-views');
   if (!supportsWebGL()) { holder.innerHTML = failedSimulation; return; }
   try {
     const response = await fetch(asset(lesson.source === 'xiaobai' ? `xiaobai/${lesson.file}` : `upstream/${lesson.file}`));

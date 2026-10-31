@@ -24,6 +24,7 @@ try {
     await press(frame.getByRole('button', { name: '自由搭建', exact: true }));
     await frame.getByText('0 塊', { exact: true }).waitFor();
     const box = await canvas.boundingBox(); assert.ok(box);
+    if (mobile) assert.ok(box.height >= 240, 'the construction canvas must remain usable on a phone');
     const position = { x: box.width / 2, y: box.height / 2 };
     if (mobile) await canvas.tap({ position, timeout: 60000 }); else await canvas.click({ position, timeout: 60000 });
     await frame.getByText('1 塊', { exact: true }).waitFor({ timeout: 60000 });
