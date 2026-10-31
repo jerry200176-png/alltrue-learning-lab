@@ -27,6 +27,8 @@ try {
     await press(frame.locator('[data-module="fission"]'));
     assert.equal(await frame.locator('#single-count').innerText(), '0');
     await press(frame.locator('#fire'));
+    // Use the lesson's own single-step control; software rendering can run too slowly for real-time playback.
+    for (let step = 0; step < 4; step++) await press(frame.locator('#step'));
     await frame.locator('#single-count').filter({ hasText: /^1$/u }).waitFor({ timeout: 60000 });
     assert.equal(await frame.locator('#neutron-count').innerText(), '3');
     await press(frame.locator('[data-module="chain"]'));
