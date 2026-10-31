@@ -47,6 +47,9 @@ try {
     for (let i = 0; i < 30 && !tileLevels.some(level => level >= 11 && level < 19); i++) await page.waitForTimeout(1000);
     assert.ok(tileLevels.some(level => level >= 11 && level < 19), `zoom requests detailed satellite tiles: ${tileLevels.join(',')}`);
     assert.equal(await page.locator('.globe-attribution').getByRole('link', { name: 'Esri' }).count(), 1);
+    const attributionBounds = await page.locator('.globe-attribution').boundingBox();
+    const cesiumBounds = await page.locator('.cesium-credit-logoContainer').boundingBox();
+    assert.ok(attributionBounds && cesiumBounds && attributionBounds.x + attributionBounds.width <= cesiumBounds.x, 'map credits remain legible without overlapping');
     const sourceButton = page.getByRole('button', { name: '查看地圖資料來源' });
     await sourceButton.focus(); await page.keyboard.press('Enter');
     const sources = page.locator('.cesium-credit-lightbox');
