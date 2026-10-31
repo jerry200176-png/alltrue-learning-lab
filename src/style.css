@@ -154,3 +154,8 @@
 
 .earth-scene::before{opacity:.65;background-image:linear-gradient(#0a254770,#07182988),var(--star-map);background-size:cover;background-position:62% center}
 .hero-simulation::before{content:none}
+@media(min-width:901px){.subject-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.gold{background:#fff0cb;color:#916d21}
+
+/* The spatial lesson needs room for its controls and construction canvas on phones. */
+@media(max-width:600px){.simulation.spatial-simulation{height:760px}}
