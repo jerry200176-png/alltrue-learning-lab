@@ -13,10 +13,11 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   mapStatus.hidden = true;
   const attribution = document.createElement('div');
   attribution.className = 'globe-attribution';
-  attribution.innerHTML = '衛星影像：<a href="https://www.esri.com" target="_blank" rel="noreferrer">Esri</a>、Vantor、Earthstar Geographics、GIS 社群 · 地形：<a href="https://terrain.reearth.land/" target="_blank" rel="noreferrer">Re:Earth / Mapterhorn</a>、EGM2008 (NGA)、Protomaps、OpenStreetMap <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>';
+  attribution.innerHTML = 'Powered by <a href="https://www.esri.com" target="_blank" rel="noreferrer">Esri</a>';
+  credits.appendChild(attribution);
   const container = document.createElement('div');
   container.className = 'cesium-globe';
-  holder.replaceChildren(container, credits, mapStatus, attribution);
+  holder.replaceChildren(container, credits, mapStatus);
   const viewer = new Cesium.Viewer(container, {
     animation: false, timeline: false, baseLayerPicker: false, geocoder: false,
     homeButton: false, sceneModePicker: false, navigationHelpButton: false,
@@ -26,12 +27,31 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
     msaaSamples: 2, requestRenderMode: true, maximumRenderTimeChange: Infinity,
   });
   const { scene, camera, canvas } = viewer;
+  // Keep the complete, dynamically supplied map credits in Cesium's source
+  // panel. Esri permits an expandable credit display on small maps.
+  viewer.cesiumWidget.creditDisplay.addStaticCredit(new Cesium.Credit('衛星影像：Esri、Vantor、Earthstar Geographics、GIS User Community'));
+  viewer.cesiumWidget.creditDisplay.addStaticCredit(new Cesium.Credit('地形：<a href="https://terrain.reearth.land/" target="_blank" rel="noreferrer">Re:Earth / Mapterhorn</a>、EGM2008 (NGA)、Protomaps、© OpenStreetMap contributors，<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>'));
+  const creditLink = credits.querySelector<HTMLElement>('.cesium-credit-expand-link');
+  const creditTitle = container.querySelector<HTMLElement>('.cesium-credit-lightbox-title');
+  const creditClose = container.querySelector<HTMLElement>('.cesium-credit-lightbox-close');
+  if (creditTitle) creditTitle.textContent = '地圖資料來源';
+  const makeKeyboardButton = (element: HTMLElement | null, label: string) => {
+    if (!element) return;
+    element.setAttribute('role', 'button'); element.setAttribute('tabindex', '0'); element.setAttribute('aria-label', label);
+    element.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); element.click(); }
+    });
+  };
+  if (creditLink) creditLink.textContent = '資料來源';
+  makeKeyboardButton(creditLink, '查看地圖資料來源');
+  makeKeyboardButton(creditClose, '關閉地圖資料來源');
   canvas.tabIndex = 0;
   canvas.setAttribute('aria-label', '互動地球，拖曳或使用左右方向鍵旋轉，滾輪或加減鍵縮放');
   scene.backgroundColor = Cesium.Color.TRANSPARENT;
   canvas.dataset.tilesPending = '0';
   scene.globe.tileLoadProgressEvent.addEventListener((pending: number) => { canvas.dataset.tilesPending = String(pending); });
   scene.globe.enableLighting = true;
+  scene.globe.maximumScreenSpaceError = 1.5;
   scene.globe.dynamicAtmosphereLighting = false;
   scene.globe.showGroundAtmosphere = false;
   scene.screenSpaceCameraController.enableInputs = false;
@@ -84,7 +104,9 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   };
   const resize = () => {
     const { width, height } = holder.getBoundingClientRect(); if (!width || !height) return;
-    viewer.resolutionScale = Math.min(window.devicePixelRatio || 1, 2.5, Math.sqrt(1_200_000 / (width * height)));
+    const touch = window.matchMedia('(pointer: coarse)').matches;
+    const pixelBudget = touch ? 1_200_000 : 2_000_000;
+    viewer.resolutionScale = Math.min((window.devicePixelRatio || 1) * (touch ? 1 : 1.25), touch ? 2.5 : 3, Math.sqrt(pixelBudget / (width * height)));
     viewer.useBrowserRecommendedResolution = true;
     viewer.resize(); render();
   };
