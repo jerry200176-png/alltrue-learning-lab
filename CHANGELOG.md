@@ -2,6 +2,10 @@
 
 版本號遵循 [Semantic Versioning](https://semver.org/)。`preview` 代表試用版本，不代表教學內容或實體裝置已驗收。
 
+## 0.1.0-preview.19 — 準備中
+
+- 首頁地球改用 CesiumJS，參考 God’s Eye View 的衛星影像與地形配置，支援從太空縮放到地表地圖；離線時回退 NASA 地球概覽。
+
 ## 0.1.0-preview.18 — 準備中
 
 - 依需求移除原子軌域與電子組態單元，保留其他教材。
