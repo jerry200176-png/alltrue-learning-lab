@@ -7,14 +7,23 @@ import { xiaobaiLessons, xiaobaiTeaching } from '../src/xiaobai';
 describe('小白教育教材', () => {
   it('adds the authorised mirror lesson without replacing the 54 upstream lessons', () => {
     expect(lessons).toHaveLength(54);
-    expect(xiaobaiLessons).toHaveLength(5);
-    expect(allLessons).toHaveLength(59);
-    expect(new Set(allLessons.map(lesson => lesson.slug)).size).toBe(59);
+    expect(xiaobaiLessons).toHaveLength(7);
+    expect(allLessons).toHaveLength(61);
+    expect(new Set(allLessons.map(lesson => lesson.slug)).size).toBe(61);
     expect(filterLessons('平面鏡', 'phys').map(lesson => lesson.slug)).toEqual(['xiaobai-mirror']);
     expect(filterLessons('等高線', 'geo').map(lesson => lesson.slug)).toEqual(['xiaobai-terrain']);
     expect(filterLessons('元素辨認', 'chem').map(lesson => lesson.slug)).toEqual(['xiaobai-atom']);
     expect(filterLessons('透鏡', 'phys').map(lesson => lesson.slug)).toEqual(['xiaobai-lens']);
     expect(filterLessons('核裂變', 'phys').map(lesson => lesson.slug)).toEqual(['xiaobai-nuclear']);
+    expect(filterLessons('立體積木', 'math').map(lesson => lesson.slug)).toEqual(['xiaobai-spatial-views']);
+    expect(filterLessons('空氣與氧氣', 'chem').map(lesson => lesson.slug)).toEqual(['xiaobai-oxygen']);
+    const oxygen = xiaobaiTeaching['xiaobai-oxygen'];
+    expect(oxygen.operations).toHaveLength(3);
+    expect(oxygen.questions).toHaveLength(3);
+    expect(oxygen.questions.every(item => item.question && item.guidance)).toBe(true);
+    const spatial = xiaobaiTeaching['xiaobai-spatial-views'];
+    expect(spatial.operations).toHaveLength(3);
+    expect(spatial.questions).toHaveLength(3);
     const nuclear = xiaobaiTeaching['xiaobai-nuclear'];
     expect(nuclear.operations).toHaveLength(3);
     expect(nuclear.questions).toHaveLength(3);
@@ -48,6 +57,29 @@ describe('小白教育教材', () => {
     expect(plan.questions.every(item => item.question && item.guidance)).toBe(true);
     expect(plan.misconceptions.length).toBeGreaterThan(0);
     expect(plan.teacherTips.length).toBeGreaterThan(0);
+  });
+  it('pins the authorised spatial lesson without temporary delivery identifiers', () => {
+    const html = readFileSync('public/xiaobai/blocks.html');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('1c12b75192d0aede484093bceab87610120991e9780a82534660051304b50ad3');
+    expect(html.toString()).not.toContain('deliveryId');
+    expect(html.toString()).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
+    expect(html.toString()).toContain('three.js authors');
+  });
+  it('pins the authorised oxygen lesson and its isolated nested modules', () => {
+    const html = readFileSync('public/xiaobai/oxygen.html', 'utf8');
+    expect(createHash('sha256').update(html).digest('hex')).toBe('c8c6efb753bfb850497b46c7a6f6c0f19534ee726e3a3666236faa9b189edc72');
+    expect(html).not.toContain('deliveryId');
+    expect(html).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
+    const modules = html.slice(html.indexOf('const MODULES={'), html.indexOf('};', html.indexOf('const MODULES={')));
+    const nested = [...modules.matchAll(/(\w+):"([A-Za-z0-9+/=]+)"/gu)];
+    expect(nested).toHaveLength(3);
+    for (const [, , encoded] of nested) {
+      const source = Buffer.from(encoded, 'base64').toString('utf8');
+      expect(source).not.toContain('deliveryId');
+      expect(source).not.toContain('data-xb-content-guard');
+      expect(source).not.toMatch(/<meta\s+name=["']xb-delivery["']/u);
+      expect(source).toContain('three.js authors');
+    }
   });
   it('pins the authorised nuclear lesson without a temporary delivery identifier', () => {
     const html = readFileSync('public/xiaobai/nuclear-energy.html');
