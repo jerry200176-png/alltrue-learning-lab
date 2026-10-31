@@ -7,7 +7,7 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const canvas = renderer.domElement;
   canvas.tabIndex = 0;
-  canvas.setAttribute('aria-label', '互動地球，拖曳或使用左右方向鍵旋轉');
+  canvas.setAttribute('aria-label', '互動地球，拖曳或使用左右方向鍵旋轉，滾輪或加減鍵縮放');
   holder.replaceChildren(canvas);
 
   const scene = new THREE.Scene();
@@ -88,6 +88,11 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   onRotationChange(playing);
   const render = () => { if (!disposed) renderer.render(scene, camera); };
   const rotate = (direction: number) => { view.rotation.y += direction * 0.35; render(); };
+  const zoom = (factor: number) => {
+    const distance = THREE.MathUtils.clamp(camera.position.z * factor, 2.8, 5.5);
+    if (distance === camera.position.z) return false;
+    camera.position.z = distance; render(); return true;
+  };
   const setSun = (latitude: number, longitude: number) => {
     const direction = new THREE.Vector3().fromArray(earthVector(latitude, longitude));
     sunlight.position.copy(direction).multiplyScalar(5);
@@ -127,9 +132,19 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   });
   const release = () => { dragging = false; holder.classList.remove('is-dragging'); };
   canvas.addEventListener('pointerup', release); canvas.addEventListener('pointercancel', release);
+  canvas.addEventListener('wheel', event => {
+    // Preserve browser zoom shortcuts and horizontal trackpad gestures.
+    if (event.ctrlKey || event.metaKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+    const delta = event.deltaY * (event.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16 : event.deltaMode === WheelEvent.DOM_DELTA_PAGE ? canvas.clientHeight : 1);
+    if (zoom(Math.exp(THREE.MathUtils.clamp(delta, -1000, 1000) * 0.001))) event.preventDefault();
+  }, { passive: false });
   canvas.addEventListener('keydown', event => {
-    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-    event.preventDefault(); rotate(event.key === 'ArrowLeft' ? -1 : 1);
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault(); rotate(event.key === 'ArrowLeft' ? -1 : 1);
+    } else if (event.key === '+' || event.key === '=' || event.key === '-' || event.key === '_') {
+      event.preventDefault(); zoom(event.key === '+' || event.key === '=' ? 0.9 : 1 / 0.9);
+    }
   });
   const loader = new THREE.TextureLoader();
   const applyTexture = (texture: THREE.Texture, quality: 'standard' | 'detailed') => {
