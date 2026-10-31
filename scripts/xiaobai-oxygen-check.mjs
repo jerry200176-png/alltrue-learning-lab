@@ -16,6 +16,7 @@ for (const mobile of [false, true]) {
     const child = outer.frameLocator('#stage-host iframe');
     await child.locator('#interpretation').getByText(/氮氣約 78%.*氧氣約 21%/u).waitFor({ timeout: 90000 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    if (mobile) assert.equal(await outer.locator('#xb-quality-toggle').getAttribute('aria-pressed'), 'true', 'touch devices start in low quality');
     assert.equal(await child.locator('body').evaluate(element => { try { return !!element.ownerDocument.defaultView.top.document; } catch { return false; } }), false);
     assert.equal(await child.locator('body').evaluate(async element => { try { await element.ownerDocument.defaultView.fetch('data:text/plain,alltrue-csp-check'); return true; } catch { return false; } }), false, 'nested frame connect-src blocks even a data URL');
     const press = async locator => {
