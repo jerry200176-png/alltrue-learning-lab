@@ -18,3 +18,9 @@
 - 官方 8192 × 4096 JPEG：<https://svs.gsfc.nasa.gov/vis/a000000/a003600/a003615/flat_earth_Largest_still.0330.jpg>；原始檔 SHA-256 `5ea6b68a4412421cae11711ae4fec1a7b1f2dbd7265c0c3004d487a03c43be9a`。本站 `public/derived/nasa-earth-4096.jpg` 由原檔縮至 4096 × 2048、JPEG 品質 90，SHA-256 `0ebad1eb6124f842ba4cc84044f6d4abc8450ed2e5ef50d3bb2bced62f8c6ee1`。標準版 `nasa-earth-2048.jpg` 由原檔縮至 2048 × 1024、JPEG 品質 88，SHA-256 `664d012fe9be21c64ab7629aeeb5841053c94030d32607a391a098f2fba9c94a`。
 - 星空採 NASA/Goddard Space Flight Center Scientific Visualization Studio 的 [Deep Star Maps 2020](https://svs.gsfc.nasa.gov/4851/)（Ernie Wright；Gaia DR2: ESA/Gaia/DPAC）。以官方 `starmap_2020_4k.exr`（SHA-256 `69b841cd048c2ef35543eb1c5819b322530e78aa4b0cab97ec1de3ef56a4ddcd`）轉成 sRGB、調整亮度範圍並輸出 4096 × 2048 JPEG；`nasa-stars-4096.jpg` SHA-256 `668f9116c34315fdf985b7b08deebfb36c3425d761346b507f8c23e531973d04`。背景採裁切及視覺調色，不宣稱與當前觀測方向或時間一致。
 - 4K 影像搭配 mipmap 約需 45 MB 顯示記憶體，只在支援 4096 材質的非觸控裝置載入；其他裝置使用 2048 版。大圖失敗時保留標準圖；大氣光暈是視覺效果，不代表天氣資料。實體手機與平板驗收仍為 **PENDING**。
+
+## 首頁地圖地球（preview.19）
+
+首頁採用 CesiumJS（Apache 2.0）及改編自 [God’s Eye View](https://github.com/bilawalsidhu/gods-eye-view) 的 viewer 設定與地圖來源（上游 commit `a725178e0f9f2748fcf5c6d09f66f74b1626d599`，程式碼 MIT）。衛星影像使用 Esri World Imagery（Esri、Vantor、Earthstar Geographics 及 GIS User Community），地形使用 Re:Earth Terrain / Mapterhorn（CC BY 4.0）。畫面保留供應者及授權署名，外部資料按服務各自條款使用，不納入本倉庫；上游 MIT 不涵蓋地圖資料或其其他第三方模型。詳見上游 [DATA_SOURCES.md](https://github.com/bilawalsidhu/gods-eye-view/blob/a725178e0f9f2748fcf5c6d09f66f74b1626d599/DATA_SOURCES.md)。
+
+地圖從衛星概覽放大至低空俯視地圖，並非即時影像、街景或 Google Photorealistic 3D Tiles。Esri 服務不可用時顯示既有 NASA 地球影像及提示；地形不可用時採用橢球表面。臺北時間與日期滑桿仍使用本站太陽位置近似模型，並非影像拍攝時間。Cesium 首頁按需載入，不改寫教材引擎。實體 iPhone、平板、線上外部服務可用性及地圖授權持續適用性仍須驗證。

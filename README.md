@@ -31,7 +31,7 @@ CI 另以 Playwright 的 Linux WebKit 和手機視窗設定，依序檢查 54 �
 
 上游基準：Tongjiang Lab commit `4d63ce0a72d987c850ec6d919e570bdb752c87a6`。`public/upstream/` 保存未修改的教材、封面、目錄和授權聲明；`docs/upstream-sha256.json` 記錄上游檔案雜湊並由單元測試核對。網站外殼、教材草稿及顯示文字轉換層是本專案新增內容；所提供的全真 Logo 保存在 `logo.jpg` 和 `public/logo.jpg`。
 
-首頁地球貼圖 `public/derived/earth-blue-marble.jpg` 逐位元組取自上述上游 `courses/earth-motion-step.html` 中的 JPEG，上游在教材中標示來源為 NASA Blue Marble；SHA-256 為 `05d06639f1afcdba63ae009fc2d1191bb148c1fe27ddbcef008c64ae2e72b8dc`。首頁以 MIT 授權的 three.js 繪製互動地球，四科圖片使用上游教材封面；自動旋轉是視覺展示，不代表實際時間尺度。
+首頁地球貼圖 `public/derived/earth-blue-marble.jpg` 逐位元組取自上述上游 `courses/earth-motion-step.html` 中的 JPEG，上游在教材中標示來源為 NASA Blue Marble；SHA-256 為 `05d06639f1afcdba63ae009fc2d1191bb148c1fe27ddbcef008c64ae2e72b8dc`。首頁使用 CesiumJS 與衛星地圖，來源、地形與離線回退見 [docs/earth-texture.md](docs/earth-texture.md)；自動旋轉是視覺展示，不代表實際時間尺度。
 
 首頁的臺北晝夜互動採用 [NOAA 太陽位置公式](https://gml.noaa.gov/grad/solcalc/solareqns.PDF)的非閏年近似，計算臺北（25.033° N、121.5654° E、UTC+8）的太陽高度與受光方向；不含大氣折射、地形或逐年差異，接近地平線時不得當成精確日出日落時間。自動旋轉只改變視角。互動設計參考 [NASA Eyes on the Earth](https://eyes.nasa.gov/apps/earth/)、[PhET 互動教學設計](https://phet.colorado.edu/translation/1534/about)與 [three.js 地球範例](https://threejs.org/examples/webgpu_tsl_earth.html)，未複製它們的模型或圖片。
 

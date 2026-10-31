@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { defineConfig } from 'vite';
+import cesium from 'vite-plugin-cesium';
 import packageJson from './package.json';
 
 // Metadata describes the actual checkout used by the build; missing Git is explicit.
@@ -14,5 +15,5 @@ function buildMetadata() {
 }
 export default defineConfig({
   base: './',
-  plugins: [{ name: 'release-metadata', generateBundle() { this.emitFile({ type: 'asset', fileName: 'version.json', source: JSON.stringify(buildMetadata(), null, 2) + '\n' }); } }]
+  plugins: [cesium(), { name: 'lazy-cesium', transformIndexHtml: { order: 'post', handler(html) { return html.replace(/\s*<link rel="stylesheet" href="[^"]*cesium\/Widgets\/widgets\.css">/, '').replace(/\s*<script src="[^"]*cesium\/Cesium\.js"><\/script>/, ''); } } }, { name: 'release-metadata', generateBundle() { this.emitFile({ type: 'asset', fileName: 'version.json', source: JSON.stringify(buildMetadata(), null, 2) + '\n' }); } }]
 });

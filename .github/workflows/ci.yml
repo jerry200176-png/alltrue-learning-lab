@@ -34,6 +34,7 @@ jobs:
           done
           curl --silent --fail "$LAB_URL" > /dev/null
           node scripts/browser-check.mjs
+          node scripts/globe-map-check.mjs
           node scripts/xiaobai-check.mjs
           node scripts/xiaobai-terrain-check.mjs
           node scripts/xiaobai-atom-check.mjs
@@ -80,6 +81,7 @@ jobs:
             ps -eo pid,ppid,rss,stat,comm --sort=-rss | head -40
             exit 1
           fi
+          LAB_ENGINE=webkit xvfb-run -a node scripts/globe-map-check.mjs
           LAB_ENGINE=webkit xvfb-run -a node scripts/xiaobai-check.mjs
           LAB_ENGINE=webkit xvfb-run -a node scripts/xiaobai-terrain-check.mjs
           LAB_ENGINE=webkit xvfb-run -a node scripts/xiaobai-atom-check.mjs

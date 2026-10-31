@@ -9,6 +9,10 @@ const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PAT
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 850 } });
   const errors = []; page.on('pageerror', error => errors.push(error.message));
+  // Keep pixel comparisons deterministic; the separate globe-map check
+  // verifies satellite tile loading and high-resolution zoom with fixtures.
+  await page.route('https://services.arcgisonline.com/**', route => route.abort());
+  await page.route('https://terrain.reearth.land/**', route => route.abort());
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(origin); assert.equal(await page.locator('.lesson-card').count(), 61);
   assert.equal(await page.locator('.hero').evaluate(element => element.ownerDocument.defaultView.getComputedStyle(element, '::before').animationName), 'none', 'reduced motion disables the star animation');
@@ -56,6 +60,10 @@ try {
   assert.equal(afterButton.equals(afterAnimation), false, 'homepage Earth animates');
   await rotationToggle.click();
   assert.equal(await rotationToggle.getAttribute('aria-pressed'), 'false', 'rotation can be paused');
+  // A paused Cesium camera can still finish loading/refining visible tiles.
+  await page.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.tilesPending === '0');
+  await page.waitForTimeout(500);
+  await page.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.tilesPending === '0');
   const paused = await homeCanvas.screenshot();
   await page.waitForTimeout(400);
   assert.equal(paused.equals(await homeCanvas.screenshot()), true, 'paused globe stays still');
@@ -76,13 +84,14 @@ try {
   assert.equal(keyboardZoom.equals(await homeCanvas.screenshot()), false, 'keyboard can zoom the globe out');
   zoomBox = await homeCanvas.boundingBox(); assert.ok(zoomBox);
   await page.mouse.move(zoomBox.x + zoomBox.width / 2, zoomBox.y + zoomBox.height / 2);
-  await page.mouse.wheel(0, -10000);
+  // The map now zooms from orbit to a low-altitude map view.
+  for (let i = 0; i < 6; i++) await page.mouse.wheel(0, -10000);
   const closest = await homeCanvas.screenshot();
   await page.mouse.wheel(0, -10000);
   assert.equal(closest.equals(await homeCanvas.screenshot()), true, 'wheel zoom has a minimum distance');
   zoomBox = await homeCanvas.boundingBox(); assert.ok(zoomBox);
   await page.mouse.move(zoomBox.x + zoomBox.width / 2, zoomBox.y + zoomBox.height / 2);
-  await page.mouse.wheel(0, 10000);
+  for (let i = 0; i < 6; i++) await page.mouse.wheel(0, 10000);
   const farthest = await homeCanvas.screenshot();
   zoomBox = await homeCanvas.boundingBox(); assert.ok(zoomBox);
   await page.mouse.move(zoomBox.x + zoomBox.width / 2, zoomBox.y + zoomBox.height / 2);
