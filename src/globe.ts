@@ -12,7 +12,7 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 20);
-  camera.position.z = 3.8;
+  camera.position.z = 3.6;
   scene.add(new THREE.AmbientLight(0xa6b9db, 0.24));
   const view = new THREE.Group();
   view.rotation.set(0.12, 2.3, 0.08); scene.add(view);
@@ -22,11 +22,46 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95 });
   const earth = new THREE.Mesh(geometry, material);
   view.add(earth);
+  // Fine geographic graticules echo the Earth lesson while remaining Earth-fixed.
+  const gridMaterial = new THREE.LineBasicMaterial({ color: 0x95daf3, transparent: true, opacity: 0.34, depthWrite: false });
+  const gridGeometries: THREE.BufferGeometry[] = [];
+  const addGridLine = (points: THREE.Vector3[]) => {
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+    gridGeometries.push(lineGeometry);
+    view.add(new THREE.Line(lineGeometry, gridMaterial));
+  };
+  for (let latitude = -60; latitude <= 60; latitude += 30) {
+    const points: THREE.Vector3[] = [];
+    for (let longitude = -180; longitude <= 180; longitude += 3) points.push(new THREE.Vector3().fromArray(earthVector(latitude, longitude)).multiplyScalar(1.003));
+    addGridLine(points);
+  }
+  for (let longitude = -180; longitude < 180; longitude += 30) {
+    const points: THREE.Vector3[] = [];
+    for (let latitude = -90; latitude <= 90; latitude += 3) points.push(new THREE.Vector3().fromArray(earthVector(latitude, longitude)).multiplyScalar(1.003));
+    addGridLine(points);
+  }
   const markerGeometry = new THREE.SphereGeometry(0.022, 16, 12);
-  const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xffd354 });
+  const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xf5f7fa });
   const marker = new THREE.Mesh(markerGeometry, markerMaterial);
   marker.position.fromArray(earthVector(TAIPEI.latitude, TAIPEI.longitude)).multiplyScalar(1.008);
   view.add(marker);
+  // Parallel rays indicate the incoming direction; distances are illustrative.
+  const rayPoints: THREE.Vector3[] = [];
+  for (const [x, y] of [[-0.48, 0], [0, 0.42], [0.48, 0]]) {
+    const tip = new THREE.Vector3(x, y, 1.1);
+    rayPoints.push(new THREE.Vector3(x, y, 1.6), tip,
+      tip, new THREE.Vector3(x - 0.045, y, 1.2),
+      tip, new THREE.Vector3(x + 0.045, y, 1.2));
+  }
+  const rayGeometry = new THREE.BufferGeometry().setFromPoints(rayPoints);
+  const rayMaterial = new THREE.LineBasicMaterial({ color: 0xffd36e, transparent: true, opacity: 0.8 });
+  const sunRays = new THREE.LineSegments(rayGeometry, rayMaterial);
+  view.add(sunRays);
+  // The gold ring marks the subsolar point: where the Sun is directly overhead.
+  const sunMarkerGeometry = new THREE.RingGeometry(0.024, 0.034, 32);
+  const sunMarkerMaterial = new THREE.MeshBasicMaterial({ color: 0xffce52, side: THREE.DoubleSide });
+  const sunMarker = new THREE.Mesh(sunMarkerGeometry, sunMarkerMaterial);
+  view.add(sunMarker);
 
   let disposed = false;
   let visible = true;
@@ -43,7 +78,12 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   const render = () => { if (!disposed) renderer.render(scene, camera); };
   const rotate = (direction: number) => { view.rotation.y += direction * 0.35; render(); };
   const setSun = (latitude: number, longitude: number) => {
-    sunlight.position.fromArray(earthVector(latitude, longitude)).multiplyScalar(5); render();
+    const direction = new THREE.Vector3().fromArray(earthVector(latitude, longitude));
+    sunlight.position.copy(direction).multiplyScalar(5);
+    sunMarker.position.copy(direction).multiplyScalar(1.01);
+    sunMarker.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
+    sunRays.quaternion.copy(sunMarker.quaternion);
+    render();
   };
   const resize = () => {
     const { width, height } = holder.getBoundingClientRect();
@@ -71,7 +111,7 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   canvas.addEventListener('pointermove', event => {
     if (!dragging) return;
     view.rotation.y += (event.clientX - previousX) * 0.008;
-    view.rotation.x = Math.max(-1.1, Math.min(1.1, view.rotation.x + (event.clientY - previousY) * 0.008));
+    view.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, view.rotation.x + (event.clientY - previousY) * 0.008));
     previousX = event.clientX; previousY = event.clientY; render();
   });
   const release = () => { dragging = false; holder.classList.remove('is-dragging'); };
@@ -102,9 +142,13 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
     if (!disposed) holder.classList.add('texture-unavailable');
   });
   resize(); animationFrame = requestAnimationFrame(animate);
-  return { rotate, setSun, toggleRotation() { playing = !playing; onRotationChange(playing); }, dispose() {
+  return { rotate, setSun, setView(viewpoint: 'taipei' | 'north') {
+    if (viewpoint === 'north') view.rotation.set(Math.PI / 2, 0, 0);
+    else view.rotation.set(0.12, 2.3, 0.08);
+    render();
+  }, toggleRotation() { playing = !playing; onRotationChange(playing); }, dispose() {
     disposed = true; cancelAnimationFrame(animationFrame); resizeObserver.disconnect(); visibilityObserver.disconnect();
     motion.removeEventListener('change', onMotionChange);
-    material.map?.dispose(); material.dispose(); geometry.dispose(); markerGeometry.dispose(); markerMaterial.dispose(); renderer.dispose(); renderer.forceContextLoss();
+    material.map?.dispose(); material.dispose(); geometry.dispose(); markerGeometry.dispose(); markerMaterial.dispose(); gridGeometries.forEach(line => line.dispose()); gridMaterial.dispose(); rayGeometry.dispose(); rayMaterial.dispose(); sunMarkerGeometry.dispose(); sunMarkerMaterial.dispose(); renderer.dispose(); renderer.forceContextLoss();
   } };
 }

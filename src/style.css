@@ -104,3 +104,46 @@
 @media(max-width:600px){.hero-demo{grid-template-columns:1fr;margin:25px 0 35px}.hero-simulation{height:310px}.earth-controls{padding:22px;gap:18px}.scene-kicker{top:14px;left:16px}.globe-bar{padding:8px 16px 15px}.earth-controls h2{font-size:20px}.sun-results strong{font-size:20px}}
 .mobile-about{display:none}
 @media(max-width:600px){.topbar-inner{gap:8px}.topbar .brand b{font-size:15px;letter-spacing:.02em}.mobile-about{display:grid;place-items:center;flex:none;width:32px;height:32px;color:#52644e;font-size:21px}.top-cta{padding:9px 10px}.top-cta span{display:none}}
+
+/* An observatory-inspired space scene; stars are CSS, not external imagery. */
+.hero{position:relative;overflow:hidden;background:#071321;color:#f7f8f5}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.72;background-image:radial-gradient(1px 1px at 9% 19%,#fff 98%,transparent),radial-gradient(1px 1px at 79% 15%,#d9efff 98%,transparent),radial-gradient(1.5px 1.5px at 38% 72%,#fff 98%,transparent),radial-gradient(1px 1px at 67% 42%,#fff 98%,transparent),radial-gradient(1px 1px at 22% 84%,#a7cbee 98%,transparent),radial-gradient(ellipse at 76% 46%,#1d526d55,transparent 49%),radial-gradient(ellipse at 18% 93%,#17435455,transparent 47%);background-size:193px 167px,263px 211px,331px 241px,157px 199px,281px 197px,auto,auto}
+.hero-inner{position:relative;z-index:1;min-height:610px}
+.hero-copy .hero-eyebrow{display:flex;align-items:center;gap:9px;color:#e9bf5d;font-size:10px;font-weight:800;letter-spacing:.18em;margin:0 0 24px;max-width:none}
+.hero-eyebrow span{width:7px;height:7px;background:#f6c348;border-radius:50%;box-shadow:0 0 12px #f7c44a}
+.hero h1{color:#fff}.hero h1 em{color:#f1cd70}
+.hero-copy>p:not(.hero-eyebrow){color:#bdced6}
+.hero .button.dark{background:#f5cb63;color:#132b29;box-shadow:0 10px 30px #e9b74425}
+.hero .button.dark:hover{background:#ffe09a}
+.hero-stats div{border-color:#ffffff35}.hero-stats b{color:#fff}.hero-stats span{color:#b5c7ce}
+.hero-demo{background:#0d2030;border:1px solid #8db2c438;box-shadow:0 24px 80px #0007}
+.earth-scene{background:radial-gradient(ellipse at 52% 47%,#1c536f 0%,#102f47 34%,#091c2d 76%)}
+.earth-scene::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.6;background-image:radial-gradient(1px 1px at 23% 31%,#fff 98%,transparent),radial-gradient(1px 1px at 80% 70%,#fff 98%,transparent),radial-gradient(1px 1px at 67% 23%,#96c9e8 98%,transparent);background-size:139px 149px,193px 179px,211px 157px}
+.scene-kicker{color:#c2d9e0}.scene-kicker span{background:#f4c55a;box-shadow:0 0 9px #ffd46b}
+.hero-simulation::before{border-color:#72b2c42e}.hero-simulation.is-dragging::before{border-color:#a9d9e588;box-shadow:0 0 20px #85ddf433}
+.hero-simulation .sim-message{color:#edf9ff}.hero-simulation .sim-message p{color:#d2e6ef}
+.hero-simulation.texture-unavailable:after{color:#fff}
+.globe-bar{color:#b6cdd5}.globe-bar button{background:#ffffff0d;color:#e6f4f5;border-color:#a6c4cf55}
+.globe-bar button:hover:enabled{background:#ffffff23;border-color:#e9c56c}
+.view-actions{position:relative;display:flex;align-items:center;gap:7px;padding:0 14px 16px;color:#a9c2ca;font-size:11px}
+.view-actions button,.sun-presets button{border:1px solid #9cbac846;background:#ffffff0d;color:#e4f2f3;border-radius:99px;padding:6px 12px;font-size:11px;line-height:1.25}
+.view-actions button:hover:enabled,.sun-presets button:hover{background:#ffffff25}
+.view-actions button:disabled{opacity:.5;cursor:default}
+.view-actions button:focus-visible,.sun-presets button:focus-visible{outline:2px solid #ffe08a;outline-offset:2px}
+.earth-controls{background:#102738eF;color:#f5f8f5;border-left:1px solid #8db2c42b}
+.lab-kicker{color:#f1c96b}.lab-lead{color:#bcd0d6}
+.sun-presets{display:flex;flex-wrap:wrap;gap:6px}
+.sun-presets button[aria-pressed=true]{background:#f1c96b;color:#132b32;border-color:#f1c96b;font-weight:700}
+.earth-slider label{color:#e6f1ef}.earth-slider output{color:#ffdc84}.range-ends,.sun-results span{color:#b3c9cf}
+.sun-results div{background:#ffffff0b;border-color:#ffffff1c}.lab-note{color:#c2d5d8}.lab-link{color:#ffda7e}
+.legend-taipei,.legend-sun{display:inline-block;width:8px;height:8px;border-radius:50%;background:#f5f7fa}
+.legend-sun{background:transparent;border:2px solid #ffce52;width:9px;height:9px}
+@media(max-width:600px){.hero-inner{min-height:0}.hero-copy .hero-eyebrow{font-size:9px;letter-spacing:.12em;margin-bottom:20px}.earth-controls{border-left:0;border-top:1px solid #8db2c42b}.view-actions{padding:0 16px 15px}.earth-controls{gap:16px}}
+
+/* Inspired by Motion Library's Twinkling Sky and Aurora Gradient. */
+@media (prefers-reduced-motion:no-preference){
+  .hero::before{animation:space-twinkle 9s ease-in-out infinite alternate}
+  .hero::after{content:'';position:absolute;inset:-15%;pointer-events:none;opacity:.45;background:radial-gradient(ellipse 38% 28% at 55% 76%,#277b9b38,transparent 75%),radial-gradient(ellipse 30% 30% at 82% 15%,#b58a4930,transparent 75%);animation:space-drift 18s ease-in-out infinite alternate}
+}
+@keyframes space-twinkle{from{opacity:.48}to{opacity:.84}}
+@keyframes space-drift{from{transform:translate3d(-1%,0,0) scale(1)}to{transform:translate3d(2%,-1%,0) scale(1.04)}}
