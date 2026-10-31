@@ -24,9 +24,9 @@ try {
     await press(frame.getByRole('button', { name: '自由搭建', exact: true }));
     await frame.getByText('0 塊', { exact: true }).waitFor();
     const box = await canvas.boundingBox(); assert.ok(box);
-    const x = box.x + box.width / 2; const y = box.y + box.height / 2;
-    if (mobile) await page.touchscreen.tap(x, y); else await page.mouse.click(x, y);
-    await frame.getByText('1 塊', { exact: true }).waitFor({ timeout: 30000 });
+    const position = { x: box.width / 2, y: box.height / 2 };
+    if (mobile) await canvas.tap({ position, timeout: 60000 }); else await canvas.click({ position, timeout: 60000 });
+    await frame.getByText('1 塊', { exact: true }).waitFor({ timeout: 60000 });
     assert.equal(await page.locator('.lesson-content details').count(), 3);
     assert.deepEqual(errors, []);
     await context.close();

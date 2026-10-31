@@ -61,4 +61,4 @@
 - 原始播放 HTML 快照 SHA-256：`4a14691a737569f3587c9126328cda36ef629aa5f3419d5991c3acf2ddf6c793`，含臨時識別碼而未存入儲存庫。
 - 本站版本 `public/xiaobai/oxygen.html` SHA-256：`c8c6efb753bfb850497b46c7a6f6c0f19534ee726e3a3666236faa9b189edc72`。移除外層播放驗證與識別標記，以及三個內嵌子教材的原站播放驗證程式，保留模型與計算；各子教材保留 three.js MIT 聲明。
 - 封面為本站整合頁的教材畫面擷取：`public/xiaobai/oxygen-cover.png`，SHA-256 `a4a26308c469a747e177f034389b1cb23314a09368fedc7039b40d0ba57b2c1a`。
-- 子教材在隔離的 iframe 中執行，獨立轉換層處理文字與 WebGL 錯誤。完整教學及術語專業審查、實體手機與平板驗收為 **PENDING**。
+- 子教材在隔離的 iframe 中執行，獨立轉換層處理文字與 WebGL 錯誤；窄螢幕縮小試管標籤以避免重疊，保留模型綁定與反應計算。完整教學及術語專業審查、實體手機與平板驗收為 **PENDING**。

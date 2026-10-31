@@ -23,6 +23,10 @@ try {
     await child.locator('#guide h1').getByText('過氧化氫分解', { exact: true }).waitFor({ timeout: 90000 });
     assert.match(await child.locator('body').innerText(), /2H₂O₂/u);
     assert.match(await child.locator('body').innerText(), /MnO₂/u);
+    if (mobile) {
+      const a = await child.locator('#label-a').boundingBox(); const b = await child.locator('#label-b').boundingBox();
+      assert.ok(a && b && (a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y), 'mobile tube labels must not overlap');
+    }
     if (!mobile) {
       const canvas = child.locator('canvas').first(); await canvas.scrollIntoViewIfNeeded();
       let positions = await child.locator('body').evaluate(element => element.ownerDocument.defaultView.__CHEM02_CATALYST__.elements());
