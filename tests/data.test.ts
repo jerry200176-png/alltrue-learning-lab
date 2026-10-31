@@ -46,6 +46,12 @@ describe('教材目錄', () => {
     const image = readFileSync('public/derived/earth-blue-marble-nasa-5400.jpg');
     expect(createHash('sha256').update(image).digest('hex')).toBe('4f4240673a3a1b173d61b92ca4b07bac5fd17059ea5f725ba6da5a9c5386b7ba');
   });
+  it('pins the reviewed NASA Earth and star imagery', () => {
+    const sha = (path: string) => createHash('sha256').update(readFileSync(path)).digest('hex');
+    expect(sha('public/derived/nasa-earth-4096.jpg')).toBe('0ebad1eb6124f842ba4cc84044f6d4abc8450ed2e5ef50d3bb2bced62f8c6ee1');
+    expect(sha('public/derived/nasa-earth-2048.jpg')).toBe('664d012fe9be21c64ab7629aeeb5841053c94030d32607a391a098f2fba9c94a');
+    expect(sha('public/derived/nasa-stars-4096.jpg')).toBe('668f9116c34315fdf985b7b08deebfb36c3425d761346b507f8c23e531973d04');
+  });
   it('uses exactly the Earth texture embedded in the pinned upstream lesson', () => {
     const source = readFileSync('public/upstream/courses/earth-motion-step.html', 'utf8');
     const embedded = source.match(/data:image\/jpeg;base64,([A-Za-z0-9+/=]+)/)?.[1];
