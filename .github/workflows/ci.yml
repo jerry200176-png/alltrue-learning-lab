@@ -83,6 +83,33 @@ jobs:
           LAB_ENGINE=webkit xvfb-run -a node scripts/xiaobai-check.mjs
           LAB_ENGINE=webkit xvfb-run -a node scripts/xiaobai-terrain-check.mjs
           LAB_ENGINE=webkit xvfb-run -a node scripts/xiaobai-atom-check.mjs
+
+  webkit-physics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps webkit
+      - run: npm run build
+      - name: Verify physics lessons in WebKit
+        env:
+          LAB_URL: http://127.0.0.1:4173/
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          WEBKIT_HEADED: '1'
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/alltrue-physics-webkit-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail "$LAB_URL" > /dev/null; then break; fi
+            sleep 1
+          done
+          curl --silent --fail "$LAB_URL" > /dev/null
           LAB_ENGINE=webkit xvfb-run -a node scripts/xiaobai-lens-check.mjs
           LAB_ENGINE=webkit xvfb-run -a node scripts/xiaobai-nuclear-check.mjs
 
@@ -143,7 +170,7 @@ jobs:
 
   deploy:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: [checks, webkit, chromium-oxygen, webkit-new-lessons]
+    needs: [checks, webkit, webkit-physics, chromium-oxygen, webkit-new-lessons]
     runs-on: ubuntu-24.04
     permissions:
       pages: write
