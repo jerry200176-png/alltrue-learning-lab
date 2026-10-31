@@ -29,6 +29,8 @@ export function mountGlobe(holder: HTMLElement, textureUrl: string, onRotationCh
   canvas.tabIndex = 0;
   canvas.setAttribute('aria-label', '互動地球，拖曳或使用左右方向鍵旋轉，滾輪或加減鍵縮放');
   scene.backgroundColor = Cesium.Color.TRANSPARENT;
+  canvas.dataset.tilesPending = '0';
+  scene.globe.tileLoadProgressEvent.addEventListener((pending: number) => { canvas.dataset.tilesPending = String(pending); });
   scene.globe.enableLighting = true;
   scene.globe.dynamicAtmosphereLighting = false;
   scene.globe.showGroundAtmosphere = false;

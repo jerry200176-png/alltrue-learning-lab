@@ -60,6 +60,10 @@ try {
   assert.equal(afterButton.equals(afterAnimation), false, 'homepage Earth animates');
   await rotationToggle.click();
   assert.equal(await rotationToggle.getAttribute('aria-pressed'), 'false', 'rotation can be paused');
+  // A paused Cesium camera can still finish loading/refining visible tiles.
+  await page.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.tilesPending === '0');
+  await page.waitForTimeout(500);
+  await page.waitForFunction(() => document.querySelector('#home-simulation canvas')?.dataset.tilesPending === '0');
   const paused = await homeCanvas.screenshot();
   await page.waitForTimeout(400);
   assert.equal(paused.equals(await homeCanvas.screenshot()), true, 'paused globe stays still');
